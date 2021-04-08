@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
@@ -12,10 +13,10 @@ import MainMenu from "./MainMenu";
 export default class Controls extends Scene {
     
     loadScene(): void {
-
+        this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
     }
 
-    startScene(): void {
+    startScene(): void {        
         let backgroundLayer = this.addUILayer("background");
         backgroundLayer.setDepth(0);
         let controlsLayer = this.addUILayer("controls");
@@ -26,8 +27,8 @@ export default class Controls extends Scene {
 
         this.viewport.setZoomLevel(1);
 
-        let background = <Rect>this.add.graphic(GraphicType.RECT, "background", {position: new Vec2(size.x, size.y), size: new Vec2(size.x * 2.0, size.y * 2)});
-        background.color = new Color(211, 211, 211, 1); //light grey
+        let backgroundImage = this.add.sprite("backgroundImage", "background");
+        backgroundImage.position.set(size.x, size.y);
 
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "controls", {position: new Vec2(100, 50), text: "Back"});
         backBtn.backgroundColor = Color.TRANSPARENT;
@@ -111,11 +112,13 @@ export default class Controls extends Scene {
         pauseGame.fontSize = 40;
 
         backBtn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         backBtn.onEnter = () => {
-            backBtn.textColor = Color.RED;
+            backBtn.textColor = Color.WHITE;
         }
         
         backBtn.onLeave = () => {

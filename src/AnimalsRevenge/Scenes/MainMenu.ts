@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
@@ -16,6 +17,10 @@ export default class MainMenu extends Scene {
 
     loadScene(): void {
         this.load.image("logo", "assets/images/Animals_Revenge_Logo.png");
+        this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
+    }
+
+    unloadScene(): void {
     }
 
     startScene(): void {
@@ -29,8 +34,8 @@ export default class MainMenu extends Scene {
 
         this.viewport.setZoomLevel(1);
 
-        let background = <Rect>this.add.graphic(GraphicType.RECT, "background", {position: new Vec2(size.x, size.y), size: new Vec2(size.x * 2.0, size.y * 2)});
-        background.color = new Color(211, 211, 211, 1); //light grey
+        let background = this.add.sprite("backgroundImage", "background");
+        background.position.set(size.x, size.y);
 
         let mainMenuLabel = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(size.x, size.y - 300), text: "Main Menu"});
         mainMenuLabel.textColor = Color.BLACK;
@@ -73,11 +78,13 @@ export default class MainMenu extends Scene {
         helpBtn.font = "PixelSimple";
 
         playBtn.onClick = () => {
-            this.sceneManager.changeToScene(LevelSelection, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(LevelSelection, {}, {});
+            }
         }
 
         playBtn.onEnter = () => {
-            playBtn.textColor = Color.RED;
+            playBtn.textColor = Color.ORANGE;
         }
         
         playBtn.onLeave = () => {
@@ -85,11 +92,13 @@ export default class MainMenu extends Scene {
         }
 
         controlsBtn.onClick = () => {
-            this.sceneManager.changeToScene(Controls, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(Controls, {}, {});
+            }
         }
 
         controlsBtn.onEnter = () => {
-            controlsBtn.textColor = Color.RED;
+            controlsBtn.textColor = Color.ORANGE;
         }
         
         controlsBtn.onLeave = () => {
@@ -97,11 +106,13 @@ export default class MainMenu extends Scene {
         }
 
         helpBtn.onClick = () => {
-            this.sceneManager.changeToScene(Help, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(Help, {}, {});
+            }
         }
 
         helpBtn.onEnter = () => {
-            helpBtn.textColor = Color.RED;
+            helpBtn.textColor = Color.ORANGE;
         }
         
         helpBtn.onLeave = () => {

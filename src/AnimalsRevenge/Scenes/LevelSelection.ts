@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
@@ -12,6 +13,7 @@ import MainMenu from "./MainMenu";
 export default class LevelSelection extends Scene {
     
     loadScene(): void {
+        this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
         this.load.image("level1Map", "assets/images/Level1_Map.png");
     }
 
@@ -27,8 +29,8 @@ export default class LevelSelection extends Scene {
 
         this.viewport.setZoomLevel(1);
 
-        let background = <Rect>this.add.graphic(GraphicType.RECT, "background", {position: new Vec2(size.x, size.y), size: new Vec2(size.x * 2.0, size.y * 2)});
-        background.color = new Color(211, 211, 211, 1); //light grey
+        let background = this.add.sprite("backgroundImage", "background");
+        background.position.set(size.x, size.y);
 
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: new Vec2(100, 50), text: "Back"});
         backBtn.backgroundColor = Color.TRANSPARENT;
@@ -145,11 +147,13 @@ export default class LevelSelection extends Scene {
         level6Btn.setPadding(new Vec2(115, 100));
 
         backBtn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         backBtn.onEnter = () => {
-            backBtn.textColor = Color.RED;
+            backBtn.textColor = Color.WHITE;
         }
         
         backBtn.onLeave = () => {
@@ -157,27 +161,39 @@ export default class LevelSelection extends Scene {
         }
 
         level1Btn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         level2Btn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         level3Btn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         level4Btn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         level5Btn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         level6Btn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
     }
 }

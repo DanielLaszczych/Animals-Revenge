@@ -1,5 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Input from "../../Wolfie2D/Input/Input";
+import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
@@ -19,6 +19,10 @@ export default class SplashScreen extends Scene {
 
     loadScene(): void {
         this.load.image("logo", "assets/images/Animals_Revenge_Logo.png");
+        this.load.image("backgroundImage", "assets/images/Background.png");
+    }
+
+    unloadScene(): void {
     }
 
     startScene(): void {
@@ -32,14 +36,14 @@ export default class SplashScreen extends Scene {
 
         this.viewport.setZoomLevel(1);
 
-        let background = <Rect>this.add.graphic(GraphicType.RECT, "background", {position: new Vec2(size.x, size.y), size: new Vec2(size.x * 2.0, size.y * 2)});
-        background.color = new Color(211, 211, 211, 1); //light grey
+        let background = this.add.sprite("backgroundImage", "background");
+        background.position.set(size.x, size.y);
 
         let logo = this.add.sprite("logo", "splashScreen");
-        logo.position.set(size.x, size.y);
-        logo.scale.set(3, 3); 
+        logo.position.set(size.x, size.y + 20);
+        logo.scale.set(3.7, 3.8); 
 
-        this.clickLabel = <Label>this.add.uiElement(UIElementType.LABEL, "splashScreen", {position: new Vec2(size.x, size.y + 300), text: "\"Click anywhere to start\""});
+        this.clickLabel = <Label>this.add.uiElement(UIElementType.LABEL, "splashScreen", {position: new Vec2(size.x, size.y + 330), text: "\"Click anywhere to start\""});
         this.clickLabel.textColor = new Color(0, 0, 0, 1);
         this.clickLabel.font = "PixelSimple";
         this.clickLabel.fontSize = 60;
@@ -52,7 +56,9 @@ export default class SplashScreen extends Scene {
     updateScene(deltaT: number): void {
         this.numberofUpdates++;
         if (Input.isMouseJustPressed()) {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         if (this.numberofUpdates === 3) {
@@ -64,8 +70,5 @@ export default class SplashScreen extends Scene {
             this.clickLabel.textColor = new Color(0, 0, 0, parseFloat((this.clickLabel.textColor.a + this.clickLabelAlphaModifier).toFixed(2)));
             this.numberofUpdates = 0;
         }
-    }
-
-    unloadScene(): void {
     }
 }

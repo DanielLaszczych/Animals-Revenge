@@ -28,8 +28,8 @@ export default class InputHandler {
     }
 
     private handleMouseDown = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
-		let pos = this.getMousePosition(event, canvas);
-        let gameEvent = new GameEvent(GameEventType.MOUSE_DOWN, {position: pos});
+        let pos = this.getMousePosition(event, canvas);
+        let gameEvent = new GameEvent(GameEventType.MOUSE_DOWN, {position: pos, button: event.button});
         this.eventQueue.addEvent(gameEvent);
     }
 

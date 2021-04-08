@@ -19,6 +19,8 @@ export default class Input {
 	private static mousePosition: Vec2;
 	private static mousePressPosition: Vec2;
 
+	private static mousePressButton: number;
+
 	private static scrollDirection: number;
 	private static justScrolled: boolean;
 
@@ -48,6 +50,7 @@ export default class Input {
 		Input.justScrolled = false;
 		Input.keysDisabled = false;
 		Input.mouseDisabled = false;
+		Input.mousePressButton = -1;
 
 		// Initialize the keymap
 		Input.keyMap = new Map();
@@ -79,7 +82,8 @@ export default class Input {
 			if(event.type === GameEventType.MOUSE_DOWN){
 				Input.mouseJustPressed = true;
 				Input.mousePressed = true;
-				Input.mousePressPosition = event.data.get("position");	
+				Input.mousePressPosition = event.data.get("position");
+				Input.mousePressButton = event.data.get("button");	
 			}
 
 			if(event.type === GameEventType.MOUSE_UP){
@@ -296,6 +300,17 @@ export default class Input {
 	}
 
 	/**
+	 * Gets the button of the last mouse press
+	 * @returns The mouse button stored as a number
+	 */
+	static getMousePressButton(): number {
+		if (!Input.mouseDisabled) {
+			return Input.mousePressButton;
+		}
+	}
+
+
+	/**
 	 * Gets the position of the last mouse press in the game world,
 	 * taking into consideration the scrolling of the viewport
 	 * @returns The mouse position stored as a Vec2
@@ -319,4 +334,12 @@ export default class Input {
 		Input.keysDisabled = false;
 		Input.mouseDisabled = false;
 	}
+}
+
+export enum BUTTON {
+	LEFTCLICK = 0,
+	MIDDLECLICK = 1,
+	RIGHTCLICK = 2,
+	BACKWARD = 3,
+	FORWARD = 4
 }

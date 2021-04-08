@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
@@ -13,7 +14,7 @@ import SplashScreen from "./SplashScreen";
 export default class Help extends Scene {
     
     loadScene(): void {
-
+        this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
     }
 
     startScene(): void {
@@ -27,8 +28,8 @@ export default class Help extends Scene {
 
         this.viewport.setZoomLevel(1);
 
-        let background = <Rect>this.add.graphic(GraphicType.RECT, "background", {position: new Vec2(size.x, size.y), size: new Vec2(size.x * 2.0, size.y * 2)});
-        background.color = new Color(211, 211, 211, 1); //light grey
+        let background = this.add.sprite("backgroundImage", "background");
+        background.position.set(size.x, size.y);
 
         let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(100, 50), text: "Back"});
         backBtn.backgroundColor = Color.TRANSPARENT;
@@ -148,11 +149,13 @@ export default class Help extends Scene {
         oneShotLabel.fontSize = 35;
 
         backBtn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(MainMenu, {}, {});
+            }
         }
 
         backBtn.onEnter = () => {
-            backBtn.textColor = Color.RED;
+            backBtn.textColor = Color.WHITE;
         }
         
         backBtn.onLeave = () => {
@@ -160,11 +163,13 @@ export default class Help extends Scene {
         }
 
         cutSceneBtn.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(SplashScreen, {}, {});
+            }
         }
 
         cutSceneBtn.onEnter = () => {
-            cutSceneBtn.textColor = Color.RED;
+            cutSceneBtn.textColor = Color.ORANGE;
         }
         
         cutSceneBtn.onLeave = () => {
@@ -172,12 +177,14 @@ export default class Help extends Scene {
         }
 
         infHealthBtn.onClick = () => {
-            if (infHealthBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                infHealthBtn.backgroundColor = Color.BLACK;
-                infHealthBtn.borderColor = Color.WHITE;
-            } else {
-                infHealthBtn.backgroundColor = Color.TRANSPARENT;
-                infHealthBtn.borderColor = Color.BLACK;
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                if (infHealthBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
+                    infHealthBtn.backgroundColor = Color.BLACK;
+                    infHealthBtn.borderColor = Color.WHITE;
+                } else {
+                    infHealthBtn.backgroundColor = Color.TRANSPARENT;
+                    infHealthBtn.borderColor = Color.BLACK;
+                }
             }
         }
 
@@ -186,12 +193,14 @@ export default class Help extends Scene {
         }
 
         infMoneyBtn.onClick = () => {
-            if (infMoneyBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                infMoneyBtn.backgroundColor = Color.BLACK;
-                infMoneyBtn.borderColor = Color.WHITE;
-            } else {
-                infMoneyBtn.backgroundColor = Color.TRANSPARENT;
-                infMoneyBtn.borderColor = Color.BLACK;
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                if (infMoneyBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
+                    infMoneyBtn.backgroundColor = Color.BLACK;
+                    infMoneyBtn.borderColor = Color.WHITE;
+                } else {
+                    infMoneyBtn.backgroundColor = Color.TRANSPARENT;
+                    infMoneyBtn.borderColor = Color.BLACK;
+                }
             }
         }
 
@@ -200,12 +209,14 @@ export default class Help extends Scene {
         }
 
         allLevelsBtn.onClick = () => {
-            if (allLevelsBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                allLevelsBtn.backgroundColor = Color.BLACK;
-                allLevelsBtn.borderColor = Color.WHITE;
-            } else {
-                allLevelsBtn.backgroundColor = Color.TRANSPARENT;
-                allLevelsBtn.borderColor = Color.BLACK;
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                if (allLevelsBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
+                    allLevelsBtn.backgroundColor = Color.BLACK;
+                    allLevelsBtn.borderColor = Color.WHITE;
+                } else {
+                    allLevelsBtn.backgroundColor = Color.TRANSPARENT;
+                    allLevelsBtn.borderColor = Color.BLACK;
+                }
             }
         }
 
@@ -214,12 +225,14 @@ export default class Help extends Scene {
         }
 
         allTurretsBtn.onClick = () => {
-            if (allTurretsBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                allTurretsBtn.backgroundColor = Color.BLACK;
-                allTurretsBtn.borderColor = Color.WHITE;
-            } else {
-                allTurretsBtn.backgroundColor = Color.TRANSPARENT;
-                allTurretsBtn.borderColor = Color.BLACK;
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                if (allTurretsBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
+                    allTurretsBtn.backgroundColor = Color.BLACK;
+                    allTurretsBtn.borderColor = Color.WHITE;
+                } else {
+                    allTurretsBtn.backgroundColor = Color.TRANSPARENT;
+                    allTurretsBtn.borderColor = Color.BLACK;
+                }
             }
         }
 
@@ -228,12 +241,14 @@ export default class Help extends Scene {
         }
 
         oneShotBtn.onClick = () => {
-            if (oneShotBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                oneShotBtn.backgroundColor = Color.BLACK;
-                oneShotBtn.borderColor = Color.WHITE;
-            } else {
-                oneShotBtn.backgroundColor = Color.TRANSPARENT;
-                oneShotBtn.borderColor = Color.BLACK;
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                if (oneShotBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
+                    oneShotBtn.backgroundColor = Color.BLACK;
+                    oneShotBtn.borderColor = Color.WHITE;
+                } else {
+                    oneShotBtn.backgroundColor = Color.TRANSPARENT;
+                    oneShotBtn.borderColor = Color.BLACK;
+                }
             }
         }
 
