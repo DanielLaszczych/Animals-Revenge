@@ -1,13 +1,16 @@
+import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import Game from "../../Wolfie2D/Loop/Game";
 import Circle from "../../Wolfie2D/Nodes/Graphics/Circle";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene"
 import Color from "../../Wolfie2D/Utils/Color";
 
@@ -28,6 +31,9 @@ export default class GameLevel extends Scene {
     protected selectedTower: Sprite = null;
     protected selectedTowerRange: Circle = null;
 
+    protected graph: PositionGraph;
+    protected waves: Array<AnimatedSprite>;
+
     initScene(init: Record<string, any>) {
         this.healthCount = init.startHealth;
         this.moneyCount = init.startMoney;
@@ -46,6 +52,7 @@ export default class GameLevel extends Scene {
         this.initViewPort();
         this.subscribeToEvents();
         this.addUI();
+        this.createNavmesh();
     }
 
     protected initLayers(): void {
@@ -187,6 +194,36 @@ export default class GameLevel extends Scene {
         this.moneyCountLabel.text = this.moneyCount.toString();
     }
 
+    protected createNavmesh(): void{
+        let graphLayer = this.addLayer("graph");
+        graphLayer.setHidden(true)
+
+        let navmesh = this.load.getObject("navmesh");
+
+        this.graph = new PositionGraph();
+
+        for(let node of navmesh.nodes){
+            this.graph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, "graph", {position: new Vec2(node[0], node[1])})
+        }
+
+        for(let edge of navmesh.edges){
+            this.graph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, "graph", {start: this.graph.getNodePosition(edge[0]), end: this.graph.getNodePosition(edge[1])})
+        }
+
+        // Set this graph as a navigable entity
+        let navmeshData = new Navmesh(this.graph);
+        this.navManager.addNavigableEntity("navmesh", navmeshData);
+    }
+
+    protected intializeWaves(): void{
+        const waveData = this.load.getObject("waveData");
+
+        this.waves = new Array(waveData.numWaves);
+
+    }
+
     updateScene(deltaT: number): void {
         if (this.selectedTower !== null) {
             this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
@@ -195,5 +232,10 @@ export default class GameLevel extends Scene {
         if (this.selectedTowerRange !== null) {
             this.selectedTowerRange.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
         }
+        // Display the navmesh of the current level
+        if(Input.isKeyJustPressed("f")){
+            this.getLayer("graph").setHidden(!this.getLayer("graph").isHidden());
+        }
+
     }
 }

@@ -1,0 +1,9 @@
+{
+    "numWaves": 1,
+    "waveData":[
+    {
+        "enemies": ["hearts", "coins"],
+        "numEnemies": [5, 3]
+    }
+    ]
+}
