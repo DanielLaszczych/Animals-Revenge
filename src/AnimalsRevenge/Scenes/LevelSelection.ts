@@ -8,6 +8,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import Level1 from "./Level1";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelection extends Scene {
@@ -162,7 +163,7 @@ export default class LevelSelection extends Scene {
 
         level1Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(MainMenu, {}, {});
+                this.sceneManager.changeToScene(Level1, {startHealth: 100, startMoney: 200, totalWaves: 10, turretsUnlocked: 6}, {});
             }
         }
 

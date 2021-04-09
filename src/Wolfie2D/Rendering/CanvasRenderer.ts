@@ -22,6 +22,7 @@ import Vec2 from "../DataTypes/Vec2";
 import Color from "../Utils/Color";
 import Line from "../Nodes/Graphics/Line";
 import Debug from "../Debug/Debug";
+import Circle from "../Nodes/Graphics/Circle";
 
 /**
  * An implementation of the RenderingManager class using CanvasRenderingContext2D.
@@ -224,6 +225,8 @@ export default class CanvasRenderer extends RenderingManager {
             this.graphicRenderer.renderLine(<Line>graphic, this.origin, this.zoom);
         } else if(graphic instanceof Rect){
             this.graphicRenderer.renderRect(<Rect>graphic, this.zoom);
+        } else if (graphic instanceof Circle) {
+            this.graphicRenderer.renderCircle(<Circle>graphic, this.zoom);
         }
     }
 

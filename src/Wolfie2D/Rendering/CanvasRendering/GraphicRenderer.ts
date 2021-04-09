@@ -1,4 +1,5 @@
 import Vec2 from "../../DataTypes/Vec2";
+import Circle from "../../Nodes/Graphics/Circle";
 import Line from "../../Nodes/Graphics/Line";
 import Point from "../../Nodes/Graphics/Point";
 import Rect from "../../Nodes/Graphics/Rect";
@@ -67,6 +68,27 @@ export default class GraphicRenderer {
             this.ctx.strokeStyle = rect.getBorderColor().toStringRGB();
             this.ctx.lineWidth = rect.getBorderWidth();
             this.ctx.strokeRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+        }
+    }
+
+    /**
+     * Renders a circle
+     * @param circle The circle to render
+     * @param zoom The zoom level
+     */
+    renderCircle(circle: Circle, zoom: number): void {
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, (circle.radius / 1.5) * zoom, 0, 2 * Math.PI, false);
+        if(circle.color.a !== 0){
+            this.ctx.fillStyle = circle.color.toStringRGB();
+            this.ctx.fill();
+        }
+
+        // Draw the border of the rect if it isn't transparent
+        if(circle.borderColor.a !== 0){
+            this.ctx.strokeStyle = circle.getBorderColor().toStringRGB();
+            this.ctx.lineWidth = circle.getBorderWidth();
+            this.ctx.stroke();
         }
     }
 }

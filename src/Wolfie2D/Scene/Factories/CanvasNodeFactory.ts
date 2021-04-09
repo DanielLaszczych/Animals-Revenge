@@ -14,6 +14,7 @@ import TextInput from "../../Nodes/UIElements/TextInput";
 import Rect from "../../Nodes/Graphics/Rect";
 import ResourceManager from "../../ResourceManager/ResourceManager";
 import Line from "../../Nodes/Graphics/Line";
+import Circle from "../../Nodes/Graphics/Circle";
 
 // @ignorePage
 
@@ -143,6 +144,9 @@ export default class CanvasNodeFactory {
 			case GraphicType.RECT:
 				instance = this.buildRect(options);
 				break;
+			case GraphicType.CIRCLE:
+				instance = this.buildCircle(options);
+				break;
 			default:
 				throw `GraphicType '${type}' does not exist, or is registered incorrectly.`
 		}
@@ -213,6 +217,13 @@ export default class CanvasNodeFactory {
 
 		return new Rect(options.position, options.size);
 	}
+
+	buildCircle(options?: Record<string, any>): Circle {
+		this.checkIfPropExists("Circle", options, "position", Vec2, "Vec2");
+		this.checkIfPropExists("Circle", options, "radius", Number, "Number");
+		
+		return new Circle(options.position, options.radius);
+	}	
 
 	/* ---------- ERROR HANDLING ---------- */
 
