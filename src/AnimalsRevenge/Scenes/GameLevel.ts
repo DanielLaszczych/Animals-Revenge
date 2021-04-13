@@ -1,4 +1,5 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import Game from "../../Wolfie2D/Loop/Game";
@@ -13,6 +14,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene"
 import Color from "../../Wolfie2D/Utils/Color";
+import EnemyAI from "../AI/EnemyAI";
 
 export default class GameLevel extends Scene {
 
@@ -32,8 +34,14 @@ export default class GameLevel extends Scene {
     protected selectedTowerRange: Circle = null;
 
     protected graph: PositionGraph;
-    protected waves: Array<AnimatedSprite>;
 
+    protected waves: Array<Record<string, any>>;
+    protected executeWave: Record<string, any> = null;
+    protected timeNow: number = Date.now();
+    protected enemy: Array<AnimatedSprite>;
+    protected enemyNumber: number;
+
+    protected doOnce: boolean = true;
     initScene(init: Record<string, any>) {
         this.healthCount = init.startHealth;
         this.moneyCount = init.startMoney;
@@ -53,6 +61,7 @@ export default class GameLevel extends Scene {
         this.subscribeToEvents();
         this.addUI();
         this.createNavmesh();
+        this.intializeWaves();
     }
 
     protected initLayers(): void {
@@ -218,10 +227,51 @@ export default class GameLevel extends Scene {
     }
 
     protected intializeWaves(): void{
-        const waveData = this.load.getObject("waveData");
+        const data = this.load.getObject("waveData");
 
-        this.waves = new Array(waveData.numWaves);
+        this.waves = new Array(data.numWaves);
+        for(let i = 0; i < data.numWaves; i++){
+            let value = data.waveData[i];
+            this.waves[i] = {"wave": value}; 
+        }
+    }
 
+    protected spawnEnemy(): void{
+        if(this.executeWave == null){
+            this.executeWave = this.waves.shift();
+            this.enemy = new Array(this.executeWave.wave.totalEnemies);
+            this.enemyNumber = 0;
+        }
+        if(Date.now() - this.timeNow >= 1500){
+            this.timeNow = Date.now();
+            if(this.executeWave.wave.enemies[0] === "farmer"){
+                this.enemy[this.enemyNumber] = this.add.animatedSprite("farmer", "primary");
+            }
+
+            this.enemy[this.enemyNumber].position.set(0, 432);
+            this.enemy[this.enemyNumber].animation.play("WALK");
+            this.enemy[this.enemyNumber].addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+            let path = this.executeWave.wave.route.map((index: number) => this.graph.getNodePosition(index));
+            this.enemy[this.enemyNumber].addAI(EnemyAI, path);
+
+            this.executeWave.wave.numberEnemies[0] -= 1;
+            if(this.executeWave.wave.numberEnemies[0] == 0){
+                this.executeWave.wave.enemies.shift();
+                this.executeWave.wave.numberEnemies.shift();
+                
+            }
+            
+            this.enemyNumber++;
+            if(this.enemyNumber == this.enemy.length){
+                this.executeWave = null;
+                this.doOnce = false;
+                // TO BE IMPLEMENTED
+                // Set a global variable to show that wave has ended.
+            }
+
+
+            
+        }
     }
 
     updateScene(deltaT: number): void {
@@ -236,6 +286,12 @@ export default class GameLevel extends Scene {
         if(Input.isKeyJustPressed("f")){
             this.getLayer("graph").setHidden(!this.getLayer("graph").isHidden());
         }
+
+        if(this.doOnce){
+            this.spawnEnemy();
+        }
+
+
 
     }
 }

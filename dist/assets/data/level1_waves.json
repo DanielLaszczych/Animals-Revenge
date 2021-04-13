@@ -1,9 +1,11 @@
 {
     "numWaves": 1,
     "waveData":[
-    {
-        "enemies": ["hearts", "coins"],
-        "numEnemies": [5, 3]
-    }
+        {
+            "enemies": ["farmer", "farmer"],
+            "totalEnemies": 7,
+            "numberEnemies": [5, 2],
+            "route": [0, 1, 2, 3, 4, 5, 6]
+        }
     ]
 }
