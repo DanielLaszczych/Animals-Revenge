@@ -1,6 +1,9 @@
 # Exclude node modules
 node_modules
 
+#Exclude .vscode settings
+.vscode
+
 # Exclude the compiled project
 dist/*
 
@@ -12,4 +15,5 @@ dist/*
 
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 !dist/assets/
+
 

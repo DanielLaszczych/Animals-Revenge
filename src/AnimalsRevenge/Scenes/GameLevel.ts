@@ -14,7 +14,8 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene"
 import Color from "../../Wolfie2D/Utils/Color";
-import EnemyAI from "../AI/EnemyAI";
+import { AR_Events } from "../animalrevenge_enums";
+import EnemyAI from "../Enemies/EnemyAI";
 
 export default class GameLevel extends Scene {
 
@@ -38,8 +39,11 @@ export default class GameLevel extends Scene {
     protected waves: Array<Record<string, any>>;
     protected executeWave: Record<string, any> = null;
     protected timeNow: number = Date.now();
-    protected enemy: Array<AnimatedSprite>;
+    protected enemies: Array<AnimatedSprite>;
     protected enemyNumber: number;
+
+    protected levelEndArea: Rect;
+    protected firstEndAreaSetUp: boolean = true;
 
     protected doOnce: boolean = true;
     initScene(init: Record<string, any>) {
@@ -76,7 +80,9 @@ export default class GameLevel extends Scene {
     }
 
     protected subscribeToEvents(): void {
-        this.receiver.subscribe([]);
+        this.receiver.subscribe([
+            AR_Events.ENEMY_ENTERED_LEVEL_END
+        ]);
     }
 
     protected addUI(): void {
@@ -239,20 +245,27 @@ export default class GameLevel extends Scene {
     protected spawnEnemy(): void{
         if(this.executeWave == null){
             this.executeWave = this.waves.shift();
-            this.enemy = new Array(this.executeWave.wave.totalEnemies);
+            this.enemies = new Array(this.executeWave.wave.totalEnemies);
             this.enemyNumber = 0;
         }
         if(Date.now() - this.timeNow >= 1500){
             this.timeNow = Date.now();
             if(this.executeWave.wave.enemies[0] === "farmer"){
-                this.enemy[this.enemyNumber] = this.add.animatedSprite("farmer", "primary");
+                this.enemies[this.enemyNumber] = this.add.animatedSprite("farmer", "primary");
             }
 
-            this.enemy[this.enemyNumber].position.set(0, 432);
-            this.enemy[this.enemyNumber].animation.play("WALK");
-            this.enemy[this.enemyNumber].addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+            this.enemies[this.enemyNumber].position.set(0, 432);
+            this.enemies[this.enemyNumber].scale.set(3, 3);
+            this.enemies[this.enemyNumber].animation.play("WALK");
+            this.enemies[this.enemyNumber].addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
             let path = this.executeWave.wave.route.map((index: number) => this.graph.getNodePosition(index));
-            this.enemy[this.enemyNumber].addAI(EnemyAI, path);
+            this.enemies[this.enemyNumber].addAI(EnemyAI, path);
+            
+            this.enemies[this.enemyNumber].setGroup("enemy");
+            if (this.firstEndAreaSetUp) {
+                this.levelEndArea.setTrigger("enemy", AR_Events.ENEMY_ENTERED_LEVEL_END, null);
+                this.firstEndAreaSetUp = false;
+            }
 
             this.executeWave.wave.numberEnemies[0] -= 1;
             if(this.executeWave.wave.numberEnemies[0] == 0){
@@ -262,7 +275,7 @@ export default class GameLevel extends Scene {
             }
             
             this.enemyNumber++;
-            if(this.enemyNumber == this.enemy.length){
+            if(this.enemyNumber == this.enemies.length){
                 this.executeWave = null;
                 this.doOnce = false;
                 // TO BE IMPLEMENTED
@@ -274,7 +287,29 @@ export default class GameLevel extends Scene {
         }
     }
 
+    /**
+     * Initializes the level end area
+     */
+    protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
+        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile, size: size});
+        this.levelEndArea.addPhysics(undefined, undefined, false, true);
+        this.levelEndArea.color = new Color(0, 0, 0, 1);
+    }
+
     updateScene(deltaT: number): void {
+        while (this.receiver.hasNextEvent()) {
+            let event = this.receiver.getNextEvent();
+
+            switch(event.type) {
+                case AR_Events.ENEMY_ENTERED_LEVEL_END:
+                    {
+                        let node = this.sceneGraph.getNode(event.data.get("node"));
+                        node.destroy();
+                        this.incHealth(-1);
+                    }
+            }
+        }
+
         if (this.selectedTower !== null) {
             this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
         }

@@ -163,7 +163,18 @@ export default class LevelSelection extends Scene {
 
         level1Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(Level1, {startHealth: 100, startMoney: 200, totalWaves: 10, turretsUnlocked: 6}, {});
+                
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["enemy"],
+                        collisions:
+                        [
+                            [0]
+                        ]
+                    }
+                }
+
+                this.sceneManager.changeToScene(Level1, {startHealth: 100, startMoney: 200, totalWaves: 10, turretsUnlocked: 6}, sceneOptions);
             }
         }
 

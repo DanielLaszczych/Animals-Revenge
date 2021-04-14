@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { AR_Events } from "../animalrevenge_enums";
 import GameLevel from "./GameLevel";
 
 
@@ -28,6 +29,8 @@ export default class Level1 extends GameLevel {
     startScene(): void {
         this.add.tilemap("level1", new Vec2(2, 2));
         super.startScene();
+
+        this.addLevelEnd(new Vec2(688, -60), new Vec2(100, 100));
     }
 
     updateScene(deltaT: number): void {

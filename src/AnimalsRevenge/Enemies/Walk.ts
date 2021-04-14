@@ -3,7 +3,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
-import EnemyAI from "./EnemyAi";
+import EnemyAI from "./EnemyAI";
 
 export default class Walk extends State {
 
@@ -41,7 +41,7 @@ export default class Walk extends State {
             this.currentPath = this.getNextPath();
         }
         this.owner.moveOnPath(this.speed * deltaT, this.currentPath);
-        this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner));
+        this.owner.rotation = Vec2.RIGHT.angleToCCW(this.currentPath.getMoveDirection(this.owner));
 
     }
 
