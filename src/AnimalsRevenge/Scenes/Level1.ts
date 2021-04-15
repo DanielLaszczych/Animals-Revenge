@@ -1,5 +1,4 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { AR_Events } from "../animalrevenge_enums";
 import GameLevel from "./GameLevel";
 
 

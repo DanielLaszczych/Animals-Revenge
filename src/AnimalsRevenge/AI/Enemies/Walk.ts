@@ -1,8 +1,8 @@
-import State from "../../Wolfie2D/DataTypes/State/State";
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
-import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
+import State from "../../../Wolfie2D/DataTypes/State/State";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import GameNode from "../../../Wolfie2D/Nodes/GameNode";
+import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
 import EnemyAI from "./EnemyAI";
 
 export default class Walk extends State {

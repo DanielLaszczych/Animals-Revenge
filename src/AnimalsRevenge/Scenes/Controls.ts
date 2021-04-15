@@ -48,7 +48,7 @@ export default class Controls extends Scene {
         line.color = Color.BLACK;
         line.thickness = 5;
 
-        let objectiveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 200), text: "Objective: Build turrets to defend against waves of enemies"});
+        let objectiveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 200), text: "Objective: Build towers to defend against waves of enemies"});
         objectiveLabel.font = "PixelSimple";
         objectiveLabel.textColor = Color.BLACK;
         objectiveLabel.fontSize = 35;

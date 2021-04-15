@@ -120,19 +120,19 @@ export default class Help extends Scene {
         allLevelLabel.font = "PixelSimple";
         allLevelLabel.fontSize = 35;
 
-        let allTurretsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(100, 700), text: ""});
-        allTurretsBtn.backgroundColor = Color.TRANSPARENT;
-        allTurretsBtn.borderColor = Color.BLACK;
-        allTurretsBtn.borderRadius = 0;
-        allTurretsBtn.borderWidth = 3;
-        allTurretsBtn.setPadding(new Vec2(25, 8));
+        let allTowersBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(100, 700), text: ""});
+        allTowersBtn.backgroundColor = Color.TRANSPARENT;
+        allTowersBtn.borderColor = Color.BLACK;
+        allTowersBtn.borderRadius = 0;
+        allTowersBtn.borderWidth = 3;
+        allTowersBtn.setPadding(new Vec2(25, 8));
 
-        let allTurretsLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(300, 700), text: "Unlock all Turrets"});
-        allTurretsLabel.textColor = Color.BLACK;
-        allTurretsLabel.backgroundColor = Color.TRANSPARENT;
-        allTurretsLabel.borderColor = Color.TRANSPARENT;
-        allTurretsLabel.font = "PixelSimple";
-        allTurretsLabel.fontSize = 35;
+        let allTowersLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(300, 700), text: "Unlock all Towers"});
+        allTowersLabel.textColor = Color.BLACK;
+        allTowersLabel.backgroundColor = Color.TRANSPARENT;
+        allTowersLabel.borderColor = Color.TRANSPARENT;
+        allTowersLabel.font = "PixelSimple";
+        allTowersLabel.fontSize = 35;
 
         let oneShotBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(480, 700), text: ""});
         oneShotBtn.backgroundColor = Color.TRANSPARENT;
@@ -224,20 +224,20 @@ export default class Help extends Scene {
             return allLevelsBtn.backgroundColor;
         }
 
-        allTurretsBtn.onClick = () => {
+        allTowersBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (allTurretsBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                    allTurretsBtn.backgroundColor = Color.BLACK;
-                    allTurretsBtn.borderColor = Color.WHITE;
+                if (allTowersBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
+                    allTowersBtn.backgroundColor = Color.BLACK;
+                    allTowersBtn.borderColor = Color.WHITE;
                 } else {
-                    allTurretsBtn.backgroundColor = Color.TRANSPARENT;
-                    allTurretsBtn.borderColor = Color.BLACK;
+                    allTowersBtn.backgroundColor = Color.TRANSPARENT;
+                    allTowersBtn.borderColor = Color.BLACK;
                 }
             }
         }
 
-        allTurretsBtn.calculateBackgroundColor = (): Color => {
-            return allTurretsBtn.backgroundColor;
+        allTowersBtn.calculateBackgroundColor = (): Color => {
+            return allTowersBtn.backgroundColor;
         }
 
         oneShotBtn.onClick = () => {

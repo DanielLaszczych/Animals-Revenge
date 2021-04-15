@@ -1,21 +1,22 @@
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
+import Physical from "../../Wolfie2D/DataTypes/Interfaces/Physical";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
-import Game from "../../Wolfie2D/Loop/Game";
 import Circle from "../../Wolfie2D/Nodes/Graphics/Circle";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene"
 import Color from "../../Wolfie2D/Utils/Color";
+import EnemyAI from "../AI/Enemies/EnemyAI";
 import { AR_Events } from "../animalrevenge_enums";
-import EnemyAI from "../Enemies/EnemyAI";
 
 export default class GameLevel extends Scene {
 
@@ -28,7 +29,7 @@ export default class GameLevel extends Scene {
     protected currentWave: number = 0;
     protected waveCountLabel: Label;
 
-    protected turretsUnlocked: number = 0;
+    protected towersUnlocked: number = 0;
 
     protected size: Vec2;
     protected selectedTower: Sprite = null;
@@ -45,13 +46,18 @@ export default class GameLevel extends Scene {
     protected levelEndArea: Rect;
     protected firstEndAreaSetUp: boolean = true;
 
+    protected tilemap: OrthogonalTilemap;
+
+    protected placedTurrets: Array<Sprite>;
+
     protected doOnce: boolean = true;
+
     initScene(init: Record<string, any>) {
         this.healthCount = init.startHealth;
         this.moneyCount = init.startMoney;
         this.currentWave = 1;
         this.totalWaves = init.totalWaves;
-        this.turretsUnlocked = init.turretsUnlocked;
+        this.towersUnlocked = init.towersUnlocked;
     }
 
     loadScene(): void {
@@ -66,6 +72,9 @@ export default class GameLevel extends Scene {
         this.addUI();
         this.createNavmesh();
         this.intializeWaves();
+
+        this.placedTurrets = new Array();
+        this.tilemap = this.getTilemap("EnemyArea") as OrthogonalTilemap;
     }
 
     protected initLayers(): void {
@@ -81,7 +90,9 @@ export default class GameLevel extends Scene {
 
     protected subscribeToEvents(): void {
         this.receiver.subscribe([
-            AR_Events.ENEMY_ENTERED_LEVEL_END
+            AR_Events.ENEMY_ENTERED_LEVEL_END,
+            AR_Events.TOWER_ENTERED_ENEMY_PATH,
+            AR_Events.TOWER_EXITED_ENEMY_PATH
         ]);
     }
 
@@ -114,7 +125,7 @@ export default class GameLevel extends Scene {
         shopLabel.font = "PixelSimple";
         shopLabel.fontSize = 60;
 
-        if (this.turretsUnlocked >= 1) {
+        if (this.towersUnlocked >= 1) {
             let chickenTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 125), text: "1"});
             chickenTowerBtn.backgroundColor = Color.TRANSPARENT;
             chickenTowerBtn.textColor = Color.BLACK;
@@ -127,6 +138,7 @@ export default class GameLevel extends Scene {
                     this.selectedTower = this.add.sprite("heart", "UI");
                     this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
                     this.selectedTower.scale.set(0.2, 0.2);
+                    this.selectedTower.addPhysics();
                     
                     this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(350)});
                     this.selectedTowerRange.color = Color.GREEN;
@@ -136,7 +148,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.turretsUnlocked >= 2) {
+        if (this.towersUnlocked >= 2) {
             let cowTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 125), text: "2"});
             cowTowerBtn.backgroundColor = Color.TRANSPARENT;
             cowTowerBtn.textColor = Color.BLACK;
@@ -145,7 +157,7 @@ export default class GameLevel extends Scene {
             cowTowerBtn.setPadding(new Vec2(50, 25));
         }
 
-        if (this.turretsUnlocked >= 3) {
+        if (this.towersUnlocked >= 3) {
             let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 250), text: "3"});
             spiderTowerBtn.backgroundColor = Color.TRANSPARENT;
             spiderTowerBtn.textColor = Color.BLACK;
@@ -154,7 +166,7 @@ export default class GameLevel extends Scene {
             spiderTowerBtn.setPadding(new Vec2(50, 25));
         }
 
-        if (this.turretsUnlocked >= 4) {
+        if (this.towersUnlocked >= 4) {
             let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 250), text: "4"});
             eagleTowerBtn.backgroundColor = Color.TRANSPARENT;
             eagleTowerBtn.textColor = Color.BLACK;
@@ -163,7 +175,7 @@ export default class GameLevel extends Scene {
             eagleTowerBtn.setPadding(new Vec2(50, 25));
         }
 
-        if (this.turretsUnlocked >= 5) {
+        if (this.towersUnlocked >= 5) {
             let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 375), text: "5"});
             elephantTowerBtn.backgroundColor = Color.TRANSPARENT;
             elephantTowerBtn.textColor = Color.BLACK;
@@ -172,7 +184,7 @@ export default class GameLevel extends Scene {
             elephantTowerBtn.setPadding(new Vec2(50, 25));
         }
 
-        if (this.turretsUnlocked >= 6) {
+        if (this.towersUnlocked >= 6) {
             let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 375), text: "6"});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
             penguinTowerBtn.textColor = Color.BLACK;
@@ -296,6 +308,63 @@ export default class GameLevel extends Scene {
         this.levelEndArea.color = new Color(0, 0, 0, 1);
     }
 
+    /**
+	 * Handles a collision between this node and an orthogonal tilemap
+	 * @param node The node
+	 * @param tilemap The tilemap the node may be colliding with
+	 * @param overlaps The list of overlaps
+	 */
+	protected collideWithOrthogonalTilemap(node: Physical, tilemap: OrthogonalTilemap): boolean {
+		// Get the min and max x and y coordinates of the moving node
+		let min = new Vec2(node.sweptRect.left, node.sweptRect.top);
+		let max = new Vec2(node.sweptRect.right, node.sweptRect.bottom);
+
+		// Convert the min/max x/y to the min and max row/col in the tilemap array
+		let minIndex = tilemap.getColRowAt(min);
+		let maxIndex = tilemap.getColRowAt(max);
+
+		let tileSize = tilemap.getTileSize();
+
+		// Loop over all possible tiles (which isn't many in the scope of the velocity per frame)
+		for(let col = minIndex.x; col <= maxIndex.x; col++){
+			for(let row = minIndex.y; row <= maxIndex.y; row++){
+				if(tilemap.isTileCollidable(col, row)){
+					// Get the position of this tile
+					let tilePos = new Vec2(col * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
+
+					// Create a new collider for this tile
+					let collider = new AABB(tilePos, tileSize.scaled(1/2));
+
+					// Calculate collision area between the node and the tile
+					let area = node.sweptRect.overlapArea(collider);
+					if(area > 0){
+						// We had a collision
+						return true;
+					} 
+				}
+			}
+		}
+	}
+
+    /**
+     * Calculates the area of the overlap between this AABB and another
+     * @param main The main AABB
+     * @param other The other AABB
+     * @returns The area of the overlap between the AABBs
+     */
+     overlaps(main: AABB, other: AABB): boolean {
+        let leftx = Math.max(main.x - main.hw, other.x - other.hw);
+        let rightx = Math.min(main.x + main.hw, other.x + other.hw);
+        let dx = rightx - leftx;
+
+        let lefty = Math.max(main.y - main.hh, other.y - other.hh);
+        let righty = Math.min(main.y + main.hh, other.y + other.hh);
+        let dy = righty - lefty;
+
+        if(dx < 0 || dy < 0) return false;
+        if (dx * dy > 0) return true;
+    }
+
     updateScene(deltaT: number): void {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
@@ -307,24 +376,74 @@ export default class GameLevel extends Scene {
                         node.destroy();
                         this.incHealth(-1);
                     }
+                    break;
+
+                case AR_Events.TOWER_ENTERED_ENEMY_PATH:
+                    {
+                        this.selectedTowerRange.color = Color.RED;
+                        this.selectedTowerRange.alpha = 0.3;
+                    }
+                    break;
+
+                case AR_Events.TOWER_EXITED_ENEMY_PATH:
+                    {
+                        this.selectedTowerRange.color = Color.GREEN;
+                        this.selectedTowerRange.alpha = 0.3;
+                    }
+                    break;
             }
         }
 
-        if (this.selectedTower !== null) {
-            this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+        if (this.selectedTower !== null && this.selectedTowerRange !== null) {
+
+            let overlapsAnotherTurret = false;
+            for (let i = 0; i < this.placedTurrets.length; i++) {
+                if (this.overlaps(this.selectedTower.sweptRect, this.placedTurrets[i].collisionShape.getBoundingRect())) {
+                    overlapsAnotherTurret = true;
+                    break;
+                }
+            }
+
+            let isEnemyArea = this.collideWithOrthogonalTilemap(this.selectedTower, this.tilemap);
+
+            if (isEnemyArea || overlapsAnotherTurret || Input.getMousePosition().x >= (900 - this.selectedTower.sweptRect.halfSize.x)) {
+                if (this.selectedTowerRange.color.toStringRGB() !== Color.RED.toStringRGB()) {
+                    this.emitter.fireEvent(AR_Events.TOWER_ENTERED_ENEMY_PATH);
+                }
+                this.selectedTower.moving = true;
+                this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                this.selectedTowerRange.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+            } else {
+                if (this.selectedTowerRange.color.toStringRGB() !== Color.GREEN.toStringRGB()) {
+                    this.emitter.fireEvent(AR_Events.TOWER_EXITED_ENEMY_PATH);
+                }
+                if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
+                    let newTurret = this.add.sprite(this.selectedTower.imageId, "UI");
+                    newTurret.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                    newTurret.scale.set(0.2, 0.2);
+                    newTurret.addPhysics(undefined, undefined, true, true);
+                    this.placedTurrets.push(newTurret);
+
+                    this.selectedTower.destroy();
+                    this.selectedTower = null;
+                    this.selectedTowerRange.destroy();
+                    this.selectedTowerRange = null;
+                } else {
+                    this.selectedTower.moving = true;
+                    this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                    this.selectedTowerRange.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                }
+            }
         }
 
-        if (this.selectedTowerRange !== null) {
-            this.selectedTowerRange.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
-        }
         // Display the navmesh of the current level
         if(Input.isKeyJustPressed("f")){
             this.getLayer("graph").setHidden(!this.getLayer("graph").isHidden());
         }
 
-        if(this.doOnce){
-            this.spawnEnemy();
-        }
+        // if(this.doOnce){
+        //     this.spawnEnemy();
+        // }
 
 
 
