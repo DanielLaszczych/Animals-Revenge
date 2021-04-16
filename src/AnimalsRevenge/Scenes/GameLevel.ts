@@ -405,7 +405,7 @@ export default class GameLevel extends Scene {
             this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(250)});
             this.selectedTowerRange.color = Color.WHITE;
             this.selectedTowerRange.alpha = 0.3;
-            this.selectedTowerRange.borderWidth = 3;
+            this.selectedTowerRange.borderColor = Color.TRANSPARENT;
 
             this.selectedTowerRange.tweens.add("expand", {
                 startDelay: 0,
@@ -483,7 +483,7 @@ export default class GameLevel extends Scene {
             this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: towerData.sprite.position, radius: new Number(towerData.range)});
             this.selectedTowerRange.color = Color.WHITE;
             this.selectedTowerRange.alpha = 0.3;
-            this.selectedTowerRange.borderWidth = 3;
+            this.selectedTowerRange.borderColor = Color.TRANSPARENT;
         }
 
         this.selectedTowerSellBtn.onClick = () => {
@@ -724,7 +724,7 @@ export default class GameLevel extends Scene {
                     this.placedTowers.set(towerId, newTowerData);
 
                     newTowerBtn.onClick = () => {
-                        if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                        if (Input.getMousePressButton() == BUTTON.LEFTCLICK && !this.isTowerSelectedFromShop) {
                             if (this.isPlacedTowerSelected) {
                                 this.selectedTowerRange.destroy();
                                 this.selectedTowerRange = null;
