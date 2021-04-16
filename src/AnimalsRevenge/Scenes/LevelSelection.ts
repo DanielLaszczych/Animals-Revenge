@@ -62,10 +62,10 @@ export default class LevelSelection extends Scene {
 
         let level1Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level1Img.position, text: ""});
         level1Btn.backgroundColor = Color.TRANSPARENT;
-        level1Btn.textColor = Color.BLACK;
         level1Btn.borderColor = Color.TRANSPARENT;
         level1Btn.borderRadius = 0;
-        level1Btn.setPadding(new Vec2(115, 100));
+        level1Btn.fontSize = 0;
+        level1Btn.setPadding(level1Img.sizeWithZoom);
 
         let level2Img = this.add.sprite("level1Map", "levelSelection");
         level2Img.position.set(size.x, size.y - 50);
@@ -78,10 +78,10 @@ export default class LevelSelection extends Scene {
         
         let level2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level2Img.position, text: ""});
         level2Btn.backgroundColor = Color.TRANSPARENT;
-        level2Btn.textColor = Color.BLACK;
         level2Btn.borderColor = Color.TRANSPARENT;
         level2Btn.borderRadius = 0;
-        level2Btn.setPadding(new Vec2(115, 100));
+        level2Btn.fontSize = 0;
+        level2Btn.setPadding(level2Img.sizeWithZoom);
 
         let level3Img = this.add.sprite("level1Map", "levelSelection");
         level3Img.position.set(size.x + 400, size.y - 50);
@@ -94,10 +94,10 @@ export default class LevelSelection extends Scene {
 
         let level3Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level3Img.position, text: ""});
         level3Btn.backgroundColor = Color.TRANSPARENT;
-        level3Btn.textColor = Color.BLACK;
         level3Btn.borderColor = Color.TRANSPARENT;
         level3Btn.borderRadius = 0;
-        level3Btn.setPadding(new Vec2(115, 100));
+        level3Btn.fontSize = 0;
+        level3Btn.setPadding(level3Img.sizeWithZoom);
 
         let level4Img = this.add.sprite("level1Map", "levelSelection");
         level4Img.position.set(size.x - 400, size.y + 250);
@@ -110,10 +110,10 @@ export default class LevelSelection extends Scene {
 
         let level4Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level4Img.position, text: ""});
         level4Btn.backgroundColor = Color.TRANSPARENT;
-        level4Btn.textColor = Color.BLACK;
         level4Btn.borderColor = Color.TRANSPARENT;
         level4Btn.borderRadius = 0;
-        level4Btn.setPadding(new Vec2(115, 100));
+        level4Btn.fontSize = 0;
+        level4Btn.setPadding(level4Img.sizeWithZoom);
 
         let level5Img = this.add.sprite("level1Map", "levelSelection");
         level5Img.position.set(size.x, size.y + 250);
@@ -126,10 +126,10 @@ export default class LevelSelection extends Scene {
 
         let level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level5Img.position, text: ""});
         level5Btn.backgroundColor = Color.TRANSPARENT;
-        level5Btn.textColor = Color.BLACK;
         level5Btn.borderColor = Color.TRANSPARENT;
         level5Btn.borderRadius = 0;
-        level5Btn.setPadding(new Vec2(115, 100));
+        level5Btn.fontSize = 0;
+        level5Btn.setPadding(level5Img.sizeWithZoom);
 
         let level6Img = this.add.sprite("level1Map", "levelSelection");
         level6Img.position.set(size.x + 400, size.y + 250);
@@ -142,10 +142,10 @@ export default class LevelSelection extends Scene {
         
         let level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level6Img.position, text: ""});
         level6Btn.backgroundColor = Color.TRANSPARENT;
-        level6Btn.textColor = Color.BLACK;
         level6Btn.borderColor = Color.TRANSPARENT;
         level6Btn.borderRadius = 0;
-        level6Btn.setPadding(new Vec2(115, 100));
+        level6Btn.fontSize = 0;
+        level6Btn.setPadding(level6Img.sizeWithZoom);
 
         backBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {

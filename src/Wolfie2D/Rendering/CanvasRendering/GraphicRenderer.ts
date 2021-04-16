@@ -78,7 +78,7 @@ export default class GraphicRenderer {
      */
     renderCircle(circle: Circle, zoom: number): void {
         this.ctx.beginPath();
-        this.ctx.arc(0, 0, (circle.radius / 1.5) * zoom, 0, 2 * Math.PI, false);
+        this.ctx.arc(0, 0, (circle.radius) * zoom, 0, 2 * Math.PI, false);
         if(circle.color.a !== 0){
             this.ctx.fillStyle = circle.color.toStringRGB();
             this.ctx.fill();

@@ -15,6 +15,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import Scene from "../../Wolfie2D/Scene/Scene"
 import Color from "../../Wolfie2D/Utils/Color";
+import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyAI from "../AI/Enemies/EnemyAI";
 import { AR_Events } from "../animalrevenge_enums";
 
@@ -32,8 +33,25 @@ export default class GameLevel extends Scene {
     protected towersUnlocked: number = 0;
 
     protected size: Vec2;
-    protected selectedTower: Sprite = null;
+
+    protected isTowerSelectedFromShop: boolean = false;
+    protected selectedTowerShopName: string;
+    protected selectedTowerShopSprite: Sprite = null;
     protected selectedTowerRange: Circle = null;
+    protected deselectTowerShopBtn: Button = null;
+    
+    //UI Elements for Tower Information
+    protected selectedTowerNameLabel: Label;
+    protected selectedTowerCostLabel: Label;
+    protected selectedTowerDamageLabel: Label;
+    protected selectedTowerSpeedLabel: Label;
+    protected selectedTowerRangeLabel: Label;
+    protected selectedTowerUpgrade1Label: Button;
+    protected selectedTowerUpgrade2Label: Button;
+    protected selectedTowerSellBtn: Button;
+
+    protected isPlacedTowerSelected: boolean = false;
+    protected selectedTowerId: number;
 
     protected graph: PositionGraph;
 
@@ -44,11 +62,13 @@ export default class GameLevel extends Scene {
     protected enemyNumber: number;
 
     protected levelEndArea: Rect;
-    protected firstEndAreaSetUp: boolean = true;
 
     protected tilemap: OrthogonalTilemap;
 
-    protected placedTurrets: Array<Sprite>;
+    protected defaultTowerValues: Map<string, 
+    {name: string, cost: number, damage: number, attackSpeed: number, range: number, upgrade1: string, upgrade2: string}>;
+    protected placedTowers: Map<number, 
+    {sprite: Sprite, name: string, button: Button, damage: number, attackSpeed: number, range: number, upgrade1: string, upgrade2: string}>;
 
     protected doOnce: boolean = true;
 
@@ -62,6 +82,7 @@ export default class GameLevel extends Scene {
 
     loadScene(): void {
         this.load.image("heart", "assets/images/heart_temp.png");
+        this.load.image("chickenTower", "assets/images/heart_temp.png"); //TODO - Change to this chicken sprite when avaiable
         this.load.image("coin", "assets/images/coin_temp.png");
     }
 
@@ -69,11 +90,12 @@ export default class GameLevel extends Scene {
         this.initLayers();
         this.initViewPort();
         this.subscribeToEvents();
+        this.initDefaultTowerValues();
         this.addUI();
         this.createNavmesh();
         this.intializeWaves();
 
-        this.placedTurrets = new Array();
+        this.placedTowers = new Map();
         this.tilemap = this.getTilemap("EnemyArea") as OrthogonalTilemap;
     }
 
@@ -94,6 +116,16 @@ export default class GameLevel extends Scene {
             AR_Events.TOWER_ENTERED_ENEMY_PATH,
             AR_Events.TOWER_EXITED_ENEMY_PATH
         ]);
+    }
+
+    protected initDefaultTowerValues(): void {
+        this.defaultTowerValues = new Map();
+        this.defaultTowerValues.set("chickenTower", {name: "Chicken Tower", cost: 100, damage: 10, attackSpeed: 3, range: 250, upgrade1: "+ Attack Speed", upgrade2: "+ Range"});
+        this.defaultTowerValues.set("cowTower", {name: "Cow Tower", cost: 100, damage: 10, attackSpeed: 3, range: 250, upgrade1: "+ Attack Speed", upgrade2: "+ Range"});
+        this.defaultTowerValues.set("spiderTower", {name: "Spider Tower", cost: 100, damage: 10, attackSpeed: 3, range: 250, upgrade1: "+ Attack Speed", upgrade2: "+ Range"});
+        this.defaultTowerValues.set("eagleTower", {name: "Eagle Tower", cost: 100, damage: 10, attackSpeed: 3, range: 250, upgrade1: "+ Attack Speed", upgrade2: "+ Range"});
+        this.defaultTowerValues.set("elephantTower", {name: "Elephant Tower", cost: 100, damage: 10, attackSpeed: 3, range: 250, upgrade1: "+ Attack Speed", upgrade2: "+ Range"});
+        this.defaultTowerValues.set("penguinTower", {name: "Penguin Tower", cost: 100, damage: 10, attackSpeed: 3, range: 250, upgrade1: "+ Attack Speed", upgrade2: "+ Range"});
     }
 
     protected addUI(): void {
@@ -133,18 +165,15 @@ export default class GameLevel extends Scene {
             chickenTowerBtn.borderRadius = 0;
             chickenTowerBtn.setPadding(new Vec2(50, 25));
 
+            
             chickenTowerBtn.onClick = () => {
-                if (Input.getMousePressButton() == BUTTON.LEFTCLICK && this.selectedTower == null && this.selectedTowerRange == null) {
-                    this.selectedTower = this.add.sprite("heart", "UI");
-                    this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
-                    this.selectedTower.scale.set(0.2, 0.2);
-                    this.selectedTower.addPhysics();
-                    
-                    this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(350)});
-                    this.selectedTowerRange.color = Color.GREEN;
-                    this.selectedTowerRange.alpha = 0.3;
-                    this.selectedTowerRange.borderWidth = 3;
-                }
+                this.createTowerFromShop("chickenTower");
+            }
+            chickenTowerBtn.onEnter = () => {
+                this.displayTowerInfoFromShop("chickenTower");
+            }
+            chickenTowerBtn.onLeave = () => {
+                this.hideTowerInfoFromShop();
             }
         }
 
@@ -155,6 +184,16 @@ export default class GameLevel extends Scene {
             cowTowerBtn.borderColor = Color.BLACK;
             cowTowerBtn.borderRadius = 0;
             cowTowerBtn.setPadding(new Vec2(50, 25));
+
+            cowTowerBtn.onClick = () => {
+                this.createTowerFromShop("chickenTower");
+            }
+            cowTowerBtn.onEnter = () => {
+                this.displayTowerInfoFromShop("cowTower");
+            }
+            cowTowerBtn.onLeave = () => {
+               this.hideTowerInfoFromShop();
+            }
         }
 
         if (this.towersUnlocked >= 3) {
@@ -164,6 +203,16 @@ export default class GameLevel extends Scene {
             spiderTowerBtn.borderColor = Color.BLACK;
             spiderTowerBtn.borderRadius = 0;
             spiderTowerBtn.setPadding(new Vec2(50, 25));
+
+            spiderTowerBtn.onClick = () => {
+                this.createTowerFromShop("chickenTower");
+            }
+            spiderTowerBtn.onEnter = () => {
+                this.displayTowerInfoFromShop("spiderTower");
+            }
+            spiderTowerBtn.onLeave = () => {
+                this.hideTowerInfoFromShop();
+            }
         }
 
         if (this.towersUnlocked >= 4) {
@@ -173,6 +222,16 @@ export default class GameLevel extends Scene {
             eagleTowerBtn.borderColor = Color.BLACK;
             eagleTowerBtn.borderRadius = 0;
             eagleTowerBtn.setPadding(new Vec2(50, 25));
+
+            eagleTowerBtn.onClick = () => {
+                this.createTowerFromShop("chickenTower");
+            }
+            eagleTowerBtn.onEnter = () => {
+                this.displayTowerInfoFromShop("eagleTower");
+            }
+            eagleTowerBtn.onLeave = () => {
+                this.hideTowerInfoFromShop();
+            }
         }
 
         if (this.towersUnlocked >= 5) {
@@ -182,6 +241,16 @@ export default class GameLevel extends Scene {
             elephantTowerBtn.borderColor = Color.BLACK;
             elephantTowerBtn.borderRadius = 0;
             elephantTowerBtn.setPadding(new Vec2(50, 25));
+
+            elephantTowerBtn.onClick = () => {
+                this.createTowerFromShop("chickenTower");
+            }
+            elephantTowerBtn.onEnter = () => {
+                this.displayTowerInfoFromShop("elephantTower");
+            }
+            elephantTowerBtn.onLeave = () => {
+                this.hideTowerInfoFromShop();
+            }
         }
 
         if (this.towersUnlocked >= 6) {
@@ -191,23 +260,243 @@ export default class GameLevel extends Scene {
             penguinTowerBtn.borderColor = Color.BLACK;
             penguinTowerBtn.borderRadius = 0;
             penguinTowerBtn.setPadding(new Vec2(50, 25));
+
+            penguinTowerBtn.onClick = () => {
+                this.createTowerFromShop("chickenTower");
+            }
+            penguinTowerBtn.onEnter = () => {
+                this.displayTowerInfoFromShop("penguinTower");
+            }
+            penguinTowerBtn.onLeave = () => {
+                this.hideTowerInfoFromShop();
+            }
         }
 
-        let deselectTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 500), text: "Deselect"});
-        deselectTowerBtn.backgroundColor = Color.TRANSPARENT;
-        deselectTowerBtn.textColor = Color.BLACK;
-        deselectTowerBtn.borderColor = Color.RED;
-        deselectTowerBtn.borderRadius = 0;
-        deselectTowerBtn.font = "PixelSimple";
-        deselectTowerBtn.setPadding(new Vec2(10, 15));
+        this.selectedTowerNameLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 450), text: ""});
+        this.selectedTowerNameLabel.textColor = Color.WHITE
+        this.selectedTowerNameLabel.font = "PixelSimple";
+        this.selectedTowerNameLabel.visible = false;
 
-        deselectTowerBtn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && this.selectedTower !== null && this.selectedTowerRange !== null) {
-                this.selectedTower.destroy();
-                this.selectedTower = null;
+        this.selectedTowerDamageLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 500), text: ""});
+        this.selectedTowerDamageLabel.textColor = Color.WHITE
+        this.selectedTowerDamageLabel.font = "PixelSimple";
+        this.selectedTowerDamageLabel.fontSize = 25;
+        this.selectedTowerDamageLabel.visible = false;
+
+        this.selectedTowerSpeedLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 530), text: ""});
+        this.selectedTowerSpeedLabel.textColor = Color.WHITE
+        this.selectedTowerSpeedLabel.font = "PixelSimple";
+        this.selectedTowerSpeedLabel.fontSize = 25;
+        this.selectedTowerSpeedLabel.visible = false;
+
+        this.selectedTowerRangeLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 560), text: ""});
+        this.selectedTowerRangeLabel.textColor = Color.WHITE
+        this.selectedTowerRangeLabel.font = "PixelSimple";
+        this.selectedTowerRangeLabel.fontSize = 25;
+        this.selectedTowerRangeLabel.visible = false;
+
+        this.selectedTowerCostLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 610), text: ""});
+        this.selectedTowerCostLabel.textColor = Color.WHITE
+        this.selectedTowerCostLabel.font = "PixelSimple";
+        this.selectedTowerCostLabel.fontSize = 30;
+        this.selectedTowerCostLabel.visible = false;
+
+        this.deselectTowerShopBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 680), text: "Deselect"});
+        this.deselectTowerShopBtn.backgroundColor = Color.TRANSPARENT;
+        this.deselectTowerShopBtn.textColor = Color.BLACK;
+        this.deselectTowerShopBtn.borderColor = Color.RED;
+        this.deselectTowerShopBtn.borderRadius = 0;
+        this.deselectTowerShopBtn.font = "PixelSimple";
+        this.deselectTowerShopBtn.setPadding(new Vec2(10, 15));
+        this.deselectTowerShopBtn.visible = false;
+        
+        this.deselectTowerShopBtn.onClick = () => {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && this.isTowerSelectedFromShop) {
+                this.selectedTowerShopSprite.destroy();
+                this.selectedTowerShopSprite = null;
+                this.selectedTowerRange.destroy();
+                this.selectedTowerRange = null;
+                this.isTowerSelectedFromShop = false;
+
+                this.deselectTowerShopBtn.visible = false;
+                this.selectedTowerNameLabel.visible = false;
+                this.selectedTowerCostLabel.visible = false;
+                this.selectedTowerDamageLabel.visible = false;
+                this.selectedTowerSpeedLabel.visible = false;
+                this.selectedTowerRangeLabel.visible = false;
+            }
+        }
+        this.deselectTowerShopBtn.onEnter = () => {
+            this.deselectTowerShopBtn.textColor = Color.WHITE;
+        }
+        this.deselectTowerShopBtn.onLeave = () => {
+            this.deselectTowerShopBtn.textColor = Color.BLACK;
+        }
+
+        this.selectedTowerUpgrade1Label = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 620), text: ""});
+        this.selectedTowerUpgrade1Label.backgroundColor = Color.TRANSPARENT;
+        this.selectedTowerUpgrade1Label.textColor = Color.BLACK;
+        this.selectedTowerUpgrade1Label.borderColor = Color.BLACK;
+        this.selectedTowerUpgrade1Label.borderRadius = 0;
+        this.selectedTowerUpgrade1Label.font = "PixelSimple";
+        this.selectedTowerUpgrade1Label.fontSize = 20;
+        this.selectedTowerUpgrade1Label.setPadding(new Vec2(10, 15));
+        this.selectedTowerUpgrade1Label.visible = false;
+
+        this.selectedTowerUpgrade1Label.onEnter = () => {
+            this.selectedTowerUpgrade1Label.textColor = Color.WHITE;
+        }
+        this.selectedTowerUpgrade1Label.onLeave = () => {
+            this.selectedTowerUpgrade1Label.textColor = Color.BLACK;
+        }
+
+        this.selectedTowerUpgrade2Label = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 680), text: ""});
+        this.selectedTowerUpgrade2Label.backgroundColor = Color.TRANSPARENT;
+        this.selectedTowerUpgrade2Label.textColor = Color.BLACK;
+        this.selectedTowerUpgrade2Label.borderColor = Color.BLACK;;
+        this.selectedTowerUpgrade2Label.borderRadius = 0;
+        this.selectedTowerUpgrade2Label.font = "PixelSimple";
+        this.selectedTowerUpgrade2Label.fontSize = 20;
+        this.selectedTowerUpgrade2Label.setPadding(new Vec2(10, 15));
+        this.selectedTowerUpgrade2Label.visible = false;
+
+        this.selectedTowerUpgrade2Label.onEnter = () => {
+            this.selectedTowerUpgrade2Label.textColor = Color.WHITE;
+        }
+        this.selectedTowerUpgrade2Label.onLeave = () => {
+            this.selectedTowerUpgrade2Label.textColor = Color.BLACK;
+        }
+
+        this.selectedTowerSellBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 750), text: "Sell"});
+        this.selectedTowerSellBtn.backgroundColor = Color.TRANSPARENT;
+        this.selectedTowerSellBtn.textColor = Color.BLACK;
+        this.selectedTowerSellBtn.borderColor = Color.RED;
+        this.selectedTowerSellBtn.borderRadius = 0;
+        this.selectedTowerSellBtn.font = "PixelSimple";
+        this.selectedTowerSellBtn.fontSize = 25;
+        this.selectedTowerSellBtn.setPadding(new Vec2(30, 10));
+        this.selectedTowerSellBtn.visible = false;
+
+        this.selectedTowerSellBtn.onEnter = () => {
+            this.selectedTowerSellBtn.textColor = Color.WHITE;
+        }
+        this.selectedTowerSellBtn.onLeave = () => {
+            this.selectedTowerSellBtn.textColor = Color.BLACK;
+        }
+        
+    }
+
+    protected createTowerFromShop(tower: string): void {
+        if (Input.getMousePressButton() == BUTTON.LEFTCLICK && !this.isTowerSelectedFromShop) {
+            
+            if (this.isPlacedTowerSelected) {
+                this.selectedTowerUpgrade1Label.visible = false;
+                this.selectedTowerUpgrade2Label.visible = false;
+                this.selectedTowerSellBtn.visible = false;
+                this.isPlacedTowerSelected = false;
                 this.selectedTowerRange.destroy();
                 this.selectedTowerRange = null;
             }
+            this.selectedTowerShopSprite = this.add.sprite(tower, "UI");
+            this.selectedTowerShopSprite.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+            this.selectedTowerShopSprite.scale.set(0.2, 0.2);
+            this.selectedTowerShopSprite.addPhysics();
+            
+            this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(250)});
+            this.selectedTowerRange.color = Color.WHITE;
+            this.selectedTowerRange.alpha = 0.3;
+            this.selectedTowerRange.borderWidth = 3;
+
+            this.selectedTowerRange.tweens.add("expand", {
+                startDelay: 0,
+                duration: 400,
+                effects: [
+                    {
+                        property: "radius",
+                        resetOnComplete: true,
+                        start: 250,
+                        end: 260,
+                        ease: EaseFunctionType.IN_OUT_SINE
+                    },
+                ],
+                reverseOnComplete: true
+            });
+
+            this.isTowerSelectedFromShop = true;
+            this.selectedTowerShopName = tower;
+
+            this.deselectTowerShopBtn.visible = true;
+        }
+    }
+
+    protected displayTowerInfoFromShop(tower: string): void {
+        if (this.isPlacedTowerSelected) {
+            this.selectedTowerUpgrade1Label.visible = false;
+            this.selectedTowerUpgrade2Label.visible = false;
+            this.selectedTowerSellBtn.visible = false;
+        }
+        let towerData = this.defaultTowerValues.get(tower);
+        this.selectedTowerNameLabel.text = towerData.name;
+        this.selectedTowerNameLabel.visible = true;
+        this.selectedTowerCostLabel.text = "Cost: " + towerData.cost;
+        this.selectedTowerCostLabel.visible = true;
+        this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
+        this.selectedTowerDamageLabel.visible = true;
+        this.selectedTowerSpeedLabel.text = "Attack Speed: " + towerData.attackSpeed;
+        this.selectedTowerSpeedLabel.visible = true;
+        this.selectedTowerRangeLabel.text = "Range: " + towerData.range;
+        this.selectedTowerRangeLabel.visible = true;
+    }
+
+    protected hideTowerInfoFromShop(): void {
+        if (this.isPlacedTowerSelected) {
+            this.selectedTowerCostLabel.visible = false;
+            this.displayTowerInfoFromId(this.selectedTowerId);
+        } else if (this.isTowerSelectedFromShop) {
+            this.displayTowerInfoFromShop(this.selectedTowerShopName);
+        } else {
+            this.selectedTowerNameLabel.visible = false;
+            this.selectedTowerCostLabel.visible = false;
+            this.selectedTowerDamageLabel.visible = false;
+            this.selectedTowerSpeedLabel.visible = false;
+            this.selectedTowerRangeLabel.visible = false;
+        }
+    }
+
+    protected displayTowerInfoFromId(towerId: number): void {
+        let towerData = this.placedTowers.get(towerId);
+        this.selectedTowerNameLabel.text = towerData.name;
+        this.selectedTowerNameLabel.visible = true;
+        this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
+        this.selectedTowerDamageLabel.visible = true;
+        this.selectedTowerSpeedLabel.text = "Attack Speed: " + towerData.attackSpeed;
+        this.selectedTowerSpeedLabel.visible = true;
+        this.selectedTowerRangeLabel.text = "Range: " + towerData.range;
+        this.selectedTowerRangeLabel.visible = true;
+        this.selectedTowerUpgrade1Label.text = towerData.upgrade1;
+        this.selectedTowerUpgrade1Label.visible = true;
+        this.selectedTowerUpgrade2Label.text = towerData.upgrade2;
+        this.selectedTowerUpgrade2Label.visible = true;
+        this.selectedTowerSellBtn.visible = true;
+
+        if (this.selectedTowerRange === null) {
+            this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: towerData.sprite.position, radius: new Number(towerData.range)});
+            this.selectedTowerRange.color = Color.WHITE;
+            this.selectedTowerRange.alpha = 0.3;
+            this.selectedTowerRange.borderWidth = 3;
+        }
+
+        this.selectedTowerSellBtn.onClick = () => {
+            towerData.sprite.destroy();
+            towerData.button.destroy();
+            this.selectedTowerRange.destroy();
+            this.selectedTowerRange = null;
+            this.placedTowers.delete(towerId);
+            this.isPlacedTowerSelected = false;
+            this.selectedTowerUpgrade1Label.visible = false;
+            this.selectedTowerUpgrade2Label.visible = false;
+            this.selectedTowerSellBtn.visible = false;
+            this.hideTowerInfoFromShop();
         }
     }
 
@@ -267,18 +556,13 @@ export default class GameLevel extends Scene {
             }
 
             this.enemies[this.enemyNumber].position.set(0, 432);
-            this.enemies[this.enemyNumber].scale.set(3, 3);
+            this.enemies[this.enemyNumber].scale.set(4, 4);
             this.enemies[this.enemyNumber].animation.play("WALK");
             this.enemies[this.enemyNumber].addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
             let path = this.executeWave.wave.route.map((index: number) => this.graph.getNodePosition(index));
-            this.enemies[this.enemyNumber].addAI(EnemyAI, path);
-            
+            this.enemies[this.enemyNumber].addAI(EnemyAI, path);        
             this.enemies[this.enemyNumber].setGroup("enemy");
-            if (this.firstEndAreaSetUp) {
-                this.levelEndArea.setTrigger("enemy", AR_Events.ENEMY_ENTERED_LEVEL_END, null);
-                this.firstEndAreaSetUp = false;
-            }
-
+    
             this.executeWave.wave.numberEnemies[0] -= 1;
             if(this.executeWave.wave.numberEnemies[0] == 0){
                 this.executeWave.wave.enemies.shift();
@@ -306,6 +590,7 @@ export default class GameLevel extends Scene {
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile, size: size});
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.color = new Color(0, 0, 0, 1);
+        this.levelEndArea.setTrigger("enemy", AR_Events.ENEMY_ENTERED_LEVEL_END, null);
     }
 
     /**
@@ -352,7 +637,7 @@ export default class GameLevel extends Scene {
      * @param other The other AABB
      * @returns The area of the overlap between the AABBs
      */
-     overlaps(main: AABB, other: AABB): boolean {
+    overlaps(main: AABB, other: AABB): boolean {
         let leftx = Math.max(main.x - main.hw, other.x - other.hw);
         let rightx = Math.min(main.x + main.hw, other.x + other.hw);
         let dx = rightx - leftx;
@@ -382,56 +667,103 @@ export default class GameLevel extends Scene {
                     {
                         this.selectedTowerRange.color = Color.RED;
                         this.selectedTowerRange.alpha = 0.3;
+                        this.selectedTowerRange.tweens.play("expand", true);
                     }
                     break;
 
                 case AR_Events.TOWER_EXITED_ENEMY_PATH:
                     {
-                        this.selectedTowerRange.color = Color.GREEN;
+                        this.selectedTowerRange.color = Color.WHITE;
                         this.selectedTowerRange.alpha = 0.3;
+                        this.selectedTowerRange.tweens.stop("expand");
                     }
                     break;
             }
         }
 
-        if (this.selectedTower !== null && this.selectedTowerRange !== null) {
-
-            let overlapsAnotherTurret = false;
-            for (let i = 0; i < this.placedTurrets.length; i++) {
-                if (this.overlaps(this.selectedTower.sweptRect, this.placedTurrets[i].collisionShape.getBoundingRect())) {
-                    overlapsAnotherTurret = true;
+        if (this.isTowerSelectedFromShop) {
+            let overlapsAnotherTower = false;
+            for (let value of Array.from(this.placedTowers.values())) {
+                if (this.overlaps(this.selectedTowerShopSprite.sweptRect, value.sprite.collisionShape.getBoundingRect())) {
+                    overlapsAnotherTower = true;
                     break;
                 }
             }
 
-            let isEnemyArea = this.collideWithOrthogonalTilemap(this.selectedTower, this.tilemap);
+            let isEnemyArea = this.collideWithOrthogonalTilemap(this.selectedTowerShopSprite, this.tilemap);
 
-            if (isEnemyArea || overlapsAnotherTurret || Input.getMousePosition().x >= (900 - this.selectedTower.sweptRect.halfSize.x)) {
+            if (isEnemyArea || overlapsAnotherTower || Input.getMousePosition().x >= (900 - this.selectedTowerShopSprite.sweptRect.halfSize.x)) {
                 if (this.selectedTowerRange.color.toStringRGB() !== Color.RED.toStringRGB()) {
                     this.emitter.fireEvent(AR_Events.TOWER_ENTERED_ENEMY_PATH);
                 }
-                this.selectedTower.moving = true;
-                this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                this.selectedTowerShopSprite.moving = true;
+                this.selectedTowerShopSprite.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
                 this.selectedTowerRange.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
             } else {
-                if (this.selectedTowerRange.color.toStringRGB() !== Color.GREEN.toStringRGB()) {
+                if (this.selectedTowerRange.color.toStringRGB() !== Color.WHITE.toStringRGB()) {
                     this.emitter.fireEvent(AR_Events.TOWER_EXITED_ENEMY_PATH);
                 }
                 if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
-                    let newTurret = this.add.sprite(this.selectedTower.imageId, "UI");
-                    newTurret.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
-                    newTurret.scale.set(0.2, 0.2);
-                    newTurret.addPhysics(undefined, undefined, true, true);
-                    this.placedTurrets.push(newTurret);
+                    let newTower = this.add.sprite(this.selectedTowerShopSprite.imageId, "primary");
+                    newTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                    newTower.scale.set(0.2, 0.2);
+                    newTower.addPhysics(undefined, undefined, true, true);
 
-                    this.selectedTower.destroy();
-                    this.selectedTower = null;
+                    let newTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: newTower.position, text: ""});
+                    newTowerBtn.backgroundColor = Color.TRANSPARENT;
+                    newTowerBtn.borderColor = Color.TRANSPARENT;
+                    newTowerBtn.borderRadius = 0;
+                    newTowerBtn.fontSize = 0;
+                    newTowerBtn.setPadding(newTower.sizeWithZoom);
+
+                    let defaultTowerData = this.defaultTowerValues.get(this.selectedTowerShopSprite.imageId);
+                    let newTowerData = {sprite: newTower, button: newTowerBtn, name: defaultTowerData.name, damage: defaultTowerData.damage, 
+                        attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, 
+                        upgrade1: defaultTowerData.upgrade1, upgrade2: defaultTowerData.upgrade2};
+                    let towerId = this.placedTowers.size;
+                    this.placedTowers.set(towerId, newTowerData);
+
+                    newTowerBtn.onClick = () => {
+                        if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                            if (this.isPlacedTowerSelected) {
+                                this.selectedTowerRange.destroy();
+                                this.selectedTowerRange = null;
+                            }
+                            this.isPlacedTowerSelected = true;
+                            this.selectedTowerId = towerId;
+                            this.displayTowerInfoFromId(this.selectedTowerId);
+                        }
+                    }
+
+                    this.selectedTowerShopSprite.destroy();
+                    this.selectedTowerShopSprite = null;
                     this.selectedTowerRange.destroy();
                     this.selectedTowerRange = null;
+                    this.deselectTowerShopBtn.visible = false;
+                    this.isTowerSelectedFromShop = false;
+                    this.hideTowerInfoFromShop();
                 } else {
-                    this.selectedTower.moving = true;
-                    this.selectedTower.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                    this.selectedTowerShopSprite.moving = true;
+                    this.selectedTowerShopSprite.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
                     this.selectedTowerRange.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
+                }
+            }
+        }
+
+        if (this.isPlacedTowerSelected && Input.getMousePosition().x < 900) {
+            if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
+                if (!(this.selectedTowerRange.position.distanceSqTo(Input.getMousePosition()) <= Math.pow(this.selectedTowerRange.radius, 2))) {
+                    this.isPlacedTowerSelected = false;
+                    this.selectedTowerRange.destroy();
+                    this.selectedTowerRange = null;
+
+                    this.selectedTowerNameLabel.visible= false;
+                    this.selectedTowerDamageLabel.visible = false;
+                    this.selectedTowerSpeedLabel.visible = false;
+                    this.selectedTowerRangeLabel.visible = false;
+                    this.selectedTowerUpgrade1Label.visible = false;
+                    this.selectedTowerUpgrade2Label.visible = false;
+                    this.selectedTowerSellBtn.visible = false;
                 }
             }
         }
@@ -441,9 +773,9 @@ export default class GameLevel extends Scene {
             this.getLayer("graph").setHidden(!this.getLayer("graph").isHidden());
         }
 
-        // if(this.doOnce){
-        //     this.spawnEnemy();
-        // }
+        if(this.doOnce){
+            this.spawnEnemy();
+        }
 
 
 
