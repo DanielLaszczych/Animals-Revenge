@@ -34,8 +34,20 @@ export default class UIElementRenderer {
      */
     renderLabel(label: Label): void {
         // If the size is unassigned (by the user or automatically) assign it
-        label.handleInitialSizing(this.ctx);
-		
+        let lines = label.text.split('\n');
+        let tempText = label.text;
+        if (lines.length > 1) {
+            let max = 0;
+            let maxLengthIndex = 0;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].length > max) {
+                    max = lines[i].length;
+                    maxLengthIndex = i;
+                }
+            }
+            label.text = lines[maxLengthIndex];
+        }
+		label.handleInitialSizing(this.ctx);
 		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = this.ctx.globalAlpha;
 
@@ -53,13 +65,22 @@ export default class UIElementRenderer {
 		this.ctx.globalAlpha = label.borderColor.a;
 		this.ctx.lineWidth = label.borderWidth;
 		this.ctx.strokeRoundedRect(-label.size.x/2, -label.size.y/2,
-			label.size.x, label.size.y, label.borderRadius);
+			label.size.x, label.size.y + ((lines.length - 1) * label.fontSize), label.borderRadius);
 
 		this.ctx.fillStyle = label.calculateTextColor();
 		this.ctx.globalAlpha = label.textColor.a;
-		this.ctx.fillText(label.text, offset.x - label.size.x/2, offset.y - label.size.y/2);
-	
+        if (lines.length === 1) {
+            this.ctx.fillText(label.text, offset.x - label.size.x/2, (offset.y - label.size.y/2));
+        } else {
+            for (let i = 0; i < lines.length; i++) {
+                let additionalY = i * (label.size.y/2 + 10);
+                label.text = lines[i];
+                offset = label.calculateTextOffset(this.ctx);
+                this.ctx.fillText(lines[i], (offset.x - label.size.x/2), (offset.y - label.size.y/2 + additionalY));
+            }
+        }
 		this.ctx.globalAlpha = previousAlpha;
+        label.text = tempText;
     }
 
     /**
