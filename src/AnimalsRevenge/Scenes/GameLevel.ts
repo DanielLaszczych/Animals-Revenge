@@ -87,16 +87,16 @@ export default class GameLevel extends Scene {
     }
 
     loadScene(): void {
-        this.load.image("heart", "assets/images/heart_temp.png");
+        this.load.image("heart", "assets/images/heart.png");
         this.load.image("chickenTowerSprite", "assets/sprites/Chicken.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
-        this.load.image("cowTower", "assets/images/heart_temp.png"); //TODO - Change to this cow sprite when avaiable
-        this.load.image("spiderTower", "assets/images/heart_temp.png"); //TODO - Change to this spider sprite when avaiable
-        this.load.image("eagleTower", "assets/images/heart_temp.png"); //TODO - Change to this eagle sprite when avaiable
-        this.load.image("elephantTower", "assets/images/heart_temp.png"); //TODO - Change to this elephant sprite when avaiable
-        this.load.image("penguinTower", "assets/images/heart_temp.png"); //TODO - Change to this penguin sprite when avaiable
-        this.load.image("coin", "assets/images/coin_temp.png");
-        this.load.image("egg", "assets/images/egg.png")
+        this.load.image("cowTower", "assets/images/Heart.png"); //TODO - Change to this cow sprite when avaiable
+        this.load.image("spiderTower", "assets/images/Heart.png"); //TODO - Change to this spider sprite when avaiable
+        this.load.image("eagleTower", "assets/images/Heart.png"); //TODO - Change to this eagle sprite when avaiable
+        this.load.image("elephantTower", "assets/images/Heart.png"); //TODO - Change to this elephant sprite when avaiable
+        this.load.image("penguinTower", "assets/images/Heart.png"); //TODO - Change to this penguin sprite when avaiable
+        this.load.image("coin", "assets/images/Coin.png");
+        this.load.image("egg", "assets/images/Egg.png")
         this.load.object("towerData", "assets/data/default_tower_values.json");
     }
 
@@ -146,7 +146,7 @@ export default class GameLevel extends Scene {
 
     protected addUI(): void {
         let heart = this.add.sprite("heart", "UI");
-        heart.scale.set(0.2, 0.2);
+        heart.scale.set(2.5, 2.5);
         heart.position.set(30, 30);
 
         this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(90, 30), text: this.healthCount.toString()});
@@ -154,7 +154,7 @@ export default class GameLevel extends Scene {
         this.healthCountLabel.font = "PixelSimple";
 
         let coin = this.add.sprite("coin", "UI");
-        coin.scale.set(0.1, 0.1);
+        coin.scale.set(2.5, 2.5);
         coin.position.set(180, 30);
 
         this.moneyCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(240, 30), text: this.moneyCount.toString()});
