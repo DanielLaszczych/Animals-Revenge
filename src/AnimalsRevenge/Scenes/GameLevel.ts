@@ -21,6 +21,7 @@ import { AR_Events } from "../animalrevenge_enums";
 import ChickenAI from "../AI/Turrets/ChickenAI";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import LevelSelection from "./LevelSelection";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class GameLevel extends Scene {
 
@@ -42,7 +43,7 @@ export default class GameLevel extends Scene {
 
     protected isTowerSelectedFromShop: boolean = false;
     protected selectedTowerShopName: string;
-    protected selectedTowerShopSprite: Sprite = null;
+    protected selectedTowerShopSprite: AnimatedSprite = null;
     protected selectedTowerRange: Circle = null;
     protected deselectTowerShopBtn: Button = null;
     
@@ -73,7 +74,7 @@ export default class GameLevel extends Scene {
 
     protected defaultTowerValues: Map<string, any>;
     protected placedTowers: Map<number, 
-    {sprite: Sprite, name: string, button: Button, damage: number, attackSpeed: number, range: number, upgrade1: string, upgrade1Cost: number, upgrade2: string, upgrade2Cost: number, totalValue: number}>;
+    {sprite: AnimatedSprite, name: string, button: Button, damage: number, attackSpeed: number, range: number, upgrade1: string, upgrade1Cost: number, upgrade2: string, upgrade2Cost: number, totalValue: number}>;
 
     protected spawningEnemies: boolean = false;
 
@@ -87,7 +88,8 @@ export default class GameLevel extends Scene {
 
     loadScene(): void {
         this.load.image("heart", "assets/images/heart_temp.png");
-        this.load.image("chickenTower", "assets/images/chicken.png"); //TODO - Change to this chicken sprite when avaiable
+        // this.load.image("chickenTower", "assets/spritesheets/Chicken1.png");
+        this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
         this.load.image("cowTower", "assets/images/heart_temp.png"); //TODO - Change to this cow sprite when avaiable
         this.load.image("spiderTower", "assets/images/heart_temp.png"); //TODO - Change to this spider sprite when avaiable
         this.load.image("eagleTower", "assets/images/heart_temp.png"); //TODO - Change to this eagle sprite when avaiable
@@ -469,9 +471,10 @@ export default class GameLevel extends Scene {
                 this.selectedTowerRange.destroy();
                 this.selectedTowerRange = null;
             }
-            this.selectedTowerShopSprite = this.add.sprite(tower, "UI");
+            this.selectedTowerShopSprite = this.add.animatedSprite(tower, "UI");
+            this.selectedTowerShopSprite.animation.play("IDLE");
             this.selectedTowerShopSprite.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
-            this.selectedTowerShopSprite.scale.set(0.15, 0.13);
+            this.selectedTowerShopSprite.scale.set(3.2, 3.2);
             this.selectedTowerShopSprite.addPhysics();
             
             this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(250)});
@@ -879,9 +882,10 @@ export default class GameLevel extends Scene {
                     this.emitter.fireEvent(AR_Events.TOWER_EXITED_ENEMY_PATH);
                 }
                 if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
-                    let newTower = this.add.sprite(this.selectedTowerShopSprite.imageId, "primary");
+                    console.log(this.selectedTowerShopSprite.imageId);
+                    let newTower = this.add.animatedSprite(this.selectedTowerShopSprite.imageId + "Tower", "primary");
                     newTower.position.set(this.selectedTowerShopSprite.position.x, this.selectedTowerShopSprite.position.y);
-                    newTower.scale.set(0.15, 0.13);
+                    newTower.scale.set(3.2, 3.2);
 
                     let newTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: newTower.position, text: ""});
                     newTowerBtn.backgroundColor = Color.TRANSPARENT;
@@ -891,7 +895,7 @@ export default class GameLevel extends Scene {
                     newTowerBtn.setPadding(newTower.sizeWithZoom);
                     newTowerBtn.addPhysics(new AABB(Vec2.ZERO, new Vec2(newTower.sizeWithZoom.x, newTower.sizeWithZoom.y)), undefined, true, true);
 
-                    let defaultTowerData = this.defaultTowerValues.get(this.selectedTowerShopSprite.imageId);
+                    let defaultTowerData = this.defaultTowerValues.get(this.selectedTowerShopSprite.imageId + "Tower");
                     newTower.addPhysics(new CircleShape(Vec2.ZERO, defaultTowerData.range), undefined, true, false);
                     newTower.addAI(ChickenAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range});
 

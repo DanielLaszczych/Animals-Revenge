@@ -6,6 +6,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode, { TweenableProperties } from "../../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../../Wolfie2D/Nodes/Graphics/Line";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import Color from "../../../Wolfie2D/Utils/Color";
@@ -15,7 +16,7 @@ import ChickenAI from "./ChickenAI";
 
 export default class Combat extends State {
     
-    protected owner: GameNode;
+    protected owner: AnimatedSprite;
     protected parent: ChickenAI;
 
     protected damage: number;
@@ -24,7 +25,7 @@ export default class Combat extends State {
 
     protected cooldownTimer: Timer;
 
-    constructor(parent: ChickenAI, owner: GameNode, stats: Record<string, any>) {
+    constructor(parent: ChickenAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
@@ -66,6 +67,7 @@ export default class Combat extends State {
 
                     this.parent.projectiles.push({sprite: projectile, dir: dir});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);
+                    this.owner.animation.play("Firing", false);
                     this.cooldownTimer.start();
                 }
             }

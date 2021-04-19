@@ -1,6 +1,7 @@
 import State from "../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import { AR_Events } from "../../animalrevenge_enums";
@@ -8,15 +9,16 @@ import ChickenAI from "./ChickenAI";
 
 export default class Idle extends State {
     
-    protected owner: GameNode;
+    protected owner: AnimatedSprite;
     protected parent: ChickenAI;
 
-    constructor(parent: ChickenAI, owner: GameNode) {
+    constructor(parent: ChickenAI, owner: AnimatedSprite) {
         super(parent);
         this.owner = owner;
     }
     
     onEnter(options: Record<string, any>): void {
+        this.owner.animation.play("IDLE");
     }
 
     handleInput(event: GameEvent): void {
