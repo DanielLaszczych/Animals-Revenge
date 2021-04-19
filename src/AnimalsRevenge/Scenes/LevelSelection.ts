@@ -166,15 +166,16 @@ export default class LevelSelection extends Scene {
                 
                 let sceneOptions = {
                     physics: {
-                        groupNames: ["enemy"],
+                        groupNames: ["enemy", "projectile"],
                         collisions:
                         [
-                            [0]
+                            [0, 0],
+                            [0, 0]
                         ]
                     }
                 }
 
-                this.sceneManager.changeToScene(Level1, {startHealth: 100, startMoney: 200, totalWaves: 10, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level1, {startHealth: 100, startMoney: 1000, totalWaves: 10, towersUnlocked: 6}, sceneOptions);
             }
         }
 

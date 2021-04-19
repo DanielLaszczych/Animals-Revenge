@@ -49,6 +49,9 @@ export default interface Physical {
     /** Events to trigger for collision enters. */
     triggerEnters: Array<string>;
 
+    /** Data to be sent during triggers. */
+    triggerEntersData: Array<Record<string, any>>;
+
     /** Events to trigger for collision exits */
     triggerExits: Array<string>;
 
@@ -105,7 +108,7 @@ export default interface Physical {
      * @param onEnter The name of the event to send when this trigger is activated
      * @param onExit The name of the event to send when this trigger stops being activated
      */
-    setTrigger(group: string, onEnter: string, onExit: string): void;
+    setTrigger(group: string, onEnter: string, onExit: string, onEnterData: Record<string, any>): void;
     
     /**
      * Sets the physics group of this node

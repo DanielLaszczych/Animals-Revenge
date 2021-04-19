@@ -45,6 +45,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	isTrigger: boolean;
 	triggerMask: number;
 	triggerEnters: Array<string>;
+	triggerEntersData: Array<Record<string, any>>;
 	triggerExits: Array<string>;
 	_velocity: Vec2;
 	sweptRect: AABB;
@@ -57,6 +58,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	_ai: AI;
 	aiActive: boolean;
 	path: NavigationPath;
+	mostRecentPath: NavigationPath;
 	pathfinding: boolean = false;
 
 	/*---------- GENERAL ----------*/
@@ -160,6 +162,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	moveOnPath(speed: number, path: NavigationPath): void {
 		if(this.frozen) return;
 		this.path = path;
+		this.mostRecentPath = path;
 		let dir = path.getMoveDirection(this);
 		this.moving = true;
 		this.pathfinding = true;
@@ -200,6 +203,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.isTrigger = false;
 		this.triggerMask = 0;
 		this.triggerEnters = new Array(32);
+		this.triggerEntersData = new Array(32);
 		this.triggerExits = new Array(32);
 		this._velocity = Vec2.ZERO;
 		this.sweptRect = new AABB();
@@ -248,6 +252,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.isTrigger = false;
 		this.triggerMask = 0;
 		this.triggerEnters = null;
+		this.triggerEntersData = null;
 		this.triggerExits = null;
 		this._velocity = Vec2.ZERO;
 		this.sweptRect = null;
@@ -294,7 +299,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
      * @param onEnter The name of the event to send when this trigger is activated
      * @param onExit The name of the event to send when this trigger stops being activated
      */
-    setTrigger(group: string, onEnter: string, onExit: string): void {
+    setTrigger(group: string, onEnter: string, onExit: string, onEnterData: Record<string, any>): void {
 		// Make this object a trigger
 		this.isTrigger = true;
 
@@ -314,6 +319,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 
 		// Set the event names
 		this.triggerEnters[index] = onEnter;
+		this.triggerEntersData[index] = onEnterData;
 		this.triggerExits[index] = onExit;
 	};
 

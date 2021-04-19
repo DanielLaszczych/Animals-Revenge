@@ -272,7 +272,8 @@ export default class BasicPhysicsManager extends PhysicsManager {
 					// Extract the triggerEnter event name
 					this.emitter.fireEvent(overlap.other.triggerEnters[index], {
 						node: (<GameNode>node).id,
-						other: (<GameNode>overlap.other).id
+						other: (<GameNode>overlap.other).id,
+						data: overlap.other.triggerEntersData[index]
 					});
 				}
 

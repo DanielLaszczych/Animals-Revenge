@@ -217,7 +217,7 @@ export default class TilemapFactory {
                         sprite.addPhysics(sprite.boundary.clone(), Vec2.ZERO, isCollidable, true);
                         sprite.setGroup(group);
                         if(isTrigger && triggerGroup !== null){
-                            sprite.setTrigger(triggerGroup, onEnter, onExit);
+                            sprite.setTrigger(triggerGroup, onEnter, onExit, null);
                         }
                     }
                 }
