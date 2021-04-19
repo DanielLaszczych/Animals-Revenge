@@ -88,7 +88,7 @@ export default class GameLevel extends Scene {
 
     loadScene(): void {
         this.load.image("heart", "assets/images/heart_temp.png");
-        // this.load.image("chickenTower", "assets/spritesheets/Chicken1.png");
+        this.load.image("chickenTowerSprite", "assets/sprites/Chicken.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
         this.load.image("cowTower", "assets/images/heart_temp.png"); //TODO - Change to this cow sprite when avaiable
         this.load.image("spiderTower", "assets/images/heart_temp.png"); //TODO - Change to this spider sprite when avaiable
@@ -172,6 +172,7 @@ export default class GameLevel extends Scene {
 
         this.startWaveBtn.onClick = () => {
             if (Input.getMousePressButton() === BUTTON.LEFTCLICK && !this.isPlacedTowerSelected) {
+                this.startWaveBtn.visible = false;
                 this.spawningEnemies = true;
                 this.waveInProgress = true;
             }
@@ -194,7 +195,7 @@ export default class GameLevel extends Scene {
         this.victoryLabel.visible = false;
 
         let sidePanel = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(1050, this.size.y), size: new Vec2(300, 800)});
-        sidePanel.color = new Color(186, 104, 30, 1);
+        sidePanel.color = new Color(186, 104, 30, 0.9);
 
         let shopLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 40), text: "Shop"});
         shopLabel.textColor = Color.WHITE;
@@ -202,13 +203,16 @@ export default class GameLevel extends Scene {
         shopLabel.fontSize = 60;
 
         if (this.towersUnlocked >= 1) {
-            let chickenTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 125), text: "1"});
+            let chickenTowerImg = this.add.sprite("chickenTowerSprite", "UI");
+            chickenTowerImg.position.set(975, 125);
+            chickenTowerImg.scale.set(4, 4);
+
+            let chickenTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 125), text: ""});
             chickenTowerBtn.backgroundColor = Color.TRANSPARENT;
-            chickenTowerBtn.textColor = Color.BLACK;
-            chickenTowerBtn.borderColor = Color.BLACK;
+            chickenTowerBtn.borderColor = Color.TRANSPARENT;
             chickenTowerBtn.borderRadius = 0;
-            chickenTowerBtn.font = "PixelSimple";
-            chickenTowerBtn.setPadding(new Vec2(50, 15));
+            chickenTowerBtn.fontSize = 0;
+            chickenTowerBtn.setPadding(chickenTowerImg.sizeWithZoom);
 
             
             chickenTowerBtn.onClick = () => {
@@ -231,106 +235,106 @@ export default class GameLevel extends Scene {
             cowTowerBtn.borderColor = Color.BLACK;
             cowTowerBtn.borderRadius = 0;
             cowTowerBtn.font = "PixelSimple";
-            cowTowerBtn.setPadding(new Vec2(50, 15));
+            cowTowerBtn.setPadding(new Vec2(30, 15));
 
             cowTowerBtn.onClick = () => {
-                this.createTowerFromShop("cowTower");
+                // this.createTowerFromShop("cowTower");
             }
             cowTowerBtn.onEnter = () => {
                 cowTowerBtn.textColor = Color.WHITE;
-                this.displayTowerInfoFromShop("cowTower");
+                // this.displayTowerInfoFromShop("cowTower");
             }
             cowTowerBtn.onLeave = () => {
                 cowTowerBtn.textColor = Color.BLACK;
-                this.hideTowerInfoFromShop();
+                // this.hideTowerInfoFromShop();
             }
         }
 
         if (this.towersUnlocked >= 3) {
-            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: "3"});
+            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: "?"});
             spiderTowerBtn.backgroundColor = Color.TRANSPARENT;
             spiderTowerBtn.textColor = Color.BLACK;
             spiderTowerBtn.borderColor = Color.BLACK;
             spiderTowerBtn.borderRadius = 0;
             spiderTowerBtn.font = "PixelSimple";
-            spiderTowerBtn.setPadding(new Vec2(50, 15));
+            spiderTowerBtn.setPadding(new Vec2(30, 15));
 
             spiderTowerBtn.onClick = () => {
-                this.createTowerFromShop("spiderTower");
+                // this.createTowerFromShop("spiderTower");
             }
             spiderTowerBtn.onEnter = () => {
                 spiderTowerBtn.textColor = Color.WHITE;
-                this.displayTowerInfoFromShop("spiderTower");
+                // this.displayTowerInfoFromShop("spiderTower");
             }
             spiderTowerBtn.onLeave = () => {
                 spiderTowerBtn.textColor = Color.BLACK;
-                this.hideTowerInfoFromShop();
+                // this.hideTowerInfoFromShop();
             }
         }
 
         if (this.towersUnlocked >= 4) {
-            let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: "4"});
+            let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: "?"});
             eagleTowerBtn.backgroundColor = Color.TRANSPARENT;
             eagleTowerBtn.textColor = Color.BLACK;
             eagleTowerBtn.borderColor = Color.BLACK;
             eagleTowerBtn.borderRadius = 0;
             eagleTowerBtn.font = "PixelSimple";
-            eagleTowerBtn.setPadding(new Vec2(50, 15));
+            eagleTowerBtn.setPadding(new Vec2(30, 15));
 
             eagleTowerBtn.onClick = () => {
-                this.createTowerFromShop("eagleTower");
+                // this.createTowerFromShop("eagleTower");
             }
             eagleTowerBtn.onEnter = () => {
                 eagleTowerBtn.textColor = Color.WHITE;
-                this.displayTowerInfoFromShop("eagleTower");
+                // this.displayTowerInfoFromShop("eagleTower");
             }
             eagleTowerBtn.onLeave = () => {
                 eagleTowerBtn.textColor = Color.BLACK;
-                this.hideTowerInfoFromShop();
+                // this.hideTowerInfoFromShop();
             }
         }
 
         if (this.towersUnlocked >= 5) {
-            let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: "5"});
+            let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: "?"});
             elephantTowerBtn.backgroundColor = Color.TRANSPARENT;
             elephantTowerBtn.textColor = Color.BLACK;
             elephantTowerBtn.borderColor = Color.BLACK;
             elephantTowerBtn.borderRadius = 0;
             elephantTowerBtn.font = "PixelSimple";
-            elephantTowerBtn.setPadding(new Vec2(50, 15));
+            elephantTowerBtn.setPadding(new Vec2(30, 15));
 
             elephantTowerBtn.onClick = () => {
-                this.createTowerFromShop("elephantTower");
+                // this.createTowerFromShop("elephantTower");
             }
             elephantTowerBtn.onEnter = () => {
                 elephantTowerBtn.textColor = Color.WHITE;
-                this.displayTowerInfoFromShop("elephantTower");
+                // this.displayTowerInfoFromShop("elephantTower");
             }
             elephantTowerBtn.onLeave = () => {
                 elephantTowerBtn.textColor = Color.BLACK;
-                this.hideTowerInfoFromShop();
+                // this.hideTowerInfoFromShop();
             }
         }
 
         if (this.towersUnlocked >= 6) {
-            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: "6"});
+            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: "?"});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
             penguinTowerBtn.textColor = Color.BLACK;
             penguinTowerBtn.borderColor = Color.BLACK;
             penguinTowerBtn.borderRadius = 0;
             penguinTowerBtn.font = "PixelSimple";
-            penguinTowerBtn.setPadding(new Vec2(50, 15));
+            penguinTowerBtn.setPadding(new Vec2(30, 15));
 
             penguinTowerBtn.onClick = () => {
-                this.createTowerFromShop("penguinTower");
+                // this.createTowerFromShop("penguinTower");
             }
             penguinTowerBtn.onEnter = () => {
                 penguinTowerBtn.textColor = Color.WHITE;
-                this.displayTowerInfoFromShop("penguinTower");
+                // this.displayTowerInfoFromShop("penguinTower");
             }
             penguinTowerBtn.onLeave = () => {
                 penguinTowerBtn.textColor = Color.BLACK;
-                this.hideTowerInfoFromShop();
+                // this.hideTowerInfoFromShop();
             }
         }
 
@@ -472,9 +476,9 @@ export default class GameLevel extends Scene {
                 this.selectedTowerRange = null;
             }
             this.selectedTowerShopSprite = this.add.animatedSprite(tower, "UI");
-            this.selectedTowerShopSprite.animation.play("IDLE");
+            this.selectedTowerShopSprite.animation.play("IDLE", true);
             this.selectedTowerShopSprite.position.set(Input.getMousePosition().x, Input.getMousePosition().y);
-            this.selectedTowerShopSprite.scale.set(3.2, 3.2);
+            this.selectedTowerShopSprite.scale.set(4, 4);
             this.selectedTowerShopSprite.addPhysics();
             
             this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(250)});
@@ -885,7 +889,7 @@ export default class GameLevel extends Scene {
                     console.log(this.selectedTowerShopSprite.imageId);
                     let newTower = this.add.animatedSprite(this.selectedTowerShopSprite.imageId + "Tower", "primary");
                     newTower.position.set(this.selectedTowerShopSprite.position.x, this.selectedTowerShopSprite.position.y);
-                    newTower.scale.set(3.2, 3.2);
+                    newTower.scale.set(4, 4);
 
                     let newTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "primary", {position: newTower.position, text: ""});
                     newTowerBtn.backgroundColor = Color.TRANSPARENT;
@@ -968,6 +972,7 @@ export default class GameLevel extends Scene {
                           this.sceneManager.changeToScene(LevelSelection, {}, {});
                     }, 3000);
                 } else {
+                    this.startWaveBtn.visible = true;
                     this.victoryLabel.visible = true;
                     this.victoryLabel.text = "Wave Complete!";
                     setTimeout(() => {

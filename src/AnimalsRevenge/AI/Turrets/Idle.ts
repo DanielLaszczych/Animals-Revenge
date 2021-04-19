@@ -4,6 +4,7 @@ import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
 import Scene from "../../../Wolfie2D/Scene/Scene";
+import Timer from "../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../animalrevenge_enums";
 import ChickenAI from "./ChickenAI";
 
@@ -11,6 +12,7 @@ export default class Idle extends State {
     
     protected owner: AnimatedSprite;
     protected parent: ChickenAI;
+    protected idleTimer: Timer;
 
     constructor(parent: ChickenAI, owner: AnimatedSprite) {
         super(parent);
@@ -18,7 +20,10 @@ export default class Idle extends State {
     }
     
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("IDLE");
+        this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
+        this.owner.animation.stop();
+        this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
+        this.idleTimer.start();
     }
 
     handleInput(event: GameEvent): void {
@@ -33,6 +38,11 @@ export default class Idle extends State {
     }
     
     update(deltaT: number): void {
+        if (this.idleTimer.isStopped()) {
+            this.owner.animation.play("IDLE");
+            this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
+            this.idleTimer.start();
+        }
         for (let i = 0; i < this.parent.projectiles.length;) {
             if (this.parent.projectiles[i].sprite.position.x === -1) { //this means they projectile collided and its position was set to -1
                 let projectile = this.parent.projectiles.splice(i, 1)[0].sprite;

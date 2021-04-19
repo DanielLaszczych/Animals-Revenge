@@ -76,12 +76,13 @@ export default class LevelSelection extends Scene {
         level2Label.font = "PixelSimple";
         level2Label.fontSize = 40;
         
-        let level2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level2Img.position, text: ""});
-        level2Btn.backgroundColor = Color.TRANSPARENT;
+        let level2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level2Img.position, text: "Locked"});
+        level2Btn.backgroundColor = Color.BLACK;
         level2Btn.borderColor = Color.TRANSPARENT;
         level2Btn.borderRadius = 0;
-        level2Btn.fontSize = 0;
-        level2Btn.setPadding(level2Img.sizeWithZoom);
+        level2Btn.fontSize = 50;
+        level2Btn.font = "PixelSimple";
+        level2Btn.setPadding(level2Img.sizeWithZoom.sub(new Vec2(79, 25)));
 
         let level3Img = this.add.sprite("level1Map", "levelSelection");
         level3Img.position.set(size.x + 400, size.y - 50);
@@ -92,12 +93,13 @@ export default class LevelSelection extends Scene {
         level3Label.font = "PixelSimple";
         level3Label.fontSize = 40;
 
-        let level3Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level3Img.position, text: ""});
-        level3Btn.backgroundColor = Color.TRANSPARENT;
+        let level3Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level3Img.position, text: "Locked"});
+        level3Btn.backgroundColor = Color.BLACK;
         level3Btn.borderColor = Color.TRANSPARENT;
         level3Btn.borderRadius = 0;
-        level3Btn.fontSize = 0;
-        level3Btn.setPadding(level3Img.sizeWithZoom);
+        level3Btn.fontSize = 50;
+        level3Btn.font = "PixelSimple"
+        level3Btn.setPadding(level3Img.sizeWithZoom.sub(new Vec2(79, 25)));
 
         let level4Img = this.add.sprite("level1Map", "levelSelection");
         level4Img.position.set(size.x - 400, size.y + 250);
@@ -108,12 +110,13 @@ export default class LevelSelection extends Scene {
         level4Label.font = "PixelSimple";
         level4Label.fontSize = 40;
 
-        let level4Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level4Img.position, text: ""});
-        level4Btn.backgroundColor = Color.TRANSPARENT;
+        let level4Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level4Img.position, text: "Locked"});
+        level4Btn.backgroundColor = Color.BLACK;
         level4Btn.borderColor = Color.TRANSPARENT;
         level4Btn.borderRadius = 0;
-        level4Btn.fontSize = 0;
-        level4Btn.setPadding(level4Img.sizeWithZoom);
+        level4Btn.fontSize = 50;
+        level4Btn.font = "PixelSimple"
+        level4Btn.setPadding(level4Img.sizeWithZoom.sub(new Vec2(79, 25)));
 
         let level5Img = this.add.sprite("level1Map", "levelSelection");
         level5Img.position.set(size.x, size.y + 250);
@@ -124,12 +127,13 @@ export default class LevelSelection extends Scene {
         level5Label.font = "PixelSimple";
         level5Label.fontSize = 40;
 
-        let level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level5Img.position, text: ""});
-        level5Btn.backgroundColor = Color.TRANSPARENT;
+        let level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level5Img.position, text: "Locked"});
+        level5Btn.backgroundColor = Color.BLACK;
         level5Btn.borderColor = Color.TRANSPARENT;
         level5Btn.borderRadius = 0;
-        level5Btn.fontSize = 0;
-        level5Btn.setPadding(level5Img.sizeWithZoom);
+        level5Btn.fontSize = 50;
+        level5Btn.font = "PixelSimple"
+        level5Btn.setPadding(level5Img.sizeWithZoom.sub(new Vec2(79, 25)));
 
         let level6Img = this.add.sprite("level1Map", "levelSelection");
         level6Img.position.set(size.x + 400, size.y + 250);
@@ -140,12 +144,13 @@ export default class LevelSelection extends Scene {
         level6Label.font = "PixelSimple";
         level6Label.fontSize = 40;
         
-        let level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level6Img.position, text: ""});
-        level6Btn.backgroundColor = Color.TRANSPARENT;
+        let level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level6Img.position, text: "Locked"});
+        level6Btn.backgroundColor = Color.BLACK;
         level6Btn.borderColor = Color.TRANSPARENT;
         level6Btn.borderRadius = 0;
-        level6Btn.fontSize = 0;
-        level6Btn.setPadding(level6Img.sizeWithZoom);
+        level6Btn.fontSize = 50;
+        level6Btn.font = "PixelSimple"
+        level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(79, 25)));
 
         backBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
