@@ -87,7 +87,7 @@ export default class GameLevel extends Scene {
     }
 
     loadScene(): void {
-        this.load.image("heart", "assets/images/heart.png");
+        this.load.image("heart", "assets/images/Heart.png");
         this.load.image("chickenTowerSprite", "assets/sprites/Chicken.png");
         this.load.image("cowTowerSprite", "assets/sprites/Cow.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
