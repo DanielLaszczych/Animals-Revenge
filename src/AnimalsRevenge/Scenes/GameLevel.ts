@@ -65,7 +65,7 @@ export default class GameLevel extends Scene {
     protected waves: Array<Record<string, any>>;
     protected currentWaveData: Record<string, any> = null;
     protected timeNow: number = Date.now();
-    protected enemies: Map<GameNode, number>;
+    protected enemies: Map<GameNode, Array<number>>;
     protected enemyNumber: number;
 
     protected levelEndArea: Rect;
@@ -678,21 +678,26 @@ export default class GameLevel extends Scene {
             this.timeNow = Date.now();
             let enemySprite;
             let enemyHealth;
+            let enemyDefense;
             if(this.currentWaveData.enemies[0] === "farmer"){
                 enemySprite = this.add.animatedSprite("farmer", "primary");
-                enemyHealth = 20;
+                enemyHealth = 35;
+                enemyDefense = 0;
             }
-
+            if(this.currentWaveData.enemies[0] === "soldier"){
+                enemySprite = this.add.animatedSprite("soldier", "primary");
+                enemyHealth = 75;
+                enemyDefense = 1;
+            }
             enemySprite.position.set(0, 432);
             enemySprite.scale.set(5, 5);
             enemySprite.animation.play("WALK");
             enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));
-            enemySprite.addAI(EnemyAI, path);        
             enemySprite.setGroup("enemy");
+            enemySprite.addAI(EnemyAI, path);
 
-            this.enemies.set(enemySprite, enemyHealth);
-    
+            this.enemies.set(enemySprite, [enemyHealth, enemyDefense]);
             this.currentWaveData.numberEnemies[0] -= 1;
             if(this.currentWaveData.numberEnemies[0] == 0){
                 this.currentWaveData.enemies.shift();
@@ -849,14 +854,18 @@ export default class GameLevel extends Scene {
                             projectile = node;
                         }
                         projectile.position.set(-1, -1);
-                        let newHealth = this.enemies.get(enemy) - event.data.get("data").damage;
+                        let defense = this.enemies.get(enemy)[1];
+                        if(defense > event.data.get("data").damage){
+                            defense = event.data.get("data").damage / 2;
+                        }
+                        let newHealth = this.enemies.get(enemy)[0] - (event.data.get("data").damage - defense);
                         if (newHealth <= 0) {
                             let id = enemy.id;
                             this.enemies.delete(enemy);
                             enemy.destroy();
                             this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: id});
                         } else {
-                            this.enemies.set(enemy, newHealth);
+                            this.enemies.set(enemy, [newHealth, defense]);
                         }
                     }
                     break;
@@ -968,6 +977,7 @@ export default class GameLevel extends Scene {
                 if (this.currentWave === this.totalWaves) {
                     this.victoryLabel.visible = true;
                     this.victoryLabel.text = "Victory!";
+                    this.startWaveBtn.visible = false;
                     setTimeout(() => {
                           this.sceneManager.changeToScene(LevelSelection, {}, {});
                     }, 3000);

@@ -11,8 +11,19 @@ export default class EnemyAI extends StateMachineAI{
     initializeAI(owner: AnimatedSprite, navigation: Array<Vec2>){
         this.owner = owner;
         
-        this.addState("default", new Walk(this, owner, navigation, 100));
+        if(this.owner.imageId === "farmer" || this.owner.imageId === "soldier" ||
+            this.owner.imageId === "super_soldier" || this.owner.imageId === "drone"){
+            this.addState("default", new Walk(this, owner, navigation, 120));
+        }
 
+        if(this.owner.imageId === "dog_robot"){
+            this.addState("default", new Walk(this, owner, navigation, 200));
+        }
+
+        if(this.owner.imageId === "president"){
+            this.addState("default", new Walk(this, owner, navigation, 80));
+        }
+        
         this.initialize("default");
     }
 

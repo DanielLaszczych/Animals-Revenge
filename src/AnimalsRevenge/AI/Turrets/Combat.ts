@@ -46,6 +46,7 @@ export default class Combat extends State {
     }
     
     update(deltaT: number): void {
+        try{
         let targetNode = this.owner.getScene().getSceneGraph().getNode(this.parent.target);
         if (targetNode === undefined || !this.checkAABBtoCircleCollision(targetNode.collisionShape.getBoundingRect(), this.owner.collisionShape.getBoundingCircle())) {
             this.finished("idle");
@@ -57,7 +58,6 @@ export default class Combat extends State {
                     let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(20));
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
-
                     let projectile = this.owner.getScene().add.sprite("egg", "primary");
                     projectile.scale.set(0.35, 0.35);
                     projectile.position.set(start.x, start.y);
@@ -86,6 +86,8 @@ export default class Combat extends State {
                 continue;
             }
             i++;
+        }
+    }catch(e){
         }   
     }
 
