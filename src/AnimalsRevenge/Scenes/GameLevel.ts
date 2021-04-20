@@ -90,11 +90,19 @@ export default class GameLevel extends Scene {
         this.load.image("heart", "assets/images/heart.png");
         this.load.image("chickenTowerSprite", "assets/sprites/Chicken.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
+<<<<<<< HEAD
         this.load.spritesheet("cowTower", "assets/spritesheets/cow.json"); //TODO - Change to this cow sprite when avaiable
         this.load.image("spiderTower", "assets/images/heart.png"); //TODO - Change to this spider sprite when avaiable
         this.load.image("eagleTower", "assets/images/heart.png"); //TODO - Change to this eagle sprite when avaiable
         this.load.image("elephantTower", "assets/images/heart.png"); //TODO - Change to this elephant sprite when avaiable
         this.load.image("penguinTower", "assets/images/heart.png"); //TODO - Change to this penguin sprite when avaiable
+=======
+        this.load.image("cowTower", "assets/images/Heart.png"); //TODO - Change to this cow sprite when avaiable
+        this.load.image("spiderTower", "assets/images/Heart.png"); //TODO - Change to this spider sprite when avaiable
+        this.load.image("eagleTower", "assets/images/Heart.png"); //TODO - Change to this eagle sprite when avaiable
+        this.load.image("elephantTower", "assets/images/Heart.png"); //TODO - Change to this elephant sprite when avaiable
+        this.load.image("penguinTower", "assets/images/Heart.png"); //TODO - Change to this penguin sprite when avaiable
+>>>>>>> 8a30b455bf93916d04755fb4d2d8dac5a39671fd
         this.load.image("coin", "assets/images/Coin.png");
         this.load.image("egg", "assets/images/Egg.png")
         this.load.object("towerData", "assets/data/default_tower_values.json");

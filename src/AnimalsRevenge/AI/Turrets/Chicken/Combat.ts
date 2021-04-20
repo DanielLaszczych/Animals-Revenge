@@ -54,7 +54,7 @@ export default class Combat extends State {
                     let start = this.owner.position.clone();
 
                     let projectile = this.owner.getScene().add.sprite("egg", "primary");
-                    projectile.scale.set(0.35, 0.35);
+                    projectile.scale.set(1, 1);
                     projectile.position.set(start.x, start.y);
                     projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
                     projectile.setGroup("projectile");
