@@ -23,13 +23,15 @@
         {
             "name": "Cow Tower",
             "cost": 100,
-            "damage": 10,
-            "attackSpeed": 3,
-            "range": 250,
-            "upgrade1": "+ Attack Speed",
-            "upgrade1Cost": 100,
-            "upgrade2": "+ Range",
-            "upgrade2Cost": 100
+            "damage": 1,
+            "attackSpeed": 0.1,
+            "range": 180,
+            "upgrade1": "Confusion Debuff",
+            "upgrade1Cost": 500,
+            "hasConfusion": false,
+            "upgrade2": "+ Attack Speed Aura Range",
+            "upgrade2Cost": 300,
+            "auraRange": 0
         },
         {
             "name": "Spider Tower",

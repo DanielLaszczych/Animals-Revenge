@@ -1,17 +1,12 @@
-import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
-import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
-import State from "../../../Wolfie2D/DataTypes/State/State";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import GameNode, { TweenableProperties } from "../../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Line from "../../../Wolfie2D/Nodes/Graphics/Line";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import Timer from "../../../Wolfie2D/Timing/Timer";
-import Color from "../../../Wolfie2D/Utils/Color";
-import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
-import { AR_Events } from "../../animalrevenge_enums";
+
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Circle from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
+import State from "../../../../Wolfie2D/DataTypes/State/State";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
+import { AR_Events } from "../../../animalrevenge_enums";
 import ChickenAI from "./ChickenAI";
 
 export default class Combat extends State {
@@ -59,7 +54,7 @@ export default class Combat extends State {
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
                     let projectile = this.owner.getScene().add.sprite("egg", "primary");
-                    projectile.scale.set(0.35, 0.35);
+                    projectile.scale.set(1, 1);
                     projectile.position.set(start.x, start.y);
                     projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
                     projectile.setGroup("projectile");

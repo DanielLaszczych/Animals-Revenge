@@ -1,11 +1,9 @@
-import State from "../../../Wolfie2D/DataTypes/State/State";
-import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
-import Scene from "../../../Wolfie2D/Scene/Scene";
-import Timer from "../../../Wolfie2D/Timing/Timer";
-import { AR_Events } from "../../animalrevenge_enums";
+
+import State from "../../../../Wolfie2D/DataTypes/State/State";
+import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
+import { AR_Events } from "../../../animalrevenge_enums";
 import ChickenAI from "./ChickenAI";
 
 export default class Idle extends State {
@@ -63,5 +61,4 @@ export default class Idle extends State {
     onExit(): Record<string, any> {
         return null;
     }
-
 }
