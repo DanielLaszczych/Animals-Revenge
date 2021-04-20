@@ -11,6 +11,7 @@ import Idle from "./Idle";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
+import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
 
 
 export default class CowAI extends StateMachineAI {
@@ -19,7 +20,7 @@ export default class CowAI extends StateMachineAI {
 
     protected stats: Record<string, any>;
     public target: number;
-    public areaofEffect: Circle;
+    public areaofEffect: Sprite;
     public trigger: Point;
     public attackDuration: Timer;
     
@@ -33,10 +34,11 @@ export default class CowAI extends StateMachineAI {
         this.trigger = this.owner.getScene().add.graphic(GraphicType.POINT, "primary", {position: new Vec2(-100, -100)});
         this.trigger.color = Color.TRANSPARENT;
         this.trigger.addPhysics(new AABB(Vec2.ZERO, new Vec2(0, 0)), undefined, false, false);
-
-        this.areaofEffect = <Circle>this.owner.getScene().add.graphic(GraphicType.CIRCLE, "UI", {position: new Vec2(-100, -100), radius: new Number(0)});
-        this.areaofEffect.color = new Color(0, 255, 0, 0.3);
-        this.areaofEffect.borderColor = Color.TRANSPARENT;
+        
+        this.areaofEffect = this.owner.getScene().add.sprite("fart", "UI");
+        this.areaofEffect.position.set(-100, -100);
+        this.areaofEffect.visible = false;
+        this.areaofEffect.alpha = 0.5;
 
         this.receiver.subscribe(AR_Events.ENEMY_ENTERED_TOWER_RANGE);
         this.receiver.subscribe(AR_Events.ENEMY_DIED);

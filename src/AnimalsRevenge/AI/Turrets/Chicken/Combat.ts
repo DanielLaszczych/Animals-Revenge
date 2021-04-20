@@ -58,7 +58,7 @@ export default class Combat extends State {
                     let targetDirection;
                     let targetPath = targetNode.mostRecentPath;
                     targetDirection = targetPath.getMoveDirection(targetNode);
-                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(20));
+                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(24));
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
     

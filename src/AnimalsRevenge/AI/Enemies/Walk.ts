@@ -2,6 +2,7 @@ import State from "../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../animalrevenge_enums";
@@ -9,7 +10,7 @@ import EnemyAI from "./EnemyAI";
 
 export default class Walk extends State {
 
-    protected owner: GameNode;
+    protected owner: AnimatedSprite;
 
     protected route: Array<Vec2>;
 
@@ -23,7 +24,7 @@ export default class Walk extends State {
     protected freezeTimer: Timer;
     protected confuseImmunity: Timer;
 
-    constructor(parent: EnemyAI, owner: GameNode, path: Array<Vec2>, speed: number) {
+    constructor(parent: EnemyAI, owner: AnimatedSprite, path: Array<Vec2>, speed: number) {
         super(parent);
         this.owner = owner;
         this.route = path;
@@ -46,6 +47,7 @@ export default class Walk extends State {
                 this.confusedStacks++;
                 if (this.confusedStacks > 60) {
                     this.owner.freeze();
+                    this.owner.animation.stop();
                     this.freezeTimer.start();
                     this.confusedStacks = 0;
                 }
@@ -57,6 +59,7 @@ export default class Walk extends State {
         if (this.freezeTimer.isStopped()) {
             if (this.owner.frozen) {
                 this.owner.unfreeze();
+                this.owner.animation.play("WALK");
                 this.confuseImmunity.start();
             }
             if (this.currentPath.isDone()){

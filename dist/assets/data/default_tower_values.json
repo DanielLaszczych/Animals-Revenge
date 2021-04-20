@@ -21,7 +21,8 @@
             "upgrade2Cost": 100,
             "attackSpeedUpgradesRemaining": 3,
             "maxRange": 350,
-            "receivedAttackSpeedAura": false
+            "receivedAttackSpeedAura": false,
+            "description": "The Chicken is a fully\noffensive turret with\nits ability to shoot\neggs. Its first upgrade\nincreases its attack\nspeed and its second\nupgrade increases its\nrange"
         },
         {
             "name": "Cow Tower",
@@ -30,11 +31,12 @@
             "attackSpeed": 0.2,
             "range": 180,
             "upgrade1": "Confusion Debuff",
-            "upgrade1Cost": 500,
+            "upgrade1Cost": 300,
             "hasConfusion": false,
             "upgrade2": "Attack Speed Aura",
-            "upgrade2Cost": 500,
-            "hasAura": false 
+            "upgrade2Cost": 300,
+            "hasAura": false,
+            "description": "The Cow is a jack of all\ntrades. It releases a\nburp cloud that deals\nconstant damage. Its\nfirst upgrade will allow\nits burp cloud to stun\nenemies for a second.\nIts second upgrade\nbuffs the attack speed\nof non-cow towers\nnear it."
         },
         {
             "name": "Spider Tower",

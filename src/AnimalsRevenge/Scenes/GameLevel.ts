@@ -54,6 +54,7 @@ export default class GameLevel extends Scene {
     protected selectedTowerDamageLabel: Label;
     protected selectedTowerSpeedLabel: Label;
     protected selectedTowerRangeLabel: Label;
+    protected selectedTowerInfoLabel: Label;
     protected selectedTowerUpgrade1Btn: Button;
     protected selectedTowerUpgrade2Btn: Button;
     protected selectedTowerSellBtn: Button;
@@ -98,6 +99,7 @@ export default class GameLevel extends Scene {
         this.load.image("penguinTower", "assets/images/Heart.png"); //TODO - Change to this penguin sprite when avaiable
         this.load.image("coin", "assets/images/Coin.png");
         this.load.image("egg", "assets/images/Egg.png")
+        this.load.image("fart", "assets/images/Fart.png")
         this.load.object("towerData", "assets/data/default_tower_values.json");
     }
 
@@ -368,6 +370,12 @@ export default class GameLevel extends Scene {
         this.selectedTowerCostLabel.fontSize = 30;
         this.selectedTowerCostLabel.visible = false;
 
+        this.selectedTowerInfoLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 560), text: ""});
+        this.selectedTowerInfoLabel.textColor = Color.WHITE
+        this.selectedTowerInfoLabel.font = "PixelSimple";
+        this.selectedTowerInfoLabel.fontSize = 25;
+        this.selectedTowerInfoLabel.visible = false;
+
         this.deselectTowerShopBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 600), text: "Deselect"});
         this.deselectTowerShopBtn.backgroundColor = Color.TRANSPARENT;
         this.deselectTowerShopBtn.textColor = Color.BLACK;
@@ -526,6 +534,13 @@ export default class GameLevel extends Scene {
             this.selectedTowerSellBtn.visible = false;
         }
         let towerData = this.defaultTowerValues.get(tower);
+        if (!this.isTowerSelectedFromShop) {
+            this.selectedTowerInfoLabel.text = towerData.description;
+            this.selectedTowerDamageLabel.sizeAssigned = false;
+            this.selectedTowerInfoLabel.visible = true;
+        } else {
+            this.selectedTowerInfoLabel.visible = false;
+        }
         this.selectedTowerNameLabel.text = towerData.name;
         this.selectedTowerNameLabel.visible = true;
         this.selectedTowerCostLabel.text = "Cost: " + towerData.cost;
@@ -540,11 +555,13 @@ export default class GameLevel extends Scene {
 
     protected hideTowerInfoFromShop(): void {
         if (this.isPlacedTowerSelected) {
+            this.selectedTowerInfoLabel.visible = false;
             this.selectedTowerCostLabel.visible = false;
             this.displayTowerInfoFromId(this.selectedTowerId);
         } else if (this.isTowerSelectedFromShop) {
             this.displayTowerInfoFromShop(this.selectedTowerShopName);
         } else {
+            this.selectedTowerInfoLabel.visible = false;
             this.selectedTowerNameLabel.visible = false;
             this.selectedTowerCostLabel.visible = false;
             this.selectedTowerDamageLabel.visible = false;

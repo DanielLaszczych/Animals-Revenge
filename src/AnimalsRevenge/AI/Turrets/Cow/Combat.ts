@@ -72,12 +72,12 @@ export default class Combat extends State {
                     targetDirection = targetPath.getMoveDirection(targetNode);
                     let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(80));
                     this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
-                    let start = this.owner.position.clone().add(this.dir.scaled(30));
+                    let start = this.owner.position.clone().add(this.dir.scaled(25));
                     this.end = preditictedTargetPosition;
                     this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
     
                     this.parent.areaofEffect.position.set(start.x, start.y);
-                    this.parent.areaofEffect.radius = 0;
+                    this.parent.areaofEffect.scale.set(0, 0);
                     this.parent.areaofEffect.visible = true;
                     this.owner.animation.play("Burping", false);
                     this.cooldownTimer.start();
@@ -88,16 +88,16 @@ export default class Combat extends State {
             }
             let reachedTargetY = (this.parent.areaofEffect.position.y > this.end.y && this.dir.y > 0) || (this.parent.areaofEffect.position.y < this.end.y && this.dir.y < 0); 
             let reachedTargetX = (this.parent.areaofEffect.position.x > this.end.x && this.dir.x > 0) || (this.parent.areaofEffect.position.x < this.end.x && this.dir.x < 0); 
-            if (this.parent.areaofEffect.radius === 80 && (reachedTargetX || reachedTargetY) && !this.doOnce) {
+            if (this.parent.areaofEffect.scale.x >= 4.5 && (reachedTargetX || reachedTargetY) && !this.doOnce) {
                 this.parent.trigger.position.set(this.parent.areaofEffect.position.x, this.parent.areaofEffect.position.y);
                 this.parent.attackDuration.start();
                 this.parent.trigger.removePhysics();
-                this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.parent.areaofEffect.radius, this.parent.areaofEffect.radius)), undefined, false, false);
+                this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, this.parent.areaofEffect.sizeWithZoom), undefined, false, false);
                 this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, confuseEnemy: this.hasConfusion});
                 this.doOnce = true;
             } else {
-                if (this.parent.areaofEffect.radius !== 80) {
-                    this.parent.areaofEffect.radius += 1;   
+                if (this.parent.areaofEffect.scale.x < 4.5) {
+                    this.parent.areaofEffect.scale.add(new Vec2(0.07, 0.07));   
                 }
                 if (!(reachedTargetY || reachedTargetX)) {
                     this.parent.areaofEffect.position.add(this.dir.scaled(2));
