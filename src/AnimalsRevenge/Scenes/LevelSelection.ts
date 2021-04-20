@@ -180,7 +180,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level1, {startHealth: 100, startMoney: 5000, totalWaves: 10, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, totalWaves: 10, towersUnlocked: 6}, sceneOptions);
             }
         }
 

@@ -12,7 +12,7 @@
         {
             "name": "Chicken Tower",
             "cost": 100,
-            "damage": 2,
+            "damage": 5,
             "attackSpeed": 4,
             "range": 250,
             "upgrade1": "+ Attack Speed",
@@ -20,7 +20,8 @@
             "upgrade2": "+ Range",
             "upgrade2Cost": 100,
             "attackSpeedUpgradesRemaining": 3,
-            "maxRange": 350
+            "maxRange": 350,
+            "receivedAttackSpeedAura": false
         },
         {
             "name": "Cow Tower",

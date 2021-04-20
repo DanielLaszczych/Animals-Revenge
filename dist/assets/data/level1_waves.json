@@ -14,21 +14,21 @@
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 9,
+            "totalEnemies": 18,
             "enemies": ["farmer", "farmer"],
-            "numberEnemies": [6, 3],
+            "numberEnemies": [6, 12],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 10,
+            "totalEnemies": 23,
             "enemies": ["farmer", "farmer"],
-            "numberEnemies": [5, 5],
+            "numberEnemies": [5, 18],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 12,
-            "enemies": ["farmer", "farmer"],
-            "numberEnemies": [6, 6],
+            "totalEnemies": 30,
+            "enemies": ["farmer", "farmer", "farmer"],
+            "numberEnemies": [6, 6, 18],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         }
     ]

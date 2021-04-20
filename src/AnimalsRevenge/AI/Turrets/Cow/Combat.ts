@@ -45,7 +45,6 @@ export default class Combat extends State {
             return;
         } else if (event.type === AR_Events.ENEMY_DIED) {
             if (this.parent.target === event.data.get("id")) {
-                console.log("our target has died");
                 let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
                 if (isBurpNotInMotion) {
                     this.finished("idle");
@@ -75,7 +74,6 @@ export default class Combat extends State {
                     this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone().add(this.dir.scaled(30));
                     this.end = preditictedTargetPosition;
-                    console.log("End:" + this.end.toString())
                     this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
     
                     this.parent.areaofEffect.position.set(start.x, start.y);
@@ -102,7 +100,6 @@ export default class Combat extends State {
                     this.parent.areaofEffect.radius += 1;   
                 }
                 if (!(reachedTargetY || reachedTargetX)) {
-                    console.log("pushing");
                     this.parent.areaofEffect.position.add(this.dir.scaled(2));
                 }
             }
