@@ -4,5 +4,6 @@ export enum AR_Events {
     TOWER_EXITED_ENEMY_PATH = "TowerExitedEnemyPath",
     ENEMY_ENTERED_TOWER_RANGE = "EnemyEnteredTowerRange",
     ENEMY_HIT = "EnemyHit",
-    ENEMY_DIED = "EnemyDied"
+    ENEMY_DIED = "EnemyDied",
+    ENEMY_CONFUSED = "EnemyConfused"
 }

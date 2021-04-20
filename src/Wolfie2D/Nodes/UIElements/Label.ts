@@ -18,7 +18,7 @@ export default class Label extends UIElement{
 	protected vAlign: string;
 
 	/** A flag for if the width of the text has been measured on the canvas for auto width assignment */
-	protected sizeAssigned: boolean;
+	public sizeAssigned: boolean;
 
 	constructor(position: Vec2, text: string){
 		super(position);

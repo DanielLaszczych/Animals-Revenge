@@ -33,8 +33,11 @@ export default class Combat extends State {
     }
 
     handleInput(event: GameEvent): void {
-        if (event.type === AR_Events.ENEMY_DIED) {
+        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
+           return;
+        } else if (event.type === AR_Events.ENEMY_DIED) {
             if (this.parent.target === event.data.get("id")) {
+                console.log("our target has died");
                 this.finished("idle");
             }
         }
@@ -42,28 +45,37 @@ export default class Combat extends State {
     
     update(deltaT: number): void {
         let targetNode = this.owner.getScene().getSceneGraph().getNode(this.parent.target);
-        if (targetNode === undefined || !this.checkAABBtoCircleCollision(targetNode.collisionShape.getBoundingRect(), this.owner.collisionShape.getBoundingCircle())) {
+        let isTargetInRange;
+        try {
+            isTargetInRange = this.checkAABBtoCircleCollision(targetNode.collisionShape.getBoundingRect(), this.owner.collisionShape.getBoundingCircle())
+        } catch {
+            isTargetInRange = false;
+        }
+        if (targetNode === undefined || !isTargetInRange) {
             this.finished("idle");
         } else {
             if (this.cooldownTimer.isStopped()) {
-                let targetPath = targetNode.mostRecentPath;
-                if (targetPath !== null) {
-                    let targetDirection = targetPath.getMoveDirection(targetNode);
+                try {
+                    let targetDirection;
+                    let targetPath = targetNode.mostRecentPath;
+                    targetDirection = targetPath.getMoveDirection(targetNode);
                     let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(20));
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
-
+    
                     let projectile = this.owner.getScene().add.sprite("egg", "primary");
-                    projectile.scale.set(1, 1);
+                    projectile.scale.set(1.5, 1.5);
                     projectile.position.set(start.x, start.y);
-                    projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+                    projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
                     projectile.setGroup("projectile");
                     projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage});
-
+    
                     this.parent.projectiles.push({sprite: projectile, dir: dir});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);
                     this.owner.animation.play("Firing", false);
                     this.cooldownTimer.start();
+                } catch {
+                    return;
                 }
             }
         }

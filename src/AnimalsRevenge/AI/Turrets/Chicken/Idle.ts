@@ -27,7 +27,8 @@ export default class Idle extends State {
     handleInput(event: GameEvent): void {
         if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
             let target = this.owner.getScene().getSceneGraph().getNode(event.data.get("target"));
-            if (target === undefined) {
+            let turret = this.owner.getScene().getSceneGraph().getNode(event.data.get("turret"));
+            if (target === undefined || turret.id !== this.owner.id) {
                 return;
             }
             this.parent.target = event.data.get("target");

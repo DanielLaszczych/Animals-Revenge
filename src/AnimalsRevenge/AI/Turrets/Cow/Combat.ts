@@ -20,54 +20,99 @@ export default class Combat extends State {
     protected attackSpeed: number;
     protected range: number;
     protected hasConfusion: boolean;
-    protected radiusofAOE: number;
 
     protected cooldownTimer: Timer;
+    protected doOnce: boolean;
+    protected dir: Vec2;
+    protected end: Vec2;
 
     constructor(parent: CowAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
         this.attackSpeed = stats.attackSpeed;
+        this.hasConfusion = stats.hasConfusion;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
-        this.radiusofAOE = 0;
+        this.parent.attackDuration = new Timer(5000);
     }
 
     onEnter(options: Record<string, any>): void {
     }
 
     handleInput(event: GameEvent): void {
-        if (event.type === AR_Events.ENEMY_DIED) {
+        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
+            return;
+        } else if (event.type === AR_Events.ENEMY_DIED) {
             if (this.parent.target === event.data.get("id")) {
-                this.finished("idle");
+                console.log("our target has died");
+                let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
+                if (isBurpNotInMotion) {
+                    this.finished("idle");
+                }
             }
         }
     }
 
     update(deltaT: number): void {
         let targetNode = this.owner.getScene().getSceneGraph().getNode(this.parent.target);
-        if (targetNode === undefined || !this.checkAABBtoCircleCollision(targetNode.collisionShape.getBoundingRect(), this.owner.collisionShape.getBoundingCircle())) {
-            this.finished("idle");
+        let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
+        let isTargetInRange;
+        try {
+            isTargetInRange = this.checkAABBtoCircleCollision(targetNode.collisionShape.getBoundingRect(), this.owner.collisionShape.getBoundingCircle());
+        } catch {
+            isTargetInRange = false;
+        }
+        if ((targetNode === undefined && isBurpNotInMotion) || (!isTargetInRange && isBurpNotInMotion)) {
+                this.finished("idle");
         } else {
             if (this.cooldownTimer.isStopped()) {
-                this.parent.areaofEffect = <Circle>this.owner.getScene().add.graphic(GraphicType.CIRCLE, "primary", {position: this.owner.position, radius: new Number(this.radiusofAOE)});
-                this.parent.areaofEffect.color = new Color(0, 255, 0, 0.3);
-                this.parent.areaofEffect.borderColor = Color.TRANSPARENT;
-                this.parent.trigger.setGroup("projectile");
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage});
-
-                this.owner.animation.play("Firing", false);
-                this.cooldownTimer.start();
+                try {
+                    let targetDirection;
+                    let targetPath = targetNode.mostRecentPath;
+                    targetDirection = targetPath.getMoveDirection(targetNode);
+                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(80));
+                    this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
+                    let start = this.owner.position.clone().add(this.dir.scaled(30));
+                    this.end = preditictedTargetPosition;
+                    console.log("End:" + this.end.toString())
+                    this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
+    
+                    this.parent.areaofEffect.position.set(start.x, start.y);
+                    this.parent.areaofEffect.radius = 0;
+                    this.parent.areaofEffect.visible = true;
+                    this.owner.animation.play("Burping", false);
+                    this.cooldownTimer.start();
+                    this.doOnce = false;
+                } catch {
+                    return;
                 }
             }
-            if (this.parent.areaofEffect.radius === 300) {
-                this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.parent.areaofEffect.radius, this.parent.areaofEffect.radius)), undefined, true, false);
+            let reachedTargetY = (this.parent.areaofEffect.position.y > this.end.y && this.dir.y > 0) || (this.parent.areaofEffect.position.y < this.end.y && this.dir.y < 0); 
+            let reachedTargetX = (this.parent.areaofEffect.position.x > this.end.x && this.dir.x > 0) || (this.parent.areaofEffect.position.x < this.end.x && this.dir.x < 0); 
+            if (this.parent.areaofEffect.radius === 80 && (reachedTargetX || reachedTargetY) && !this.doOnce) {
+                this.parent.trigger.position.set(this.parent.areaofEffect.position.x, this.parent.areaofEffect.position.y);
+                this.parent.attackDuration.start();
+                this.parent.trigger.removePhysics();
+                this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.parent.areaofEffect.radius, this.parent.areaofEffect.radius)), undefined, false, false);
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, confuseEnemy: this.hasConfusion});
+                this.doOnce = true;
             } else {
-                this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, new Vec2(this.parent.areaofEffect.radius, this.parent.areaofEffect.radius)), undefined, true, false);
-                this.parent.areaofEffect.radius += 2;   
+                if (this.parent.areaofEffect.radius !== 80) {
+                    this.parent.areaofEffect.radius += 1;   
+                }
+                if (!(reachedTargetY || reachedTargetX)) {
+                    console.log("pushing");
+                    this.parent.areaofEffect.position.add(this.dir.scaled(2));
+                }
+            }
+            if(this.parent.attackDuration.isStopped() && this.doOnce) {
+                this.parent.areaofEffect.visible = false;
+                this.doOnce = false;
+                this.parent.trigger.setTrigger("enemy", null, null, {damage: this.damage});
             }
         }
+    }
 
     onExit(): Record<string, any> {
         return null;

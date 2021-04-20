@@ -26,7 +26,8 @@ export default class Idle extends State {
     handleInput(event: GameEvent): void {
         if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
             let target = this.owner.getScene().getSceneGraph().getNode(event.data.get("target"));
-            if (target === undefined) {
+            let turret = this.owner.getScene().getSceneGraph().getNode(event.data.get("turret"));
+            if (target === undefined || turret.id !== this.owner.id) {
                 return;
             }
             this.parent.target = event.data.get("target");
@@ -40,7 +41,10 @@ export default class Idle extends State {
             this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
             this.idleTimer.start();
         }
-        
+        if(this.parent.attackDuration.isStopped() && this.parent.areaofEffect.visible) {
+            this.parent.areaofEffect.visible = false;
+            this.parent.trigger.setTrigger("enemy", null, null, {damage: 0});
+        }
     }
 
     onExit(): Record<string, any> {
