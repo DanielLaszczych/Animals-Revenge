@@ -18,10 +18,11 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyAI from "../AI/Enemies/EnemyAI";
 import { AR_Events } from "../animalrevenge_enums";
-import ChickenAI from "../AI/Turrets/ChickenAI";
+import ChickenAI from "../AI/Turrets/Chicken/ChickenAI";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import LevelSelection from "./LevelSelection";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import CowAI from "../AI/Turrets/Cow/CowAI";
 
 export default class GameLevel extends Scene {
 
@@ -73,8 +74,7 @@ export default class GameLevel extends Scene {
     protected tilemap: OrthogonalTilemap;
 
     protected defaultTowerValues: Map<string, any>;
-    protected placedTowers: Map<number, 
-    {sprite: AnimatedSprite, name: string, button: Button, damage: number, attackSpeed: number, range: number, upgrade1: string, upgrade1Cost: number, upgrade2: string, upgrade2Cost: number, totalValue: number}>;
+    protected placedTowers: Map<number, any>;
 
     protected spawningEnemies: boolean = false;
 
@@ -87,16 +87,16 @@ export default class GameLevel extends Scene {
     }
 
     loadScene(): void {
-        this.load.image("heart", "assets/images/heart_temp.png");
+        this.load.image("heart", "assets/images/heart.png");
         this.load.image("chickenTowerSprite", "assets/sprites/Chicken.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
-        this.load.image("cowTower", "assets/images/heart_temp.png"); //TODO - Change to this cow sprite when avaiable
-        this.load.image("spiderTower", "assets/images/heart_temp.png"); //TODO - Change to this spider sprite when avaiable
-        this.load.image("eagleTower", "assets/images/heart_temp.png"); //TODO - Change to this eagle sprite when avaiable
-        this.load.image("elephantTower", "assets/images/heart_temp.png"); //TODO - Change to this elephant sprite when avaiable
-        this.load.image("penguinTower", "assets/images/heart_temp.png"); //TODO - Change to this penguin sprite when avaiable
-        this.load.image("coin", "assets/images/coin_temp.png");
-        this.load.image("egg", "assets/images/egg.png")
+        this.load.spritesheet("cowTower", "assets/spritesheets/cow.json"); //TODO - Change to this cow sprite when avaiable
+        this.load.image("spiderTower", "assets/images/heart.png"); //TODO - Change to this spider sprite when avaiable
+        this.load.image("eagleTower", "assets/images/heart.png"); //TODO - Change to this eagle sprite when avaiable
+        this.load.image("elephantTower", "assets/images/heart.png"); //TODO - Change to this elephant sprite when avaiable
+        this.load.image("penguinTower", "assets/images/heart.png"); //TODO - Change to this penguin sprite when avaiable
+        this.load.image("coin", "assets/images/Coin.png");
+        this.load.image("egg", "assets/images/Egg.png")
         this.load.object("towerData", "assets/data/default_tower_values.json");
     }
 
@@ -146,7 +146,7 @@ export default class GameLevel extends Scene {
 
     protected addUI(): void {
         let heart = this.add.sprite("heart", "UI");
-        heart.scale.set(0.2, 0.2);
+        heart.scale.set(2.5, 2.5);
         heart.position.set(30, 30);
 
         this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(90, 30), text: this.healthCount.toString()});
@@ -154,7 +154,7 @@ export default class GameLevel extends Scene {
         this.healthCountLabel.font = "PixelSimple";
 
         let coin = this.add.sprite("coin", "UI");
-        coin.scale.set(0.1, 0.1);
+        coin.scale.set(2.5, 2.5);
         coin.position.set(180, 30);
 
         this.moneyCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(240, 30), text: this.moneyCount.toString()});
@@ -238,15 +238,15 @@ export default class GameLevel extends Scene {
             cowTowerBtn.setPadding(new Vec2(30, 15));
 
             cowTowerBtn.onClick = () => {
-                // this.createTowerFromShop("cowTower");
+                this.createTowerFromShop("cowTower");
             }
             cowTowerBtn.onEnter = () => {
                 cowTowerBtn.textColor = Color.WHITE;
-                // this.displayTowerInfoFromShop("cowTower");
+                this.displayTowerInfoFromShop("cowTower");
             }
             cowTowerBtn.onLeave = () => {
                 cowTowerBtn.textColor = Color.BLACK;
-                // this.hideTowerInfoFromShop();
+                this.hideTowerInfoFromShop();
             }
         }
 
@@ -481,7 +481,7 @@ export default class GameLevel extends Scene {
             this.selectedTowerShopSprite.scale.set(4, 4);
             this.selectedTowerShopSprite.addPhysics();
             
-            this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(250)});
+            this.selectedTowerRange = <Circle>this.add.graphic(GraphicType.CIRCLE, "UI", {position: Input.getMousePosition(), radius: new Number(towerData.range)});
             this.selectedTowerRange.color = Color.WHITE;
             this.selectedTowerRange.alpha = 0.3;
             this.selectedTowerRange.borderColor = Color.TRANSPARENT;
@@ -493,8 +493,8 @@ export default class GameLevel extends Scene {
                     {
                         property: "radius",
                         resetOnComplete: true,
-                        start: 250,
-                        end: 260,
+                        start: towerData.range,
+                        end: towerData.range + 10,
                         ease: EaseFunctionType.IN_OUT_SINE
                     },
                 ],
@@ -834,6 +834,7 @@ export default class GameLevel extends Scene {
 
                 case AR_Events.ENEMY_HIT:
                     {
+                        console.log("enemy hit");
                         let node = this.sceneGraph.getNode(event.data.get("node"));
                         let other = this.sceneGraph.getNode(event.data.get("other"));
                         let enemy;
@@ -886,7 +887,6 @@ export default class GameLevel extends Scene {
                     this.emitter.fireEvent(AR_Events.TOWER_EXITED_ENEMY_PATH);
                 }
                 if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
-                    console.log(this.selectedTowerShopSprite.imageId);
                     let newTower = this.add.animatedSprite(this.selectedTowerShopSprite.imageId + "Tower", "primary");
                     newTower.position.set(this.selectedTowerShopSprite.position.x, this.selectedTowerShopSprite.position.y);
                     newTower.scale.set(4, 4);
@@ -901,8 +901,19 @@ export default class GameLevel extends Scene {
 
                     let defaultTowerData = this.defaultTowerValues.get(this.selectedTowerShopSprite.imageId + "Tower");
                     newTower.addPhysics(new CircleShape(Vec2.ZERO, defaultTowerData.range), undefined, true, false);
-                    newTower.addAI(ChickenAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range});
-
+                    switch (this.selectedTowerShopSprite.imageId) {
+                        case "chicken":
+                            {
+                                newTower.addAI(ChickenAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range});
+                            }
+                            break;
+                        
+                        case "cow":
+                            {
+                                newTower.addAI(CowAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, auraRange: defaultTowerData.auraRange, hasConfusion: defaultTowerData.hasConfusion});
+                            } 
+                            break;   
+                    }
                     this.selectedTowerShopSprite.destroy();
                     this.selectedTowerShopSprite = null;
                     this.selectedTowerRange.destroy();

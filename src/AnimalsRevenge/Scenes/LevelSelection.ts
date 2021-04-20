@@ -186,31 +186,31 @@ export default class LevelSelection extends Scene {
 
         level2Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(MainMenu, {}, {});
+                // this.sceneManager.changeToScene(MainMenu, {}, {});
             }
         }
 
         level3Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(MainMenu, {}, {});
+                // this.sceneManager.changeToScene(MainMenu, {}, {});
             }
         }
 
         level4Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(MainMenu, {}, {});
+                // this.sceneManager.changeToScene(MainMenu, {}, {});
             }
         }
 
         level5Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(MainMenu, {}, {});
+                // this.sceneManager.changeToScene(MainMenu, {}, {});
             }
         }
 
         level6Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                this.sceneManager.changeToScene(MainMenu, {}, {});
+                // this.sceneManager.changeToScene(MainMenu, {}, {});
             }
         }
     }

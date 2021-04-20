@@ -1,17 +1,12 @@
-import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
-import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
-import State from "../../../Wolfie2D/DataTypes/State/State";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import GameNode, { TweenableProperties } from "../../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Line from "../../../Wolfie2D/Nodes/Graphics/Line";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import Timer from "../../../Wolfie2D/Timing/Timer";
-import Color from "../../../Wolfie2D/Utils/Color";
-import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
-import { AR_Events } from "../../animalrevenge_enums";
+
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Circle from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
+import State from "../../../../Wolfie2D/DataTypes/State/State";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
+import { AR_Events } from "../../../animalrevenge_enums";
 import ChickenAI from "./ChickenAI";
 
 export default class Combat extends State {

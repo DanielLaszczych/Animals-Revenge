@@ -1,10 +1,8 @@
-import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI"
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite"
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import Scene from "../../../Wolfie2D/Scene/Scene";
-import { AR_Events } from "../../animalrevenge_enums";
+import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
+import { AR_Events } from "../../../animalrevenge_enums";
 import Combat from "./Combat";
 import Idle from "./Idle";
 
