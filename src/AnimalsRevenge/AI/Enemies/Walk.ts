@@ -43,7 +43,7 @@ export default class Walk extends State {
 
     handleInput(event: GameEvent): void {
         if (event.type === AR_Events.ENEMY_CONFUSED) {
-            if (this.owner.id === event.data.get("id") && this.confuseImmunity.isStopped()) {
+            if (this.owner.id === event.data.get("id") && this.confuseImmunity.isStopped() && !this.owner.frozen) {
                 this.confusedStacks++;
                 if (this.confusedStacks > 60) {
                     this.owner.freeze();

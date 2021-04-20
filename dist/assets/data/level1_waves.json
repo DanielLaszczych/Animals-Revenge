@@ -8,27 +8,27 @@
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 7,
-            "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [2, 3, 2],
-            "route": [0, 1, 2, 3, 4, 5, 6, 7]
-        },
-        {
-            "totalEnemies": 18,
-            "enemies": ["farmer", "farmer"],
-            "numberEnemies": [6, 12],
-            "route": [0, 1, 2, 3, 4, 5, 6, 7]
-        },
-        {
-            "totalEnemies": 23,
-            "enemies": ["farmer", "farmer"],
-            "numberEnemies": [5, 18],
-            "route": [0, 1, 2, 3, 4, 5, 6, 7]
-        },
-        {
             "totalEnemies": 30,
             "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [6, 6, 18],
+            "numberEnemies": [2, 3, 25],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 48,
+            "enemies": ["farmer", "farmer"],
+            "numberEnemies": [6, 42],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 58,
+            "enemies": ["farmer", "farmer"],
+            "numberEnemies": [5, 53],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 70,
+            "enemies": ["farmer", "farmer", "farmer"],
+            "numberEnemies": [6, 6, 58],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         }
     ]

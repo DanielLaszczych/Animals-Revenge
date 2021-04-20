@@ -78,6 +78,7 @@ export default class GameLevel extends Scene {
     protected placedTowers: Map<number, any>;
 
     protected spawningEnemies: boolean = false;
+    protected timeBetweenSpawn: number = 1000;
 
     initScene(init: Record<string, any>) {
         this.healthCount = init.startHealth;
@@ -176,6 +177,9 @@ export default class GameLevel extends Scene {
         this.startWaveBtn.onClick = () => {
             if (Input.getMousePressButton() === BUTTON.LEFTCLICK && !this.isPlacedTowerSelected) {
                 this.startWaveBtn.visible = false;
+                if (this.currentWave >= 2) {
+                    this.timeBetweenSpawn -= 100;
+                }
                 this.spawningEnemies = true;
                 this.waveInProgress = true;
             }
@@ -757,15 +761,18 @@ export default class GameLevel extends Scene {
     }
 
     protected incHealth(amt: number): void {
-        if (this.healthCount > 0) this.healthCount += amt;
-        this.healthCountLabel.text = this.healthCount.toString();
-        if (this.healthCount === 0) {
-            this.victoryLabel.visible = true;
-            this.victoryLabel.text = "Defeat";
-            this.startWaveBtn.visible = false;
-            setTimeout(() => {
-                    this.sceneManager.changeToScene(LevelSelection, {}, {});
-            }, 3000);
+        if (this.healthCount > 0) {
+            this.healthCount += amt;
+            this.healthCountLabel.text = this.healthCount.toString();
+            if (this.healthCount === 0) {
+                this.waveInProgress = false;
+                this.victoryLabel.visible = true;
+                this.victoryLabel.text = "Defeat";
+                this.startWaveBtn.visible = false;
+                setTimeout(() => {
+                        this.sceneManager.changeToScene(LevelSelection, {}, {});
+                }, 3000);
+            }
         }
     }
 
@@ -814,7 +821,7 @@ export default class GameLevel extends Scene {
             this.enemies = new Map();
             this.enemyNumber = 0;
         }
-        if(Date.now() - this.timeNow >= 1000){
+        if(Date.now() - this.timeNow >= this.timeBetweenSpawn){
             this.timeNow = Date.now();
             let enemySprite;
             let enemyHealth;
@@ -1144,7 +1151,7 @@ export default class GameLevel extends Scene {
         }
 
         if (this.waveInProgress) {
-            if (this.enemies.size === 0 && !this.spawningEnemies) {
+            if (this.enemies.size === 0 && !this.spawningEnemies && this.healthCount > 0) {
                 this.waveInProgress = false;
                 if (this.currentWave === this.totalWaves) {
                     this.victoryLabel.visible = true;
@@ -1160,7 +1167,7 @@ export default class GameLevel extends Scene {
                     setTimeout(() => {
                         this.victoryLabel.visible = false;
                     }, 3000);
-                    this.moneyCount += 200;
+                    this.moneyCount += 150;
                     this.moneyCountLabel.text = this.moneyCount.toString();
                     this.currentWave++;
                     this.waveCountLabel.text = "Wave " + this.currentWave + "/" + this.totalWaves;

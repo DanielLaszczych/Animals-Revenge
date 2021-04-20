@@ -13,7 +13,7 @@
             "name": "Chicken Tower",
             "cost": 100,
             "damage": 5,
-            "attackSpeed": 4,
+            "attackSpeed": 2,
             "range": 250,
             "upgrade1": "+ Attack Speed",
             "upgrade1Cost": 100,
