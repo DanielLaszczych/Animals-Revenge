@@ -13,7 +13,7 @@ export default class EnemyAI extends StateMachineAI{
         this.owner = owner;
         
         this.addState("default", new Walk(this, owner, options.navigation, options.speed));
-
+        
         this.initialize("default");
         this.receiver.subscribe(AR_Events.ENEMY_CONFUSED);
     }

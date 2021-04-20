@@ -38,7 +38,6 @@ export default class Walk extends State {
         if (this.currentPath == null) {
             this.currentPath = this.getNextPath();
         }
-
     }
 
     handleInput(event: GameEvent): void {

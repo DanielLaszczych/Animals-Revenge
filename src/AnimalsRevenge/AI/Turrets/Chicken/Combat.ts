@@ -44,6 +44,7 @@ export default class Combat extends State {
     }
     
     update(deltaT: number): void {
+        try{
         let targetNode = this.owner.getScene().getSceneGraph().getNode(this.parent.target);
         let isTargetInRange;
         try {
@@ -62,7 +63,10 @@ export default class Combat extends State {
                     let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(20));
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
+<<<<<<< HEAD
     
+=======
+>>>>>>> 2827769d74a289ce3910fa0d8855fab91c00bc61
                     let projectile = this.owner.getScene().add.sprite("egg", "primary");
                     projectile.scale.set(1.5, 1.5);
                     projectile.position.set(start.x, start.y);
@@ -93,6 +97,8 @@ export default class Combat extends State {
                 continue;
             }
             i++;
+        }
+    }catch(e){
         }   
     }
 
