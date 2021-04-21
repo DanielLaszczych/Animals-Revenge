@@ -38,22 +38,51 @@ export default class Combat extends State {
     }
 
     onEnter(options: Record<string, any>): void {
+        this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
+        this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
     }
 
     handleInput(event: GameEvent): void {
-        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
-            return;
-        } else if (event.type === AR_Events.ENEMY_DIED) {
-            if (this.parent.target === event.data.get("id")) {
-                let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
-                if (isBurpNotInMotion) {
-                    this.finished("idle");
-                }
+        if (event.type === AR_Events.LEVEL_SPEED_CHANGE) {
+            this.parent.levelSpeed = event.data.get("levelSpeed");
+            this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
+            this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
+        }
+        if (event.type === AR_Events.PAUSE_RESUME_GAME) {
+            if (event.data.get("pausing")) {
+                this.parent.isPaused = true;
+                this.owner.animation.pause();
+                if (this.cooldownTimer.isRunning()) this.cooldownTimer.pause();
+                if (this.parent.attackDuration.isRunning()) this.parent.attackDuration.pause();
+                return;
+            } else {
+                this.parent.isPaused = false;
+                this.owner.animation.resume();
+                if (this.cooldownTimer.isPaused()) this.cooldownTimer.resume();
+                if (this.parent.attackDuration.isPaused()) this.parent.attackDuration.resume();
+                return;
             }
         }
+        if (this.parent.isPaused) {
+            return;
+        }
+        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
+            return;
+        } 
+        // else if (event.type === AR_Events.ENEMY_DIED) {
+        //     if (this.parent.target === event.data.get("id")) {
+        //         let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
+        //         if (isBurpNotInMotion) {
+        //             this.finished("idle");
+        //         }
+        //     }
+        // }
     }
 
     update(deltaT: number): void {
+        if (this.parent.isPaused) {
+            return;
+        }
         let targetNode = this.owner.getScene().getSceneGraph().getNode(this.parent.target);
         let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
         let isTargetInRange;
@@ -70,7 +99,7 @@ export default class Combat extends State {
                     let targetDirection;
                     let targetPath = targetNode.mostRecentPath;
                     targetDirection = targetPath.getMoveDirection(targetNode);
-                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(80));
+                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
                     this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone().add(this.dir.scaled(25));
                     this.end = preditictedTargetPosition;
@@ -93,14 +122,14 @@ export default class Combat extends State {
                 this.parent.attackDuration.start();
                 this.parent.trigger.removePhysics();
                 this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, this.parent.areaofEffect.sizeWithZoom), undefined, false, false);
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, confuseEnemy: this.hasConfusion});
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
                 this.doOnce = true;
             } else {
                 if (this.parent.areaofEffect.scale.x < 4.5) {
-                    this.parent.areaofEffect.scale.add(new Vec2(0.07, 0.07));   
+                    this.parent.areaofEffect.scale.add(new Vec2(0.07 * this.parent.levelSpeed, 0.07 * this.parent.levelSpeed));   
                 }
                 if (!(reachedTargetY || reachedTargetX)) {
-                    this.parent.areaofEffect.position.add(this.dir.scaled(2));
+                    this.parent.areaofEffect.position.add(this.dir.scaled(2 * this.parent.levelSpeed));
                 }
             }
             if(this.parent.attackDuration.isStopped() && this.doOnce) {

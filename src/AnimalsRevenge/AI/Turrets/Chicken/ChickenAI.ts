@@ -13,17 +13,28 @@ export default class ChickenAI extends StateMachineAI {
     protected stats: Record<string, any>;
     public target: number;
     public projectiles: Array<{sprite: Sprite, dir: Vec2}>;
+    public isPaused: boolean = false;
+    public levelSpeed: number;
+    public predictionMultiplier: Map<number, number>;
     
     initializeAI(owner: AnimatedSprite, stats: Record<string, any>) {
         this.owner = owner;
         this.stats = stats;
         this.projectiles = new Array();
+        this.levelSpeed = 1;
+        this.predictionMultiplier = new Map([
+            [1, 24],
+            [2, 35],
+            [4, 45]
+        ]);
 
         this.addState("idle", new Idle(this, owner));
         this.addState("combat", new Combat(this, owner, this.stats));
 
         this.receiver.subscribe(AR_Events.ENEMY_ENTERED_TOWER_RANGE);
         this.receiver.subscribe(AR_Events.ENEMY_DIED);
+        this.receiver.subscribe(AR_Events.PAUSE_RESUME_GAME);
+        this.receiver.subscribe(AR_Events.LEVEL_SPEED_CHANGE);
 
         this.initialize("idle");
     }

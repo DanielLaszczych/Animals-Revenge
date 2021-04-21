@@ -22,11 +22,14 @@ export default class Timer implements Updateable {
     /** The number of times this timer has been run */
     protected numRuns: number;
 
+    public levelSpeed: number;
+
     constructor(time: number, onEnd?: Function, loop: boolean = false){
         // Register this timer
         TimerManager.getInstance().addTimer(this);
         
         this.totalTime = time;
+        this.levelSpeed = 1;
         this.timeLeft = 0;
         this.onEnd = onEnd;
         this.loop = loop;
@@ -40,6 +43,10 @@ export default class Timer implements Updateable {
 
     isPaused(){
         return this.state === TimerState.PAUSED;
+    }
+
+    isRunning() {
+        return this.state === TimerState.ACTIVE;
     }
 
     /**
@@ -68,9 +75,13 @@ export default class Timer implements Updateable {
         this.state = TimerState.PAUSED;
     }
 
+    resume(): void {
+        this.state = TimerState.ACTIVE;
+    }
+
     update(deltaT: number){
         if(this.state === TimerState.ACTIVE){
-            this.timeLeft -= deltaT*1000;
+            this.timeLeft -= deltaT*1000*this.levelSpeed;
 
             if(this.timeLeft <= 0){
                 this.timeLeft = MathUtils.clampLow0(this.timeLeft);

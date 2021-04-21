@@ -23,10 +23,27 @@ export default class CowAI extends StateMachineAI {
     public areaofEffect: Sprite;
     public trigger: Point;
     public attackDuration: Timer;
+    public isPaused: boolean = false;
+    public levelSpeed: number;
+    public predictionMultiplier: Map<number, number>;
+    public damageMultiplier: Map<number, number>;
     
     initializeAI(owner: AnimatedSprite, stats: Record<string, any>) {
         this.owner = owner;
         this.stats = stats;
+
+        this.levelSpeed = 1;
+        this.predictionMultiplier = new Map([
+            [1, 80],
+            [2, 90],
+            [4, 100]
+        ]);
+
+        this.damageMultiplier = new Map([
+            [1, 1],
+            [2, 2.1],
+            [4, 2.8]
+        ]);
 
         this.addState("idle", new Idle(this, owner));
         this.addState("combat", new Combat(this, owner, this.stats));
@@ -42,6 +59,8 @@ export default class CowAI extends StateMachineAI {
 
         this.receiver.subscribe(AR_Events.ENEMY_ENTERED_TOWER_RANGE);
         this.receiver.subscribe(AR_Events.ENEMY_DIED);
+        this.receiver.subscribe(AR_Events.PAUSE_RESUME_GAME);
+        this.receiver.subscribe(AR_Events.LEVEL_SPEED_CHANGE);
 
         this.initialize("idle");
     }

@@ -23,6 +23,7 @@ import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import LevelSelection from "./LevelSelection";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import CowAI from "../AI/Turrets/Cow/CowAI";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 export default class GameLevel extends Scene {
 
@@ -35,8 +36,10 @@ export default class GameLevel extends Scene {
     protected currentWave: number = 0;
     protected waveCountLabel: Label;
     protected startWaveBtn: Button;
+    protected levelSpeedBtn: Button;
     protected waveInProgress: boolean = false;
     protected victoryLabel: Label;
+    protected isGamePaused: boolean = false;
 
     protected towersUnlocked: number = 0;
 
@@ -66,9 +69,9 @@ export default class GameLevel extends Scene {
 
     protected waves: Array<Record<string, any>>;
     protected currentWaveData: Record<string, any> = null;
-    protected timeNow: number = Date.now();
     protected enemies: Map<GameNode, Array<number>>;
     protected enemyNumber: number;
+    protected levelSpeed: number;
 
     protected levelEndArea: Rect;
 
@@ -79,11 +82,13 @@ export default class GameLevel extends Scene {
 
     protected spawningEnemies: boolean = false;
     protected timeBetweenSpawn: number = 1000;
+    protected spawnTimer: Timer;
 
     initScene(init: Record<string, any>) {
         this.healthCount = init.startHealth;
         this.moneyCount = init.startMoney;
         this.currentWave = 1;
+        this.levelSpeed = 1;
         this.totalWaves = init.totalWaves;
         this.towersUnlocked = init.towersUnlocked;
     }
@@ -180,8 +185,13 @@ export default class GameLevel extends Scene {
                 if (this.currentWave >= 2) {
                     this.timeBetweenSpawn -= 100;
                 }
+                this.spawnTimer = new Timer(this.timeBetweenSpawn);
+                this.levelSpeed = 1;
+                this.emitter.fireEvent(AR_Events.LEVEL_SPEED_CHANGE, {levelSpeed: this.levelSpeed});
+                this.levelSpeedBtn.text = "Speed: " + this.levelSpeed + "x";
                 this.spawningEnemies = true;
                 this.waveInProgress = true;
+                this.levelSpeedBtn.visible = true;
             }
         }
         this.startWaveBtn.onEnter = () => {
@@ -189,6 +199,40 @@ export default class GameLevel extends Scene {
         }
         this.startWaveBtn.onLeave = () => {
             this.startWaveBtn.textColor = Color.BLACK;
+        }
+
+        this.levelSpeedBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(80, 80), text: "Speed: " + this.levelSpeed + "x"});
+        this.levelSpeedBtn.backgroundColor = Color.TRANSPARENT;
+        this.levelSpeedBtn.textColor = Color.BLACK;
+        this.levelSpeedBtn.borderColor = Color.BLACK;
+        this.levelSpeedBtn.borderRadius = 0;
+        this.levelSpeedBtn.fontSize = 25;
+        this.levelSpeedBtn.font = "PixelSimple";
+        this.levelSpeedBtn.visible = false;
+        this.levelSpeedBtn.setPadding(new Vec2(10, 10));
+
+        this.levelSpeedBtn.onClick = () => {
+            if (Input.getMousePressButton() === BUTTON.LEFTCLICK) {
+                if (this.levelSpeed !== 4) {
+                    this.levelSpeed *= 2;
+                    this.spawnTimer.levelSpeed = this.levelSpeed;
+                    this.levelSpeedBtn.text = "Speed: " + this.levelSpeed + "x";
+                    this.emitter.fireEvent(AR_Events.LEVEL_SPEED_CHANGE, {levelSpeed: this.levelSpeed});
+                }
+            } else if (Input.getMousePressButton() === BUTTON.RIGHTCLICK) {
+                if (this.levelSpeed !== 1) {
+                    this.levelSpeed /= 2;
+                    this.spawnTimer.levelSpeed = this.levelSpeed;
+                    this.levelSpeedBtn.text = "Speed: " + this.levelSpeed + "x";
+                    this.emitter.fireEvent(AR_Events.LEVEL_SPEED_CHANGE, {levelSpeed: this.levelSpeed});
+                }
+            }
+        }
+        this.levelSpeedBtn.onEnter = () => {
+            this.levelSpeedBtn.textColor = Color.WHITE;
+        }
+        this.levelSpeedBtn.onLeave = () => {
+            this.levelSpeedBtn.textColor = Color.BLACK;
         }
 
         this.waveCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(810, 30), text: "Wave " + this.currentWave + "/" + this.totalWaves});
@@ -659,7 +703,7 @@ export default class GameLevel extends Scene {
                                 if (towerData.attackSpeedUpgradesRemaining !== 0) {
                                     purchaseCost = towerData.upgrade1Cost;
                                     towerData.attackSpeedUpgradesRemaining--;
-                                    towerData.upgrade1Cost += 100;
+                                    towerData.upgrade1Cost += 50;
                                     if (towerData.attackSpeedUpgradesRemaining === 0) {
                                         this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nMaxed Out");
                                         this.selectedTowerUpgrade1Btn.sizeAssigned = false;
@@ -713,7 +757,7 @@ export default class GameLevel extends Scene {
                                 towerData.range += 50;
                                 purchaseCost = towerData.upgrade2Cost;
                                 this.selectedTowerRange.radius = towerData.range;
-                                towerData.upgrade2Cost += 100;
+                                towerData.upgrade2Cost += 50;
                                 towerData.sprite.addPhysics(new CircleShape(Vec2.ZERO, towerData.range), undefined, true, false);
                                 if (towerData.range >= towerData.maxRange) {
                                     this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nMaxed Out");
@@ -766,6 +810,7 @@ export default class GameLevel extends Scene {
             this.healthCountLabel.text = this.healthCount.toString();
             if (this.healthCount === 0) {
                 this.waveInProgress = false;
+                this.levelSpeedBtn.visible = false;
                 this.victoryLabel.visible = true;
                 this.victoryLabel.text = "Defeat";
                 this.startWaveBtn.visible = false;
@@ -821,8 +866,8 @@ export default class GameLevel extends Scene {
             this.enemies = new Map();
             this.enemyNumber = 0;
         }
-        if(Date.now() - this.timeNow >= this.timeBetweenSpawn){
-            this.timeNow = Date.now();
+        if(this.spawnTimer.isStopped()){
+            this.spawnTimer.start();
             let enemySprite;
             let enemyHealth;
             let enemyDefense;
@@ -841,7 +886,7 @@ export default class GameLevel extends Scene {
             enemySprite.animation.play("WALK");
             enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));
-            enemySprite.addAI(EnemyAI, {navigation: path, speed: 100});        
+            enemySprite.addAI(EnemyAI, {navigation: path, speed: 100, levelSpeed: this.levelSpeed});        
             enemySprite.setGroup("enemy");
 
             this.enemies.set(enemySprite, [enemyHealth, enemyDefense]);
@@ -1017,13 +1062,27 @@ export default class GameLevel extends Scene {
                         if (newHealth <= 0) {
                             this.enemies.delete(enemy);
                             enemy.destroy();
-                            this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: id});
+                            // this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: id});
                         } else {
                             this.enemies.set(enemy, [newHealth, defense]);
                         }
                     }
                     break;
             }
+        }
+
+        if(Input.isKeyJustPressed("escape")){
+            this.isGamePaused = !this.isGamePaused;
+            if (this.isGamePaused) {
+                this.victoryLabel.text = "Paused";
+                this.victoryLabel.visible = true;
+            } else {
+                this.victoryLabel.visible = false;
+            }
+            if (this.spawningEnemies) {
+                this.isGamePaused ? this.spawnTimer.pause() : this.spawnTimer.resume();
+            }
+            this.emitter.fireEvent(AR_Events.PAUSE_RESUME_GAME, {pausing: this.isGamePaused});
         }
 
         if (this.isTowerSelectedFromShop) {
@@ -1132,7 +1191,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if(this.spawningEnemies){
+        if(this.spawningEnemies && !this.isGamePaused){
             this.spawnEnemy();
         }
 
@@ -1156,6 +1215,7 @@ export default class GameLevel extends Scene {
                 if (this.currentWave === this.totalWaves) {
                     this.victoryLabel.visible = true;
                     this.victoryLabel.text = "Victory!";
+                    this.levelSpeedBtn.visible = false;
                     this.startWaveBtn.visible = false;
                     setTimeout(() => {
                           this.sceneManager.changeToScene(LevelSelection, {}, {});
@@ -1163,7 +1223,9 @@ export default class GameLevel extends Scene {
                 } else {
                     this.startWaveBtn.visible = true;
                     this.victoryLabel.visible = true;
+                    this.levelSpeedBtn.visible = false;
                     this.victoryLabel.text = "Wave Complete!";
+                    this.emitter.fireEvent(AR_Events.LEVEL_SPEED_CHANGE, {levelSpeed: 1});
                     setTimeout(() => {
                         this.victoryLabel.visible = false;
                     }, 3000);
@@ -1203,7 +1265,6 @@ export default class GameLevel extends Scene {
                 }
             }
         }
-
         // Display the navmesh of the current level
         if(Input.isKeyJustPressed("f")){
             this.getLayer("graph").setHidden(!this.getLayer("graph").isHidden());

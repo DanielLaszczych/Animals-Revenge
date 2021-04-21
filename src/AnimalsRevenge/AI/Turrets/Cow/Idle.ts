@@ -20,10 +20,35 @@ export default class Idle extends State {
         this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
         this.owner.animation.stop();
         this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
+        this.idleTimer.levelSpeed = this.parent.levelSpeed;
         this.idleTimer.start();
+        this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
     }
 
     handleInput(event: GameEvent): void {
+        if (event.type === AR_Events.LEVEL_SPEED_CHANGE) {
+            this.parent.levelSpeed = event.data.get("levelSpeed");
+            this.idleTimer.levelSpeed = this.parent.levelSpeed;
+            this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
+        }
+        if (event.type === AR_Events.PAUSE_RESUME_GAME) {
+            if (event.data.get("pausing")) {
+                this.parent.isPaused = true;
+                this.owner.animation.pause();
+                if (this.idleTimer.isRunning()) this.idleTimer.pause();
+                if (this.parent.attackDuration.isRunning()) this.parent.attackDuration.pause();
+                return;
+            } else {
+                this.parent.isPaused = false;
+                this.owner.animation.resume();
+                if (this.idleTimer.isPaused()) this.idleTimer.resume();
+                if (this.parent.attackDuration.isPaused()) this.parent.attackDuration.resume();
+                return;
+            }
+        }
+        if (this.parent.isPaused) {
+            return;
+        }
         if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
             let target = this.owner.getScene().getSceneGraph().getNode(event.data.get("target"));
             let turret = this.owner.getScene().getSceneGraph().getNode(event.data.get("turret"));
@@ -36,6 +61,9 @@ export default class Idle extends State {
     }
 
     update(deltaT: number): void {
+        if (this.parent.isPaused) {
+            return;
+        }
         if (this.idleTimer.isStopped()) {
             this.owner.animation.play("IDLE");
             this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));

@@ -5,5 +5,7 @@ export enum AR_Events {
     ENEMY_ENTERED_TOWER_RANGE = "EnemyEnteredTowerRange",
     ENEMY_HIT = "EnemyHit",
     ENEMY_DIED = "EnemyDied",
-    ENEMY_CONFUSED = "EnemyConfused"
+    ENEMY_CONFUSED = "EnemyConfused",
+    PAUSE_RESUME_GAME = "PauseResumeGame",
+    LEVEL_SPEED_CHANGE = "LevelSpeedChange"
 }

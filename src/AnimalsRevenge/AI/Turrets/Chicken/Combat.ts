@@ -27,22 +27,48 @@ export default class Combat extends State {
         this.attackSpeed = stats.attackSpeed;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
+        this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
     }
     
     onEnter(options: Record<string, any>): void {
+        this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
     }
 
     handleInput(event: GameEvent): void {
-        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
-           return;
-        } else if (event.type === AR_Events.ENEMY_DIED) {
-            if (this.parent.target === event.data.get("id")) {
-                this.finished("idle");
+        if (event.type === AR_Events.LEVEL_SPEED_CHANGE) {
+            this.parent.levelSpeed = event.data.get("levelSpeed");
+            this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
+        }
+        if (event.type === AR_Events.PAUSE_RESUME_GAME) {
+            if (event.data.get("pausing")) {
+                this.parent.isPaused = true;
+                this.owner.animation.pause();
+                if (this.cooldownTimer.isRunning()) this.cooldownTimer.pause();
+                return;
+            } else {
+                this.parent.isPaused = false;
+                this.owner.animation.resume();
+                if (this.cooldownTimer.isPaused()) this.cooldownTimer.resume();
+                return;
             }
         }
+        if (this.parent.isPaused) {
+            return;
+        }
+        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
+           return;
+        } 
+        // else if (event.type === AR_Events.ENEMY_DIED) {
+        //     if (this.parent.target === event.data.get("id")) {
+        //         this.finished("idle");
+        //     }
+        // }
     }
     
     update(deltaT: number): void {
+        if (this.parent.isPaused) {
+            return;
+        }
         let targetNode = this.owner.getScene().getSceneGraph().getNode(this.parent.target);
         let isTargetInRange;
         try {
@@ -58,7 +84,7 @@ export default class Combat extends State {
                     let targetDirection;
                     let targetPath = targetNode.mostRecentPath;
                     targetDirection = targetPath.getMoveDirection(targetNode);
-                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(24));
+                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
     
@@ -84,7 +110,7 @@ export default class Combat extends State {
                 projectile.destroy();
                 continue;
             }
-            let newPosition = this.parent.projectiles[i].sprite.position.add(this.parent.projectiles[i].dir.scaled(15));
+            let newPosition = this.parent.projectiles[i].sprite.position.add(this.parent.projectiles[i].dir.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
             this.parent.projectiles[i].sprite.position.set(newPosition.x, newPosition.y);
             if (this.parent.projectiles[i].sprite.position.x > 1200 || this.parent.projectiles[i].sprite.position.x < 0) {
                 let projectile = this.parent.projectiles.splice(i, 1)[0].sprite;
