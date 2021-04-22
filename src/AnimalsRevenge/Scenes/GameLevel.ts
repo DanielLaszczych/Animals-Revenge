@@ -1264,23 +1264,24 @@ export default class GameLevel extends Scene {
                     }
                 }
             }
+        }
 
-            if (this.enemies.size !== 0) {
+        if (this.enemies !== undefined && this.enemies.size !== 0) {
+            for (let enemySprite of Array.from(this.enemies.keys())) {
+                let healthBar = <Rect>this.enemies.get(enemySprite).healthBar;
+                healthBar.position.set(enemySprite.position.x, enemySprite.position.y - 50);
+            }
+
+            for (let towerValue of Array.from(this.placedTowers.values())) {
                 for (let enemySprite of Array.from(this.enemies.keys())) {
-                    let healthBar = <Rect>this.enemies.get(enemySprite).healthBar;
-                    healthBar.position.set(enemySprite.position.x, enemySprite.position.y - 50);
-                }
-
-                for (let towerValue of Array.from(this.placedTowers.values())) {
-                    for (let enemySprite of Array.from(this.enemies.keys())) {
-                        if (this.checkAABBtoCircleCollision(enemySprite.collisionShape.getBoundingRect(), towerValue.sprite.collisionShape.getBoundingCircle())) {
-                            this.emitter.fireEvent(AR_Events.ENEMY_ENTERED_TOWER_RANGE, {turret: (<GameNode>towerValue.sprite).id, target: (<GameNode>enemySprite).id,})
-                            break;
-                        }
+                    if (this.checkAABBtoCircleCollision(enemySprite.collisionShape.getBoundingRect(), towerValue.sprite.collisionShape.getBoundingCircle())) {
+                        this.emitter.fireEvent(AR_Events.ENEMY_ENTERED_TOWER_RANGE, {turret: (<GameNode>towerValue.sprite).id, target: (<GameNode>enemySprite).id,})
+                        break;
                     }
                 }
             }
         }
+
         // Display the navmesh of the current level
         if(Input.isKeyJustPressed("f")){
             this.getLayer("graph").setHidden(!this.getLayer("graph").isHidden());
