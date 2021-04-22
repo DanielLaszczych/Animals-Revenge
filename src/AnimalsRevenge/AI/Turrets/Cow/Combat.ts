@@ -96,9 +96,8 @@ export default class Combat extends State {
         } else {
             if (this.cooldownTimer.isStopped()) {
                 try {
-                    let targetDirection;
                     let targetPath = targetNode.mostRecentPath;
-                    targetDirection = targetPath.getMoveDirection(targetNode);
+                    let targetDirection = targetPath.getMoveDirection(targetNode);
                     let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
                     this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone().add(this.dir.scaled(25));

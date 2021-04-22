@@ -69,7 +69,7 @@ export default class GameLevel extends Scene {
 
     protected waves: Array<Record<string, any>>;
     protected currentWaveData: Record<string, any> = null;
-    protected enemies: Map<GameNode, Array<number>>;
+    protected enemies: Map<GameNode, any>;
     protected enemyNumber: number;
     protected levelSpeed: number;
 
@@ -889,7 +889,15 @@ export default class GameLevel extends Scene {
             enemySprite.addAI(EnemyAI, {navigation: path, speed: 100, levelSpeed: this.levelSpeed});        
             enemySprite.setGroup("enemy");
 
-            this.enemies.set(enemySprite, [enemyHealth, enemyDefense]);
+            let enemyWidth = enemySprite.sizeWithZoom.x * 2;
+            let healthBarWidth = enemyWidth - (enemyWidth * 0.2);
+            let healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(enemySprite.position.x, enemySprite.position.y - 50), size: new Vec2(healthBarWidth, 10)});
+            healthBar.borderColor = Color.BLACK;
+            healthBar.borderWidth = 3;
+            healthBar.lineJoin = 'round';
+            healthBar.color = Color.RED;
+
+            this.enemies.set(enemySprite, {health: enemyHealth, maxHP: enemyHealth, defense: enemyDefense, healthBar: healthBar});
             this.currentWaveData.numberEnemies[0] -= 1;
             if(this.currentWaveData.numberEnemies[0] == 0){
                 this.currentWaveData.enemies.shift();
@@ -1048,23 +1056,26 @@ export default class GameLevel extends Scene {
                         if (projectile.group !== -1) {
                             projectile.position.set(-1, -1);
                         }
-                        let defense = this.enemies.get(enemy)[1];
+                        let defense = this.enemies.get(enemy).defense;
                         if(defense > event.data.get("data").damage){
                             defense = event.data.get("data").damage / 2;
                         }
-                        let newHealth = this.enemies.get(enemy)[0] - (event.data.get("data").damage - defense);
+                        let newHealth = this.enemies.get(enemy).health - (event.data.get("data").damage - defense);
+                        let healthBar = <Rect>this.enemies.get(enemy).healthBar;
+                        let enemyWidth = enemy.sizeWithZoom.x * 2;
+                        let healthBarWidth = enemyWidth - (enemyWidth * 0.2);
+                        healthBar.fillWidth = (newHealth / this.enemies.get(enemy).maxHP) * healthBarWidth; //100 px is a max hp bar
                         let id = enemy.id;
-                        if (event.data.get("data").confuseEnemy !== undefined) {
-                            if (event.data.get("data").confuseEnemy) {
-                                this.emitter.fireEvent(AR_Events.ENEMY_CONFUSED, {id: id})
-                            }
+                        if (event.data.get("data").confuseEnemy !== undefined && event.data.get("data").confuseEnemy) {
+                            this.emitter.fireEvent(AR_Events.ENEMY_CONFUSED, {id: id})
                         }
                         if (newHealth <= 0) {
                             this.enemies.delete(enemy);
+                            healthBar.destroy();
                             enemy.destroy();
                             // this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: id});
                         } else {
-                            this.enemies.set(enemy, [newHealth, defense]);
+                            this.enemies.get(enemy).health = newHealth;
                         }
                     }
                     break;
@@ -1191,10 +1202,6 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if(this.spawningEnemies && !this.isGamePaused){
-            this.spawnEnemy();
-        }
-
         if (!this.waveInProgress) {
             for (let firstTower of Array.from(this.placedTowers.values())) {
                 if (firstTower.name === "Cow Tower" && firstTower.hasAura) {
@@ -1207,6 +1214,10 @@ export default class GameLevel extends Scene {
                     }
                 }   
             }
+        }
+
+        if(this.spawningEnemies && !this.isGamePaused){
+            this.spawnEnemy();
         }
 
         if (this.waveInProgress) {
@@ -1255,6 +1266,11 @@ export default class GameLevel extends Scene {
             }
 
             if (this.enemies.size !== 0) {
+                for (let enemySprite of Array.from(this.enemies.keys())) {
+                    let healthBar = <Rect>this.enemies.get(enemySprite).healthBar;
+                    healthBar.position.set(enemySprite.position.x, enemySprite.position.y - 50);
+                }
+
                 for (let towerValue of Array.from(this.placedTowers.values())) {
                     for (let enemySprite of Array.from(this.enemies.keys())) {
                         if (this.checkAABBtoCircleCollision(enemySprite.collisionShape.getBoundingRect(), towerValue.sprite.collisionShape.getBoundingCircle())) {

@@ -11,12 +11,20 @@ export default class Rect extends Graphic {
     /** The width of the border */
     borderWidth: number;
 
+    /** The width of the fill */
+    fillWidth: number;
+
+    /** The line join property of the rectangle */
+    lineJoin: CanvasLineJoin;
+
     constructor(position: Vec2, size: Vec2){
         super();
         this.position = position;
         this.size = size;
         this.borderColor = Color.TRANSPARENT;
         this.borderWidth = 0;
+        this.fillWidth = null;
+        this.lineJoin = null;
     }
 
     /**
