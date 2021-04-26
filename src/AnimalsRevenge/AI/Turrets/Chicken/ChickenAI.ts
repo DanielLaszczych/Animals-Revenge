@@ -1,5 +1,6 @@
 import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
 import { AR_Events } from "../../../animalrevenge_enums";
@@ -12,7 +13,7 @@ export default class ChickenAI extends StateMachineAI {
 
     protected stats: Record<string, any>;
     public target: number;
-    public projectiles: Array<{sprite: Sprite, dir: Vec2}>;
+    public projectiles: Array<{sprite: Sprite, dir: Vec2, target: number}>;
     public isPaused: boolean = false;
     public levelSpeed: number;
     public predictionMultiplier: Map<number, number>;

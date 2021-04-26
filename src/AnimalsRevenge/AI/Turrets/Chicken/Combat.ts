@@ -5,6 +5,7 @@ import State from "../../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
 import ChickenAI from "./ChickenAI";
@@ -94,7 +95,7 @@ export default class Combat extends State {
                     projectile.setGroup("projectile");
                     projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage});
     
-                    this.parent.projectiles.push({sprite: projectile, dir: dir});
+                    this.parent.projectiles.push({sprite: projectile, dir: dir, target: this.parent.target});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);
                     this.owner.animation.play("Firing", false);
                     this.cooldownTimer.start();
@@ -104,15 +105,22 @@ export default class Combat extends State {
             }
         }
         for (let i = 0; i < this.parent.projectiles.length;) {
-            if (this.parent.projectiles[i].sprite.position.x === -1) { //this means they projectile collided and its position was set to -1
-                let projectile = this.parent.projectiles.splice(i, 1)[0].sprite;
+            let projectile = this.parent.projectiles[i].sprite;
+            if (projectile.position.x === -1) { //this means they projectile collided and its position was set to -1
+                this.parent.projectiles.splice(i, 1)[0];
                 projectile.destroy();
                 continue;
             }
-            let newPosition = this.parent.projectiles[i].sprite.position.add(this.parent.projectiles[i].dir.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
-            this.parent.projectiles[i].sprite.position.set(newPosition.x, newPosition.y);
-            if (this.parent.projectiles[i].sprite.position.x > 1200 || this.parent.projectiles[i].sprite.position.x < 0) {
-                let projectile = this.parent.projectiles.splice(i, 1)[0].sprite;
+            let target = this.parent.projectiles[i].target;
+            let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
+            if (targetNode !== undefined) {
+                this.parent.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
+                projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
+            } else {
+                projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
+            }
+            if (projectile.position.x > 1200 || projectile.position.x < 0) {
+                this.parent.projectiles.splice(i, 1)[0];
                 projectile.destroy();
                 continue;
             }
