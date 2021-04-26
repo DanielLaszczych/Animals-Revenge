@@ -34,18 +34,18 @@ export default class CowAI extends StateMachineAI {
 
         this.levelSpeed = 1;
         this.predictionMultiplier = new Map([
-            [1, 80],
-            [2, 90],
-            [4, 100]
+            [1, 10],
+            [2, 20],
+            [4, 40]
         ]);
 
         this.damageMultiplier = new Map([
             [1, 1],
-            [2, 2.1],
-            [4, 2.8]
+            [2, 2],
+            [4, 4]
         ]);
 
-        this.addState("idle", new Idle(this, owner));
+        this.addState("idle", new Idle(this, owner, this.stats));
         this.addState("combat", new Combat(this, owner, this.stats));
 
         this.trigger = this.owner.getScene().add.graphic(GraphicType.POINT, "primary", {position: new Vec2(-100, -100)});
@@ -67,7 +67,7 @@ export default class CowAI extends StateMachineAI {
 
     activate(stats: Record<string, any>) {
         this.stats = stats;
-        this.addState("idle", new Idle(this, this.owner));
+        this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
     }
 }
