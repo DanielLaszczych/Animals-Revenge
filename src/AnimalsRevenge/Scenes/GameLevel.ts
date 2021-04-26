@@ -873,6 +873,8 @@ export default class GameLevel extends Scene {
             let enemyDefense;
             if(this.currentWaveData.enemies[0] === "farmer"){
                 enemySprite = this.add.animatedSprite("farmer", "primary");
+                enemySprite.scale.set(5, 5);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
                 enemyHealth = 35;
                 enemyDefense = 0;
             }
@@ -882,9 +884,7 @@ export default class GameLevel extends Scene {
                 enemyDefense = 1;
             }
             enemySprite.position.set(0, 432);
-            enemySprite.scale.set(5, 5);
             enemySprite.animation.play("WALK");
-            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));
             enemySprite.addAI(EnemyAI, {navigation: path, speed: 100, levelSpeed: this.levelSpeed});        
             enemySprite.setGroup("enemy");

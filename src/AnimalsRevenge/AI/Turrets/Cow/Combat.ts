@@ -35,7 +35,7 @@ export default class Combat extends State {
         this.hasConfusion = stats.hasConfusion;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
-        this.parent.attackDuration = new Timer(5000);
+        this.parent.attackDuration = new Timer(4000);
     }
 
     onEnter(options: Record<string, any>): void {
@@ -132,11 +132,10 @@ export default class Combat extends State {
                     this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
                     this.parent.areaofEffect.position.set(targetNode.position.x + (this.targetDirection.x * this.parent.levelSpeed), targetNode.position.y + (this.targetDirection.y * this.parent.levelSpeed));
                 } catch {}
-                this.parent.areaofEffect.scale.add(new Vec2(0.07 * this.parent.levelSpeed, 0.07 * this.parent.levelSpeed));  
+                this.parent.areaofEffect.scale.add(new Vec2(0.1 * this.parent.levelSpeed, 0.1 * this.parent.levelSpeed));  
             }
             if(this.parent.attackDuration.isStopped() && this.doOnce) {
                 this.parent.areaofEffect.visible = false;
-                this.doOnce = false;
                 this.parent.trigger.setTrigger("enemy", null, null, {damage: 0});
             }
         }
@@ -166,8 +165,7 @@ export default class Combat extends State {
         let distX = circle.x - pointX;
         let distY = circle.y - pointY;
         let distance = Math.sqrt((distX * distX) + (distY * distY));
-
-        if (distance <= circle.r) {
+        if (circle.r - distance >= 10) {
             return true;
         }
         return false;

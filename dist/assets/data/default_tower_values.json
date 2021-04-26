@@ -28,7 +28,7 @@
             "name": "Cow Tower",
             "cost": 100,
             "damage": 0.2,
-            "attackSpeed": 0.2,
+            "attackSpeed": 0.15,
             "range": 180,
             "upgrade1": "Confusion Debuff",
             "upgrade1Cost": 300,
