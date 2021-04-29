@@ -24,6 +24,8 @@ import LevelSelection from "./LevelSelection";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import CowAI from "../AI/Turrets/Cow/CowAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Help from "./Help";
+import Layer from "../../Wolfie2D/Scene/Layer";
 
 export default class GameLevel extends Scene {
 
@@ -39,7 +41,10 @@ export default class GameLevel extends Scene {
     protected levelSpeedBtn: Button;
     protected waveInProgress: boolean = false;
     protected victoryLabel: Label;
+    protected pauseLabel: Label;
     protected isGamePaused: boolean = false;
+    protected pauseLayer: Layer;
+    protected UILayer: Layer;
 
     protected towersUnlocked: number = 0;
 
@@ -85,8 +90,16 @@ export default class GameLevel extends Scene {
     protected spawnTimer: Timer;
 
     initScene(init: Record<string, any>) {
-        this.healthCount = init.startHealth;
-        this.moneyCount = init.startMoney;
+        if (Help.infHealth) {
+            this.healthCount = Infinity;
+        } else {
+            this.healthCount = init.startHealth;
+        }
+        if (Help.infMoney) {
+            this.moneyCount = Infinity;
+        } else {
+            this.moneyCount = init.startMoney; 
+        }
         this.currentWave = 1;
         this.levelSpeed = 1;
         this.totalWaves = init.totalWaves;
@@ -107,6 +120,7 @@ export default class GameLevel extends Scene {
         this.load.image("egg", "assets/images/Egg.png")
         this.load.image("fart", "assets/images/Fart.png")
         this.load.object("towerData", "assets/data/default_tower_values.json");
+        this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
     }
 
     startScene(): void {
@@ -123,9 +137,12 @@ export default class GameLevel extends Scene {
     }
 
     protected initLayers(): void {
-        let UI = this.addUILayer("UI");
-        UI.setDepth(2);
+        this.UILayer = this.addUILayer("UI");
+        this.UILayer.setDepth(2);
         this.addLayer("primary", 1);
+        this.pauseLayer = this.addUILayer("pauseLayer");
+        this.pauseLayer.setDepth(3);
+        this.pauseLayer.disable();
     }
 
     protected initViewPort(): void {
@@ -154,11 +171,23 @@ export default class GameLevel extends Scene {
     }
 
     protected addUI(): void {
+        let background = this.add.sprite("backgroundImage", "pauseLayer");
+        background.position.set(this.size.x, this.size.y);
+
+        this.pauseLabel = <Label>this.add.uiElement(UIElementType.LABEL, "pauseLayer", {position: this.size, text: "Paused"});
+        this.pauseLabel.textColor = Color.BLACK;
+        this.pauseLabel.font = "PixelSimple";
+        this.pauseLabel.fontSize = 50;
+
         let heart = this.add.sprite("heart", "UI");
         heart.scale.set(2.5, 2.5);
         heart.position.set(30, 30);
 
         this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(90, 30), text: this.healthCount.toString()});
+        if (this.healthCount == Infinity) {
+            this.healthCountLabel.text = '\u221E';
+            this.healthCountLabel.position.set(70, 30);
+        }
         this.healthCountLabel.textColor = Color.WHITE
         this.healthCountLabel.font = "PixelSimple";
 
@@ -167,6 +196,10 @@ export default class GameLevel extends Scene {
         coin.position.set(180, 30);
 
         this.moneyCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(240, 30), text: this.moneyCount.toString()});
+        if (this.moneyCount === Infinity) {
+            this.moneyCountLabel.text = '\u221E';
+            this.moneyCountLabel.position.set(220, 30)
+        }
         this.moneyCountLabel.textColor = Color.WHITE
         this.moneyCountLabel.font = "PixelSimple";
 
@@ -253,7 +286,7 @@ export default class GameLevel extends Scene {
         shopLabel.font = "PixelSimple";
         shopLabel.fontSize = 60;
 
-        if (this.towersUnlocked >= 1) {
+        if (this.towersUnlocked >= 1 || Help.allTowers) {
             let chickenTowerImg = this.add.sprite("chickenTowerSprite", "UI");
             chickenTowerImg.position.set(975, 125);
             chickenTowerImg.scale.set(4, 4);
@@ -277,7 +310,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 2) {
+        if (this.towersUnlocked >= 2 || Help.allTowers) {
             let cowTowerImg = this.add.sprite("cowTowerSprite", "UI");
             cowTowerImg.position.set(1125, 125);
             cowTowerImg.scale.set(2, 2);
@@ -300,7 +333,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 3) {
+        if (this.towersUnlocked >= 3 || Help.allTowers) {
             let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: "?"});
             spiderTowerBtn.backgroundColor = Color.TRANSPARENT;
             spiderTowerBtn.textColor = Color.BLACK;
@@ -322,7 +355,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 4) {
+        if (this.towersUnlocked >= 4 || Help.allTowers) {
             let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: "?"});
             eagleTowerBtn.backgroundColor = Color.TRANSPARENT;
             eagleTowerBtn.textColor = Color.BLACK;
@@ -344,7 +377,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 5) {
+        if (this.towersUnlocked >= 5  || Help.allTowers) {
             let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: "?"});
             elephantTowerBtn.backgroundColor = Color.TRANSPARENT;
             elephantTowerBtn.textColor = Color.BLACK;
@@ -366,7 +399,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 6) {
+        if (this.towersUnlocked >= 6  || Help.allTowers) {
             let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: "?"});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
             penguinTowerBtn.textColor = Color.BLACK;
@@ -640,8 +673,7 @@ export default class GameLevel extends Scene {
 
         this.selectedTowerSellBtn.onClick = () => {
             if (!this.waveInProgress && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
-                this.moneyCount += towerData.totalValue * 0.75;
-                this.moneyCountLabel.text = this.moneyCount.toString();
+                this.incMoney(towerData.totalValue * 0.75);
                 towerData.sprite.destroy();
                 towerData.button.destroy();
                 this.selectedTowerRange.destroy();
@@ -731,8 +763,7 @@ export default class GameLevel extends Scene {
                             break;
                     }
                     if (purchased) {
-                        this.moneyCount += -purchaseCost;
-                        this.moneyCountLabel.text = this.moneyCount.toString();
+                        this.incMoney(-purchaseCost);
                         towerData.totalValue += purchaseCost;
                         this.selectedTowerSellBtn.text = "Sell: " + (towerData.totalValue * 0.75);
                     }
@@ -794,8 +825,7 @@ export default class GameLevel extends Scene {
                         break;
                     }
                     if (purchased) {
-                        this.moneyCount += -purchaseCost;
-                        this.moneyCountLabel.text = this.moneyCount.toString();
+                        this.incMoney(-purchaseCost);
                         towerData.totalValue += purchaseCost;
                         this.selectedTowerSellBtn.text = "Sell: " + (towerData.totalValue * 0.75);
                     }
@@ -805,7 +835,7 @@ export default class GameLevel extends Scene {
     }
 
     protected incHealth(amt: number): void {
-        if (this.healthCount > 0) {
+        if (this.healthCount > 0 && !Help.infHealth) {
             this.healthCount += amt;
             this.healthCountLabel.text = this.healthCount.toString();
             if (this.healthCount === 0) {
@@ -822,8 +852,10 @@ export default class GameLevel extends Scene {
     }
 
     protected incMoney(amt: number): void {
-        this.moneyCount += amt;
-        this.moneyCountLabel.text = this.moneyCount.toString();
+        if (!Help.infMoney) {
+            this.moneyCount += amt;
+            this.moneyCountLabel.text = this.moneyCount.toString();
+        }
     }
 
     protected createNavmesh(): void{
@@ -1060,7 +1092,12 @@ export default class GameLevel extends Scene {
                         if(defense > event.data.get("data").damage){
                             defense = event.data.get("data").damage / 2;
                         }
-                        let newHealth = this.enemies.get(enemy).health - (event.data.get("data").damage - defense);
+                        let newHealth;
+                        if (Help.oneShot) {
+                            newHealth = 0;
+                        } else {
+                            newHealth = this.enemies.get(enemy).health - (event.data.get("data").damage - defense);
+                        }
                         let healthBar = <Rect>this.enemies.get(enemy).healthBar;
                         let enemyWidth = enemy.sizeWithZoom.x * 2;
                         let healthBarWidth = enemyWidth - (enemyWidth * 0.2);
@@ -1085,10 +1122,11 @@ export default class GameLevel extends Scene {
         if(Input.isKeyJustPressed("escape")){
             this.isGamePaused = !this.isGamePaused;
             if (this.isGamePaused) {
-                this.victoryLabel.text = "Paused";
-                this.victoryLabel.visible = true;
+                this.pauseLayer.enable();
+                this.UILayer.disable();
             } else {
-                this.victoryLabel.visible = false;
+                this.UILayer.enable();
+                this.pauseLayer.disable();
             }
             if (this.spawningEnemies) {
                 this.isGamePaused ? this.spawnTimer.pause() : this.spawnTimer.resume();
@@ -1096,7 +1134,7 @@ export default class GameLevel extends Scene {
             this.emitter.fireEvent(AR_Events.PAUSE_RESUME_GAME, {pausing: this.isGamePaused});
         }
 
-        if (this.isTowerSelectedFromShop) {
+        if (this.isTowerSelectedFromShop && !this.isGamePaused) {
             let overlapsAnotherTower = false;
             for (let value of Array.from(this.placedTowers.values())) {
                 if (this.overlaps(this.selectedTowerShopSprite.sweptRect, value.button.collisionShape.getBoundingRect())) {
@@ -1160,9 +1198,7 @@ export default class GameLevel extends Scene {
                     newTowerData.totalValue = defaultTowerData.cost;
                     let towerId = this.placedTowers.size;
                     this.placedTowers.set(towerId, newTowerData);
-                    this.moneyCount += -defaultTowerData.cost;
-                    this.moneyCountLabel.text = this.moneyCount.toString();
-
+                    this.incMoney(-defaultTowerData.cost);
                     newTowerBtn.onClick = () => {
                         if (Input.getMousePressButton() == BUTTON.LEFTCLICK && !this.isTowerSelectedFromShop) {
                             if (this.isPlacedTowerSelected) {
@@ -1240,8 +1276,7 @@ export default class GameLevel extends Scene {
                     setTimeout(() => {
                         this.victoryLabel.visible = false;
                     }, 3000);
-                    this.moneyCount += 150;
-                    this.moneyCountLabel.text = this.moneyCount.toString();
+                    this.incMoney(150);
                     this.currentWave++;
                     this.waveCountLabel.text = "Wave " + this.currentWave + "/" + this.totalWaves;
                 }

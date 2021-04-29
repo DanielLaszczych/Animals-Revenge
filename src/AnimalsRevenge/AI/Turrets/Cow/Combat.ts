@@ -132,7 +132,7 @@ export default class Combat extends State {
                     this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
                     this.parent.areaofEffect.position.set(targetNode.position.x + (this.targetDirection.x * this.parent.levelSpeed), targetNode.position.y + (this.targetDirection.y * this.parent.levelSpeed));
                 } catch {}
-                this.parent.areaofEffect.scale.add(new Vec2(0.1 * this.parent.levelSpeed, 0.1 * this.parent.levelSpeed));  
+                this.parent.areaofEffect.scale.add(new Vec2(6 * deltaT * this.parent.levelSpeed, 6 * deltaT * this.parent.levelSpeed));  
             }
             if(this.parent.attackDuration.isStopped() && this.doOnce) {
                 this.parent.areaofEffect.visible = false;
