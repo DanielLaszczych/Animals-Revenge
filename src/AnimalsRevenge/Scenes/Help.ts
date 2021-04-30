@@ -14,9 +14,9 @@ import SplashScreen from "./SplashScreen";
 export default class Help extends Scene {
 
     static infHealth: boolean = false;
-    static infMoney: boolean = false;
+    static infMoney: boolean = true;
     static allLevels: boolean = false;
-    static allTowers: boolean = false;
+    static allTowers: boolean = true;
     static oneShot: boolean = false;
     
     loadScene(): void {

@@ -26,6 +26,7 @@ import CowAI from "../AI/Turrets/Cow/CowAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Help from "./Help";
 import Layer from "../../Wolfie2D/Scene/Layer";
+import PenguinAI from "../AI/Turrets/Penguin/PenguinAI";
 
 export default class GameLevel extends Scene {
 
@@ -110,15 +111,17 @@ export default class GameLevel extends Scene {
         this.load.image("heart", "assets/images/Heart.png");
         this.load.image("chickenTowerSprite", "assets/sprites/Chicken.png");
         this.load.image("cowTowerSprite", "assets/sprites/Cow.png");
+        this.load.image("penguinTowerSprite", "assets/sprites/Penguin.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
         this.load.spritesheet("cowTower", "assets/spritesheets/cow.json");
         this.load.image("spiderTower", "assets/images/Heart.png"); //TODO - Change to this spider sprite when avaiable
         this.load.image("eagleTower", "assets/images/Heart.png"); //TODO - Change to this eagle sprite when avaiable
         this.load.image("elephantTower", "assets/images/Heart.png"); //TODO - Change to this elephant sprite when avaiable
-        this.load.image("penguinTower", "assets/images/Heart.png"); //TODO - Change to this penguin sprite when avaiable
+        this.load.spritesheet("penguinTower", "assets/spritesheets/penguin.json");
         this.load.image("coin", "assets/images/Coin.png");
         this.load.image("egg", "assets/images/Egg.png")
         this.load.image("fart", "assets/images/Fart.png")
+        this.load.image("snowball", "assets/images/Snowball.png");
         this.load.object("towerData", "assets/data/default_tower_values.json");
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
     }
@@ -317,7 +320,7 @@ export default class GameLevel extends Scene {
 
             let cowTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 125), text: ""});
             cowTowerBtn.backgroundColor = Color.TRANSPARENT;
-            cowTowerBtn.borderColor = Color.BLACK;
+            cowTowerBtn.borderColor = Color.TRANSPARENT;
             cowTowerBtn.borderRadius = 0;
             cowTowerBtn.fontSize = 0;
             cowTowerBtn.setPadding(cowTowerImg.sizeWithZoom);
@@ -400,24 +403,27 @@ export default class GameLevel extends Scene {
         }
 
         if (this.towersUnlocked >= 6  || Help.allTowers) {
-            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: "?"});
+            let penguinTowerImg = this.add.sprite("penguinTowerSprite", "UI");
+            penguinTowerImg.position.set(1125, 275);
+            penguinTowerImg.scale.set(4, 4);
+
+            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
-            penguinTowerBtn.textColor = Color.BLACK;
-            penguinTowerBtn.borderColor = Color.BLACK;
+            penguinTowerBtn.borderColor = Color.TRANSPARENT;
             penguinTowerBtn.borderRadius = 0;
-            penguinTowerBtn.font = "PixelSimple";
-            penguinTowerBtn.setPadding(new Vec2(30, 15));
+            penguinTowerBtn.fontSize = 0;
+            penguinTowerBtn.setPadding(penguinTowerImg.sizeWithZoom);
 
             penguinTowerBtn.onClick = () => {
-                // this.createTowerFromShop("penguinTower");
+                this.createTowerFromShop("penguinTower");
             }
             penguinTowerBtn.onEnter = () => {
                 penguinTowerBtn.textColor = Color.WHITE;
-                // this.displayTowerInfoFromShop("penguinTower");
+                this.displayTowerInfoFromShop("penguinTower");
             }
             penguinTowerBtn.onLeave = () => {
                 penguinTowerBtn.textColor = Color.BLACK;
-                // this.hideTowerInfoFromShop();
+                this.hideTowerInfoFromShop();
             }
         }
 
@@ -578,6 +584,11 @@ export default class GameLevel extends Scene {
                         this.selectedTowerShopSprite.scale.set(3, 3);
                     }   
                     break;
+                case "penguinTower":
+                    {
+                        this.selectedTowerShopSprite.scale.set(4, 4);
+                    }   
+                    break;
             }
             this.selectedTowerShopSprite.addPhysics();
             
@@ -710,6 +721,16 @@ export default class GameLevel extends Scene {
                     }
                 }
                 break;
+            case "penguin":
+                {
+                    if (towerData.attackSpeedUpgradesRemaining === 0) {
+                        ugprade1Text = towerData.upgrade1 + "\nMaxed Out";
+                    }
+                    if (towerData.hasStrongSlow) {
+                        upgrade2Text =  towerData.upgrade2 + "\nMaxed Out";
+                    }
+                }
+                break;
         }
         
         this.selectedTowerUpgrade1Btn.setText(ugprade1Text);
@@ -761,6 +782,25 @@ export default class GameLevel extends Scene {
                                 }
                             }
                             break;
+                        case "penguin": 
+                            {   
+                                if (towerData.attackSpeedUpgradesRemaining !== 0) {
+                                    purchaseCost = towerData.upgrade1Cost;
+                                    towerData.attackSpeedUpgradesRemaining--;
+                                    towerData.upgrade1Cost += 50;
+                                    if (towerData.attackSpeedUpgradesRemaining === 0) {
+                                        this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nMaxed Out");
+                                        this.selectedTowerUpgrade1Btn.sizeAssigned = false;
+                                    } else {
+                                        this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nCost: " + towerData.upgrade1Cost);
+                                    }
+                                    towerData.attackSpeed += 1;
+                                    this.selectedTowerSpeedLabel.text = "Attack Speed: " + towerData.attackSpeed;
+                                    towerData.sprite.setAIActive(true, {damage: towerData.damage, attackSpeed: towerData.attackSpeed, range: towerData.range, hasStrongSlow: towerData.hasStrongSlow});
+                                    purchased = true;
+                                }
+                            }
+                            break;
                     }
                     if (purchased) {
                         this.incMoney(-purchaseCost);
@@ -783,46 +823,59 @@ export default class GameLevel extends Scene {
                     let purchaseCost = 0;
                     switch (towerData.sprite.imageId) {
                         case "chicken": 
-                        {
-                            if (!(towerData.range >= towerData.maxRange)) {
-                                towerData.range += 50;
-                                purchaseCost = towerData.upgrade2Cost;
-                                this.selectedTowerRange.radius = towerData.range;
-                                towerData.upgrade2Cost += 50;
-                                towerData.sprite.addPhysics(new CircleShape(Vec2.ZERO, towerData.range), undefined, true, false);
-                                if (towerData.range >= towerData.maxRange) {
+                            {
+                                if (!(towerData.range >= towerData.maxRange)) {
+                                    towerData.range += 50;
+                                    purchaseCost = towerData.upgrade2Cost;
+                                    this.selectedTowerRange.radius = towerData.range;
+                                    towerData.upgrade2Cost += 50;
+                                    towerData.sprite.addPhysics(new CircleShape(Vec2.ZERO, towerData.range), undefined, true, false);
+                                    if (towerData.range >= towerData.maxRange) {
+                                        this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nMaxed Out");
+                                        this.selectedTowerUpgrade2Btn.sizeAssigned = false;
+                                    } else {
+                                        this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nCost: " + towerData.upgrade2Cost);
+                                    }
+                                    this.selectedTowerRangeLabel.text = "Range: " + towerData.range;
+                                    towerData.sprite.setAIActive(true, {damage: towerData.damage, attackSpeed: towerData.attackSpeed, range: towerData.range});
+                                    purchased = true;
+                                }
+                            }
+                            break;
+                        case "cow": 
+                            {
+                                if (!towerData.hasAura) {
+                                    purchaseCost = towerData.upgrade2Cost;
+                                    towerData.hasAura = true;
                                     this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nMaxed Out");
                                     this.selectedTowerUpgrade2Btn.sizeAssigned = false;
-                                } else {
-                                    this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nCost: " + towerData.upgrade2Cost);
-                                }
-                                this.selectedTowerRangeLabel.text = "Range: " + towerData.range;
-                                towerData.sprite.setAIActive(true, {damage: towerData.damage, attackSpeed: towerData.attackSpeed, range: towerData.range});
-                                purchased = true;
-                            }
-                        }
-                        break;
-                        case "cow": {
-                            if (!towerData.hasAura) {
-                                purchaseCost = towerData.upgrade2Cost;
-                                towerData.hasAura = true;
-                                this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nMaxed Out");
-                                this.selectedTowerUpgrade2Btn.sizeAssigned = false;
-                                towerData.sprite.setAIActive(true, {damage: towerData.damage, attackSpeed: towerData.attackSpeed, range: towerData.range, hasAura: towerData.hasAura, hasConfusion: towerData.hasConfusion});
-                                purchased = true;
-                                for (let key of Array.from(this.placedTowers.keys())) {
-                                    if (key !== towerId) {
-                                        let value = this.placedTowers.get(key);
-                                        if (value.name === "Chicken Tower" && !value.receivedAttackSpeedAura && this.checkAABBtoCircleCollision(value.button.collisionShape.getBoundingRect(), towerData.sprite.collisionShape.getBoundingCircle())) {
-                                            value.attackSpeed += 2;
-                                            value.receivedAttackSpeedAura = true;
-                                            value.sprite.setAIActive(true, {damage: value.damage, attackSpeed: value.attackSpeed, range: value.range});
-                                        }
-                                    }   
+                                    towerData.sprite.setAIActive(true, {damage: towerData.damage, attackSpeed: towerData.attackSpeed, range: towerData.range, hasAura: towerData.hasAura, hasConfusion: towerData.hasConfusion});
+                                    purchased = true;
+                                    for (let key of Array.from(this.placedTowers.keys())) {
+                                        if (key !== towerId) {
+                                            let value = this.placedTowers.get(key);
+                                            if ((value.name === "Chicken Tower" || value.name === "Penguin Tower") && !value.receivedAttackSpeedAura && this.checkAABBtoCircleCollision(value.button.collisionShape.getBoundingRect(), towerData.sprite.collisionShape.getBoundingCircle())) {
+                                                value.attackSpeed += 2;
+                                                value.receivedAttackSpeedAura = true;
+                                                value.sprite.setAIActive(true, {damage: value.damage, attackSpeed: value.attackSpeed, range: value.range});
+                                            }
+                                        }   
+                                    }
                                 }
                             }
-                        }
-                        break;
+                            break;
+                        case "penguin":
+                            {
+                                if (!towerData.hasStrongSlow) {
+                                    purchaseCost = towerData.upgrade2Cost;
+                                    towerData.hasStrongSlow = true;
+                                    this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nMaxed Out");
+                                    this.selectedTowerUpgrade2Btn.sizeAssigned = false;
+                                    towerData.sprite.setAIActive(true, {damage: towerData.damage, attackSpeed: towerData.attackSpeed, range: towerData.range, hasStrongSlow: towerData.hasStrongSlow});
+                                    purchased = true;
+                                }
+                            }
+                            break;
                     }
                     if (purchased) {
                         this.incMoney(-purchaseCost);
@@ -1103,8 +1156,11 @@ export default class GameLevel extends Scene {
                         let healthBarWidth = enemyWidth - (enemyWidth * 0.2);
                         healthBar.fillWidth = (newHealth / this.enemies.get(enemy).maxHP) * healthBarWidth; //100 px is a max hp bar
                         let id = enemy.id;
+                        if (event.data.get("data").slowAmount !== undefined) {
+                            this.emitter.fireEvent(AR_Events.ENEMY_SLOWED, {id: id, slowAmount: event.data.get("data").slowAmount});
+                        }
                         if (event.data.get("data").confuseEnemy !== undefined && event.data.get("data").confuseEnemy) {
-                            this.emitter.fireEvent(AR_Events.ENEMY_CONFUSED, {id: id})
+                            this.emitter.fireEvent(AR_Events.ENEMY_CONFUSED, {id: id});
                         }
                         if (newHealth <= 0) {
                             this.enemies.delete(enemy);
@@ -1181,7 +1237,13 @@ export default class GameLevel extends Scene {
                                 newTower.scale.set(3, 3);
                                 newTower.addAI(CowAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasAura: defaultTowerData.hasAura, hasConfusion: defaultTowerData.hasConfusion});
                             } 
-                            break;   
+                            break;  
+                        case "penguin":
+                            {   
+                                newTower.scale.set(4, 4);
+                                newTower.addAI(PenguinAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasStrongSlow: defaultTowerData.hasStrongSlow});
+                            }   
+                            break;
                     }
                     newTowerBtn.setPadding(newTower.sizeWithZoom);
                     newTowerBtn.addPhysics(new AABB(Vec2.ZERO, newTower.sizeWithZoom), undefined, true, true);
@@ -1242,7 +1304,7 @@ export default class GameLevel extends Scene {
             for (let firstTower of Array.from(this.placedTowers.values())) {
                 if (firstTower.name === "Cow Tower" && firstTower.hasAura) {
                     for (let secondTower of Array.from(this.placedTowers.values())) {
-                        if (secondTower.name === "Chicken Tower" && !secondTower.receivedAttackSpeedAura && this.checkAABBtoCircleCollision(secondTower.button.collisionShape.getBoundingRect(), firstTower.sprite.collisionShape.getBoundingCircle())) {
+                        if ((secondTower.name === "Chicken Tower" || secondTower.name === "Penguin Tower") && !secondTower.receivedAttackSpeedAura && this.checkAABBtoCircleCollision(secondTower.button.collisionShape.getBoundingRect(), firstTower.sprite.collisionShape.getBoundingCircle())) {
                             secondTower.attackSpeed += 2;
                             secondTower.receivedAttackSpeedAura = true;
                             secondTower.sprite.setAIActive(true, {damage: secondTower.damage, attackSpeed: secondTower.attackSpeed, range: secondTower.range});

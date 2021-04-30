@@ -22,6 +22,7 @@ export default class EnemyAI extends StateMachineAI{
         this.receiver.subscribe(AR_Events.ENEMY_CONFUSED);
         this.receiver.subscribe(AR_Events.PAUSE_RESUME_GAME);
         this.receiver.subscribe(AR_Events.LEVEL_SPEED_CHANGE);
+        this.receiver.subscribe(AR_Events.ENEMY_SLOWED);
     }
 
     activate(options: Record<string, any>): void {
