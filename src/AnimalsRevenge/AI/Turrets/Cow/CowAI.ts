@@ -1,6 +1,4 @@
 import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
-import Circle from "../../../../Wolfie2D/Nodes/Graphics/Circle";
-import CircleShape from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
 import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Point from "../../../../Wolfie2D/Nodes/Graphics/Point";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -65,8 +63,18 @@ export default class CowAI extends StateMachineAI {
         this.initialize("idle");
     }
 
-    activate(stats: Record<string, any>) {
-        this.stats = stats;
+    activate(newStats: Record<string, any>) {
+        if (newStats.type === "attackSpeed") {
+            this.stats.attackSpeed = newStats.attackSpeed;
+        } else if (newStats.type === "damage") {
+            this.stats.damage = newStats.damage;
+        } else if (newStats.type === "range") {
+            this.stats.range = newStats.range;
+        } else if (newStats.type === "hasAura") {
+            this.stats.hasAura = newStats.hasAura;
+        } else if (newStats.type === "hasConfusion") {
+            this.stats.hasConfusion = newStats.hasConfusion;
+        }
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
     }

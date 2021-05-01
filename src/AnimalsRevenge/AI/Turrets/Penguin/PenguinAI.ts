@@ -1,6 +1,5 @@
 import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
 import { AR_Events } from "../../../animalrevenge_enums";
@@ -40,8 +39,16 @@ export default class PenguinAI extends StateMachineAI {
         this.initialize("idle");
     }
 
-    activate(stats: Record<string, any>) {
-        this.stats = stats;
+    activate(newStats: Record<string, any>) {
+        if (newStats.type === "attackSpeed") {
+            this.stats.attackSpeed = newStats.attackSpeed;
+        } else if (newStats.type === "damage") {
+            this.stats.damage = newStats.damage;
+        } else if (newStats.type === "range") {
+            this.stats.range = newStats.range;
+        } else if (newStats.type === "hasStrongSlow") {
+            this.stats.hasStrongSlow = newStats.hasStrongSlow;
+        }
         this.addState("idle", new Idle(this, this.owner));
         this.addState("combat", new Combat(this, this.owner, this.stats));
     }

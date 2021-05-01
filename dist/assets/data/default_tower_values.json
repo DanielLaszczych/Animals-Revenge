@@ -52,13 +52,16 @@
         {
             "name": "Eagle Tower",
             "cost": 100,
-            "damage": 10,
-            "attackSpeed": 3,
-            "range": 250,
-            "upgrade1": "+ Attack Speed",
+            "damage": 20,
+            "attackSpeed": 1,
+            "range": 275,
+            "upgrade1": "+ Damage",
             "upgrade1Cost": 100,
-            "upgrade2": "+ Range",
-            "upgrade2Cost": 100
+            "upgrade2": "Damage Aura",
+            "upgrade2Cost": 200,
+            "damageUpgradesRemaining": 3,
+            "hasDamageAura": false,
+            "description": "The Eagle is a hard\nhitter but it lacks the\nability to attack fast.\nIts first upgrade\nincreases its damage\nand its second upgrade\nprovides a damage buff\nto allies within its\nrange."
         },
         {
             "name": "Elephant Tower",
@@ -83,7 +86,7 @@
             "upgrade2Cost": 200,
             "attackSpeedUpgradesRemaining": 3,
             "hasStrongSlow": false,
-            "description": "The penguin has both\noffense and crowd\ncontrol at its disposal.\nIts attacks both pack a\npunch and slightly slow\nenemies. Its first\nupgrade increases its\nattack speed and its\nsecond upgrade\nincreases the slow on\nits attack."
+            "description": "The Penguin has both\noffense and crowd\ncontrol at its disposal.\nIts attacks both pack a\npunch and slightly slow\nenemies. Its first\nupgrade increases its\nattack speed and its\nsecond upgrade\nincreases the slow on\nits attack."
         }
     ]
 }

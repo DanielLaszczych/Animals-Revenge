@@ -6,12 +6,12 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
-import PengiuinAI from "./PenguinAI";
+import EagleAI from "./EagleAI";
 
 export default class Combat extends State {
     
     protected owner: AnimatedSprite;
-    protected parent: PengiuinAI;
+    protected parent: EagleAI;
 
     protected damage: number;
     protected attackSpeed: number;
@@ -20,12 +20,11 @@ export default class Combat extends State {
 
     protected cooldownTimer: Timer;
 
-    constructor(parent: PengiuinAI, owner: AnimatedSprite, stats: Record<string, any>) {
+    constructor(parent: EagleAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
         this.attackSpeed = stats.attackSpeed;
-        this.hasStrongSlow = stats.hasStrongSlow;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
         this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
@@ -82,21 +81,18 @@ export default class Combat extends State {
         } else {
             if (this.cooldownTimer.isStopped()) {
                 try {
-                    let targetPath = targetNode.mostRecentPath;
-                    let targetDirection = targetPath.getMoveDirection(targetNode);
-                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
-                    let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
-                    let start = this.owner.position.clone();
+                    let dir = targetNode.position.clone().sub(this.owner.position).normalize();
     
-                    let projectile = this.owner.getScene().add.sprite("snowball", "primary");
-                    projectile.scale.set(1.5, 1.5);
-                    projectile.position.set(start.x, start.y);
-                    projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
+                    let projectile = this.owner.getScene().add.animatedSprite("lightingBolt", "primary");
+                    projectile.animation.play("Falling");
+                    projectile.scale.set(2.6, 2.6);
+                    projectile.position.set(targetNode.position.x - 300, targetNode.position.y - 800);
+                    projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(4, 4)), undefined, false, false);
                     projectile.setGroup("projectile");
-                    let slowAmount = this.hasStrongSlow ? 25 : 15;
-                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, slowAmount: slowAmount});
+                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, target: this.parent.target});
+                    let projectileDir = targetNode.position.clone().sub(projectile.position).normalize();
     
-                    this.parent.projectiles.push({sprite: projectile, dir: dir, target: this.parent.target});
+                    this.parent.projectiles.push({sprite: projectile, target: this.parent.target, dir: projectileDir});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);
                     this.owner.animation.play("Firing", false);
                     this.cooldownTimer.start();
@@ -112,15 +108,17 @@ export default class Combat extends State {
                 projectile.destroy();
                 continue;
             }
+
             let target = this.parent.projectiles[i].target;
             let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
             if (targetNode !== undefined) {
                 this.parent.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
                 projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
             } else {
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage});
                 projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
             }
-            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
+            if (projectile.position.x > 1200) {
                 this.parent.projectiles.splice(i, 1)[0];
                 projectile.destroy();
                 continue;

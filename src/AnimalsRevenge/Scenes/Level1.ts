@@ -21,8 +21,7 @@ export default class Level1 extends GameLevel {
         this.load.object("waveData", "assets/data/level1_waves.json");
 
         // Loading enemy spritesheets
-        this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json")
-        
+        this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json");
     }
 
     startScene(): void {

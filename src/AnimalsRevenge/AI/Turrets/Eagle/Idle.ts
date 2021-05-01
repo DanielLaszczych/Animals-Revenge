@@ -3,22 +3,26 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
-import ChickenAI from "./ChickenAI";
+import EagleAI from "./EagleAI";
 
 export default class Idle extends State {
     
     protected owner: AnimatedSprite;
-    protected parent: ChickenAI;
+    protected parent: EagleAI;
     protected idleTimer: Timer;
+    protected damage: number;
 
-    constructor(parent: ChickenAI, owner: AnimatedSprite) {
+    constructor(parent: EagleAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
+        this.damage = stats.damage;
     }
     
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
-        this.owner.animation.stop();
+        if (!this.owner.animation.isPlaying("Firing")) {
+            this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
+            this.owner.animation.stop();
+        }
         this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
         this.idleTimer.levelSpeed = this.parent.levelSpeed;
         this.idleTimer.start();
@@ -73,15 +77,17 @@ export default class Idle extends State {
                 projectile.destroy();
                 continue;
             }
+
             let target = this.parent.projectiles[i].target;
             let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
             if (targetNode !== undefined) {
                 this.parent.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
                 projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
             } else {
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage});
                 projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
             }
-            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
+            if (projectile.position.x > 1200) {
                 this.parent.projectiles.splice(i, 1)[0];
                 projectile.destroy();
                 continue;

@@ -1,13 +1,9 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
-import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import MainMenu from "./MainMenu";
 
 

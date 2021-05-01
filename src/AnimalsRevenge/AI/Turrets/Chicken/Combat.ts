@@ -1,11 +1,9 @@
-
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Circle from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
 import ChickenAI from "./ChickenAI";
@@ -119,7 +117,7 @@ export default class Combat extends State {
             } else {
                 projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
             }
-            if (projectile.position.x > 1200 || projectile.position.x < 0) {
+            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
                 this.parent.projectiles.splice(i, 1)[0];
                 projectile.destroy();
                 continue;

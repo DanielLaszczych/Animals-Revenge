@@ -1,7 +1,6 @@
 import State from "../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
 import Timer from "../../../Wolfie2D/Timing/Timer";
@@ -94,7 +93,7 @@ export default class Walk extends State {
                 if (this.owner.id === event.data.get("id")) {
                     if (this.slowAmount === 0 || event.data.get("slowAmount") > this.slowAmount) {
                         this.speed = this.originalSpeed;
-                        this.speed -= event.data.get("slowAmount");
+                        this.slowAmount = event.data.get("slowAmount");
                         this.slowTimer.start();
                     }
                 }

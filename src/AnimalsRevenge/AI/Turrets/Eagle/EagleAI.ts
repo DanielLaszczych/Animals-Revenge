@@ -6,29 +6,23 @@ import { AR_Events } from "../../../animalrevenge_enums";
 import Combat from "./Combat";
 import Idle from "./Idle";
 
-export default class ChickenAI extends StateMachineAI {
+export default class EagleAI extends StateMachineAI {
     
     protected owner: AnimatedSprite;
 
     protected stats: Record<string, any>;
     public target: number;
-    public projectiles: Array<{sprite: Sprite, dir: Vec2, target: number}>;
+    public projectiles: Array<{sprite: Sprite, target: number, dir: Vec2}>;
     public isPaused: boolean = false;
     public levelSpeed: number;
-    public predictionMultiplier: Map<number, number>;
     
     initializeAI(owner: AnimatedSprite, stats: Record<string, any>) {
         this.owner = owner;
         this.stats = stats;
         this.projectiles = new Array();
         this.levelSpeed = 1;
-        this.predictionMultiplier = new Map([
-            [1, 24],
-            [2, 35],
-            [4, 45]
-        ]);
 
-        this.addState("idle", new Idle(this, owner));
+        this.addState("idle", new Idle(this, owner, this.stats));
         this.addState("combat", new Combat(this, owner, this.stats));
 
         this.receiver.subscribe(AR_Events.ENEMY_ENTERED_TOWER_RANGE);
@@ -46,8 +40,10 @@ export default class ChickenAI extends StateMachineAI {
             this.stats.damage = newStats.damage;
         } else if (newStats.type === "range") {
             this.stats.range = newStats.range;
+        } else if (newStats.type === "hasDamageAura") {
+            this.stats.hasDamageAura = newStats.hasDamageAura;
         }
-        this.addState("idle", new Idle(this, this.owner));
+        this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
     }
 }

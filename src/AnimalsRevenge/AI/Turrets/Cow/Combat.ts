@@ -1,14 +1,11 @@
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import Circle from "../../../../Wolfie2D/Nodes/Graphics/Circle";
 import CircleShape from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
-import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
 import CowAI from "./CowAI";
-import Color from "../../../../Wolfie2D/Utils/Color";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 export default class Combat extends State {
