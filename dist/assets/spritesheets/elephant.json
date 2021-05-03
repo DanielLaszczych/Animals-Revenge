@@ -1,0 +1,46 @@
+{
+    "name": "elephant",
+    "spriteSheetImage": "Elephant.png",
+    "spriteWidth": 18,
+    "spriteHeight": 18,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 4,
+    "rows": 1,
+    "animations": [
+        {
+            "name": "IDLE",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 50
+                }
+            ]
+        },
+        {
+            "name": "Firing",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 10
+                },
+                {
+                    "index": 1,
+                    "duration": 10
+                },
+                {
+                    "index": 2,
+                    "duration": 10
+                },
+                {
+                    "index": 3,
+                    "duration": 10
+                }
+            ]
+        }
+    ]
+}

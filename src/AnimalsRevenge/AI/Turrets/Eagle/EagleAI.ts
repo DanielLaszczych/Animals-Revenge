@@ -46,4 +46,31 @@ export default class EagleAI extends StateMachineAI {
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
     }
+
+    updateProjectiles(deltaT: number): void {
+        for (let i = 0; i < this.projectiles.length;) {
+            let projectile = this.projectiles[i].sprite;
+            if (projectile.position.x === -1) { //this means they projectile collided and its position was set to -1
+                this.projectiles.splice(i, 1)[0];
+                projectile.destroy();
+                continue;
+            }
+
+            let target = this.projectiles[i].target;
+            let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
+            if (targetNode !== undefined) {
+                this.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
+                projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
+            } else {
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage});
+                projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
+            }
+            if (projectile.position.x > 1200) {
+                this.projectiles.splice(i, 1)[0];
+                projectile.destroy();
+                continue;
+            }
+            i++;
+        }
+    }
 }

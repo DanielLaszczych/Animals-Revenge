@@ -94,7 +94,7 @@ export default class Combat extends State {
                     projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
                     projectile.setGroup("projectile");
                     let slowAmount = this.hasStrongSlow ? 25 : 15;
-                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, slowAmount: slowAmount});
+                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, target: this.parent.target, slowAmount: slowAmount});
     
                     this.parent.projectiles.push({sprite: projectile, dir: dir, target: this.parent.target});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);
@@ -105,28 +105,7 @@ export default class Combat extends State {
                 }
             }
         }
-        for (let i = 0; i < this.parent.projectiles.length;) {
-            let projectile = this.parent.projectiles[i].sprite;
-            if (projectile.position.x === -1) { //this means they projectile collided and its position was set to -1
-                this.parent.projectiles.splice(i, 1)[0];
-                projectile.destroy();
-                continue;
-            }
-            let target = this.parent.projectiles[i].target;
-            let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
-            if (targetNode !== undefined) {
-                this.parent.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
-                projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
-            } else {
-                projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
-            }
-            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
-                this.parent.projectiles.splice(i, 1)[0];
-                projectile.destroy();
-                continue;
-            }
-            i++;
-        }
+        this.parent.updateProjectiles(deltaT);
     }
 
     onExit(): Record<string, any> {

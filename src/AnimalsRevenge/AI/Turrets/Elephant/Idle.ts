@@ -1,34 +1,37 @@
 import State from "../../../../Wolfie2D/DataTypes/State/State";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
-import EagleAI from "./EagleAI";
+import ElephantAI from "./ElephantAI";
 
 export default class Idle extends State {
     
     protected owner: AnimatedSprite;
-    protected parent: EagleAI;
+    protected parent: ElephantAI;
     protected idleTimer: Timer;
     protected damage: number;
 
-    constructor(parent: EagleAI, owner: AnimatedSprite, stats: Record<string, any>) {
+    constructor(parent: ElephantAI, owner: AnimatedSprite) {
         super(parent);
         this.owner = owner;
-        this.damage = stats.damage;
     }
     
     onEnter(options: Record<string, any>): void {
-        if (!this.owner.animation.isPlaying("Firing")) {
-            this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
-            this.owner.animation.stop();
-        }
+        this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
+        this.owner.animation.stop();
         this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
         this.idleTimer.levelSpeed = this.parent.levelSpeed;
         this.idleTimer.start();
     }
 
     handleInput(event: GameEvent): void {
+        if (event.type === AR_Events.WAVE_START_END) {
+            if (event.data.get("isWaveInProgress")) {
+                this.finished("combat");
+            }
+        }
         if (event.type === AR_Events.LEVEL_SPEED_CHANGE) {
             this.parent.levelSpeed = event.data.get("levelSpeed");
             this.idleTimer.levelSpeed = this.parent.levelSpeed;
@@ -49,15 +52,11 @@ export default class Idle extends State {
         if (this.parent.isPaused) {
             return;
         }
-        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
-            let target = this.owner.getScene().getSceneGraph().getNode(event.data.get("target"));
-            let turret = this.owner.getScene().getSceneGraph().getNode(event.data.get("turret"));
-            if (target === undefined || turret.id !== this.owner.id) {
-                return;
+        if (event.type === AR_Events.NEW_TARGET_LOCATION) {
+            if (event.data.get("id") === this.owner.id) {
+                this.parent.target = event.data.get("target");
             }
-            this.parent.target = event.data.get("target");
-            this.finished("combat");
-        }
+        } 
     }
     
     update(deltaT: number): void {

@@ -66,13 +66,16 @@
         {
             "name": "Elephant Tower",
             "cost": 100,
-            "damage": 10,
-            "attackSpeed": 3,
-            "range": 250,
+            "damage": 15,
+            "attackSpeed": 1,
+            "range": "User Input",
             "upgrade1": "+ Attack Speed",
             "upgrade1Cost": 100,
-            "upgrade2": "+ Range",
-            "upgrade2Cost": 100
+            "upgrade2": "+ Damage",
+            "upgrade2Cost": 100,
+            "attackSpeedUpgradesRemaining": 3,
+            "damageUpgradesRemaining": 3,
+            "description": "The Elephant has a\nrapid rate of fire but\nis slightly innacurate.\nYou control where they\nfire by pressing/holding\nX on a desired spot.\nIts first upgrade\nincreases its attack\nspeed and its second\nupgrade increases its\ndamage."
         },
         {
             "name": "Penguin Tower",

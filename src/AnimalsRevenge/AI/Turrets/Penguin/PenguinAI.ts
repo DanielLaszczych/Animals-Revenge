@@ -28,7 +28,7 @@ export default class PenguinAI extends StateMachineAI {
             [4, 45]
         ]);
 
-        this.addState("idle", new Idle(this, owner));
+        this.addState("idle", new Idle(this, owner, this.stats));
         this.addState("combat", new Combat(this, owner, this.stats));
 
         this.receiver.subscribe(AR_Events.ENEMY_ENTERED_TOWER_RANGE);
@@ -49,7 +49,34 @@ export default class PenguinAI extends StateMachineAI {
         } else if (newStats.type === "hasStrongSlow") {
             this.stats.hasStrongSlow = newStats.hasStrongSlow;
         }
-        this.addState("idle", new Idle(this, this.owner));
+        this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
+    }
+
+    updateProjectiles(deltaT: number): void {
+        for (let i = 0; i < this.projectiles.length;) {
+            let projectile = this.projectiles[i].sprite;
+            if (projectile.position.x === -1) { //this means they projectile collided and its position was set to -1
+                this.projectiles.splice(i, 1)[0];
+                projectile.destroy();
+                continue;
+            }
+            let target = this.projectiles[i].target;
+            let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
+            if (targetNode !== undefined) {
+                this.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
+                projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
+            } else {
+                let slowAmount = this.stats.hasStrongSlow ? 25 : 15;
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage, slowAmount: slowAmount});
+                projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
+            }
+            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
+                this.projectiles.splice(i, 1)[0];
+                projectile.destroy();
+                continue;
+            }
+            i++;
+        }
     }
 }

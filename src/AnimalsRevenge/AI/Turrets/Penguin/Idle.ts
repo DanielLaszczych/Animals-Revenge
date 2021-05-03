@@ -10,10 +10,12 @@ export default class Idle extends State {
     protected owner: AnimatedSprite;
     protected parent: PenguinAI;
     protected idleTimer: Timer;
+    protected damage: number;
 
-    constructor(parent: PenguinAI, owner: AnimatedSprite) {
+    constructor(parent: PenguinAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
+        this.damage = stats.damage;
     }
     
     onEnter(options: Record<string, any>): void {
@@ -66,28 +68,7 @@ export default class Idle extends State {
             this.idleTimer.levelSpeed = this.parent.levelSpeed;
             this.idleTimer.start();
         }
-        for (let i = 0; i < this.parent.projectiles.length;) {
-            let projectile = this.parent.projectiles[i].sprite;
-            if (projectile.position.x === -1) { //this means they projectile collided and its position was set to -1
-                this.parent.projectiles.splice(i, 1)[0];
-                projectile.destroy();
-                continue;
-            }
-            let target = this.parent.projectiles[i].target;
-            let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
-            if (targetNode !== undefined) {
-                this.parent.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
-                projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
-            } else {
-                projectile.position.add(this.parent.projectiles[i].dir.scaled(800 * deltaT * this.parent.levelSpeed));
-            }
-            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
-                this.parent.projectiles.splice(i, 1)[0];
-                projectile.destroy();
-                continue;
-            }
-            i++;
-        }
+        this.parent.updateProjectiles(deltaT);
     }
 
     onExit(): Record<string, any> {
