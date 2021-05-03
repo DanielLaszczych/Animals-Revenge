@@ -16,6 +16,7 @@ export default class Combat extends State {
     protected damage: number;
     protected attackSpeed: number;
     protected range: number;
+    protected accuracy: number;
 
     protected cooldownTimer: Timer;
 
@@ -25,6 +26,7 @@ export default class Combat extends State {
         this.damage = stats.damage;
         this.attackSpeed = stats.attackSpeed;
         this.range = stats.range;
+        this.accuracy = stats.accuracy;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
         this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
     }
@@ -85,11 +87,19 @@ export default class Combat extends State {
             projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
             projectile.setGroup("projectile");
 
-            let midPoint = new Vec2((this.parent.target.x + projectile.position.x)/2, (this.parent.target.y + projectile.position.y)/2);
-            let distance = this.parent.target.distanceTo(projectile.position);
-            let speed = distance * 0.4;
 
-            this.parent.projectiles.push({sprite: projectile, dir: dir, midPoint: midPoint, target: this.parent.target, speed: speed});
+            let adjustment1 = Math.random() * (((1 - this.accuracy) * 100) - 0) + 0;
+            adjustment1 *= Math.floor(Math.random() * 2) === 1 ? -1 : 1;
+            let adjustment2 = Math.random() * (((1 - this.accuracy) * 100) - 0) + 0;
+            adjustment2 *= Math.floor(Math.random() * 2) === 1 ? -1 : 1;
+            let accuracyAdjustedTarget = this.parent.target.clone().add(new Vec2(adjustment1, adjustment2));
+
+            let midPoint = new Vec2((accuracyAdjustedTarget.x + projectile.position.x)/2, (accuracyAdjustedTarget.y + projectile.position.y)/2);
+            let distance = accuracyAdjustedTarget.distanceTo(projectile.position);
+            let speed = distance * 0.4;
+            let adjustedDir = accuracyAdjustedTarget.clone().sub(this.owner.position).normalize();
+
+            this.parent.projectiles.push({sprite: projectile, dir: adjustedDir, midPoint: midPoint, target: accuracyAdjustedTarget, speed: speed});
             this.owner.rotation = Vec2.UP.angleToCCW(dir);
             this.owner.animation.play("Firing", false);
             this.cooldownTimer.start();

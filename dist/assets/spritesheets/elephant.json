@@ -2,12 +2,12 @@
     "name": "elephant",
     "spriteSheetImage": "Elephant.png",
     "spriteWidth": 18,
-    "spriteHeight": 18,
+    "spriteHeight": 19,
     "leftBuffer": 0,
     "rightBuffer": 0,
     "topBuffer": 0,
     "bottomBuffer": 0,
-    "columns": 4,
+    "columns": 6,
     "rows": 1,
     "animations": [
         {
@@ -16,6 +16,18 @@
             "frames": [
                 {
                     "index": 0,
+                    "duration": 50
+                },
+                {
+                    "index": 4,
+                    "duration": 50
+                },
+                {
+                    "index": 0,
+                    "duration": 50
+                },
+                {
+                    "index": 5,
                     "duration": 50
                 }
             ]
