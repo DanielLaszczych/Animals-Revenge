@@ -119,7 +119,11 @@ export default class Walk extends State {
                 this.currentPath = this.getNextPath();
             }
             this.owner.moveOnPath((this.speed - this.slowAmount) * deltaT * this.parent.levelSpeed, this.currentPath);
-            this.owner.rotation = Vec2.RIGHT.angleToCCW(this.currentPath.getMoveDirection(this.owner));
+            let addTurn = 0;
+            if (this.owner.imageId === "soldier") {
+                addTurn = 0.9;
+            }
+            this.owner.rotation = Vec2.RIGHT.angleToCCW(this.currentPath.getMoveDirection(this.owner)) + addTurn;
         }
     }
 

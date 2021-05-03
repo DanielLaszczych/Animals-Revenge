@@ -79,8 +79,8 @@ export default class ElephantAI extends StateMachineAI {
                 splash.position.set(target.x, target.y);
                 splash.animation.play("Splashing");
                 let trigger = this.owner.getScene().add.graphic(GraphicType.POINT, "primary", {position: target});
+                trigger.color = Color.TRANSPARENT;
                 setTimeout(() => {
-                    trigger.color = Color.TRANSPARENT;
                     trigger.addPhysics(new AABB(Vec2.ZERO, new Vec2(60, 62)), undefined, false, false);
                     trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage, explosionId: trigger.id});
                 }, 200);

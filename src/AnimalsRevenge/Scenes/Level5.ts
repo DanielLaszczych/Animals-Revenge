@@ -2,7 +2,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameLevel from "./GameLevel";
 
 
-export default class Level1 extends GameLevel {
+export default class Level5 extends GameLevel {
 
     initScene(init: Record<string, any>) {
         super.initScene(init);
@@ -12,26 +12,28 @@ export default class Level1 extends GameLevel {
         super.loadScene();
 
         // Loading the TileMap
-        this.load.tilemap("level1", "assets/tilemaps/Test_Level_MK2.json");
+        this.load.tilemap("level5", "assets/tilemaps/ParkingLot.json");
 
         // Loading the navmesh
-        this.load.object("navmesh", "assets/data/level1_navmesh.json");
+        this.load.object("navmesh", "assets/data/parkinglot_navmesh.json");
 
         // Loading the wave data
-        this.load.object("waveData", "assets/data/level1_waves.json");
+        this.load.object("waveData", "assets/data/parkinglot_waves.json");
 
         // Loading enemy spritesheets
         this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json")
         this.load.spritesheet("soldier", "assets/spritesheets/soldier.json")
         this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json")
-   
+
+
+        
     }
 
     startScene(): void {
-        this.add.tilemap("level1", new Vec2(2, 2));
+        this.add.tilemap("level5", new Vec2(2, 2));
         super.startScene();
 
-        this.addLevelStart(new Vec2(0, 432));
+        this.addLevelStart(new Vec2(0, 752));
         this.addLevelEnd(new Vec2(688, -90), new Vec2(100, 100));
     }
 

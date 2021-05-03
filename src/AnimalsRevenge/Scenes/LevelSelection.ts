@@ -8,6 +8,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./Level1";
+import Level5 from "./Level5";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelection extends Scene {
@@ -15,6 +16,7 @@ export default class LevelSelection extends Scene {
     loadScene(): void {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
         this.load.image("level1Map", "assets/images/Level1_Map.png");
+        this.load.image("level5Map", "assets/images/ParkingLot.png");
     }
 
     startScene(): void {
@@ -117,7 +119,7 @@ export default class LevelSelection extends Scene {
         level4Btn.font = "PixelSimple"
         level4Btn.setPadding(level4Img.sizeWithZoom.sub(new Vec2(79, 25)));
 
-        let level5Img = this.add.sprite("level1Map", "levelSelection");
+        let level5Img = this.add.sprite("level5Map", "levelSelection");
         level5Img.position.set(size.x, size.y + 250);
         level5Img.scale.set(0.3, 0.3);
 
@@ -126,13 +128,12 @@ export default class LevelSelection extends Scene {
         level5Label.font = "PixelSimple";
         level5Label.fontSize = 40;
 
-        let level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level5Img.position, text: "Locked"});
-        level5Btn.backgroundColor = Color.BLACK;
+        let level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level5Img.position, text: ""});
+        level5Btn.backgroundColor = Color.TRANSPARENT;
         level5Btn.borderColor = Color.TRANSPARENT;
         level5Btn.borderRadius = 0;
-        level5Btn.fontSize = 50;
-        level5Btn.font = "PixelSimple"
-        level5Btn.setPadding(level5Img.sizeWithZoom.sub(new Vec2(79, 25)));
+        level5Btn.fontSize = 0;
+        level5Btn.setPadding(level5Img.sizeWithZoom);
 
         let level6Img = this.add.sprite("level1Map", "levelSelection");
         level6Img.position.set(size.x + 400, size.y + 250);
@@ -179,7 +180,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 1000, totalWaves: 10, towersUnlocked: 2}, sceneOptions);
+                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, totalWaves: 10, towersUnlocked: 2}, sceneOptions);
             }
         }
 
@@ -203,7 +204,19 @@ export default class LevelSelection extends Scene {
 
         level5Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                // this.sceneManager.changeToScene(MainMenu, {}, {});
+                
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["enemy", "projectile"],
+                        collisions:
+                        [
+                            [0, 0],
+                            [0, 0]
+                        ]
+                    }
+                }
+
+                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 150, towersUnlocked: 2}, sceneOptions);
             }
         }
 

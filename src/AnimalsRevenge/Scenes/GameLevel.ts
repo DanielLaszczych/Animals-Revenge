@@ -85,6 +85,7 @@ export default class GameLevel extends Scene {
     protected levelSpeed: number;
 
     protected levelEndArea: Rect;
+    protected levelStart: Vec2;
 
     protected tilemap: OrthogonalTilemap;
 
@@ -108,7 +109,6 @@ export default class GameLevel extends Scene {
         }
         this.currentWave = 1;
         this.levelSpeed = 1;
-        this.totalWaves = init.totalWaves;
         this.towersUnlocked = init.towersUnlocked;
     }
 
@@ -593,6 +593,7 @@ export default class GameLevel extends Scene {
         
         this.selectedTowerTarget = this.add.sprite("target", "UI");
         this.selectedTowerTarget.scale.set(4, 4);
+        this.selectedTowerTarget.visible = false;
     }
 
     protected createTowerFromShop(tower: string): void {
@@ -639,7 +640,7 @@ export default class GameLevel extends Scene {
                     break;
                 case "eagleTower":
                     {
-                        this.selectedTowerShopSprite.scale.set(5, 5);
+                        this.selectedTowerShopSprite.scale.set(4, 4);
                     }   
                     break;
                 case "elephantTower":
@@ -1094,28 +1095,35 @@ export default class GameLevel extends Scene {
             let enemySprite;
             let enemyHealth;
             let enemyDefense;
+            let speed;
             if(this.currentWaveData.enemies[0] === "farmer"){
                 enemySprite = this.add.animatedSprite("farmer", "primary");
-                enemySprite.scale.set(5, 5);
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
+                enemySprite.scale.set(4, 4);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 24)));
                 enemyHealth = 35;
                 enemyDefense = 0;
+                speed = 100;
             }
             if(this.currentWaveData.enemies[0] === "soldier"){
                 enemySprite = this.add.animatedSprite("soldier", "primary");
+                enemySprite.scale.set(4, 4);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 35)));
                 enemyHealth = 75;
                 enemyDefense = 1;
+                speed = 75;
             }
             if(this.currentWaveData.enemies[0] === "robot_dog"){
                 enemySprite = this.add.animatedSprite("robot_dog", "primary");
-                enemyHealth = 50;
+                enemySprite.scale.set(2, 2);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
+                enemyHealth = 20;
                 enemyDefense = 2;
+                speed = 150;
             }
-            enemySprite.scale.set(5, 5);
-            enemySprite.position.set(0, 432);
+            enemySprite.position.set(this.levelStart.x, this.levelStart.y);
             enemySprite.animation.play("WALK");
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));
-            enemySprite.addAI(EnemyAI, {navigation: path, speed: 100, levelSpeed: this.levelSpeed});        
+            enemySprite.addAI(EnemyAI, {navigation: path, speed: speed, levelSpeed: this.levelSpeed});        
             enemySprite.setGroup("enemy");
 
             let enemyWidth = enemySprite.sizeWithZoom.x * 2;
@@ -1140,6 +1148,10 @@ export default class GameLevel extends Scene {
                 this.spawningEnemies = false;
             }            
         }
+    }
+
+    protected addLevelStart(start: Vec2) {
+        this.levelStart = start;
     }
 
     /**
@@ -1398,7 +1410,7 @@ export default class GameLevel extends Scene {
                             break;
                         case "eagle":
                             {   
-                                newTower.scale.set(5, 5);
+                                newTower.scale.set(4, 4);
                                 newTower.addAI(EagleAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasDamageAura: defaultTowerData.hasDamageAura});
                             }      
                             break;
