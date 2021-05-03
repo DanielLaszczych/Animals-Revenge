@@ -1,6 +1,4 @@
 import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
-import Circle from "../../../../Wolfie2D/Nodes/Graphics/Circle";
-import CircleShape from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
 import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Point from "../../../../Wolfie2D/Nodes/Graphics/Point";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -34,18 +32,18 @@ export default class CowAI extends StateMachineAI {
 
         this.levelSpeed = 1;
         this.predictionMultiplier = new Map([
-            [1, 80],
-            [2, 90],
-            [4, 100]
+            [1, 10],
+            [2, 20],
+            [4, 40]
         ]);
 
         this.damageMultiplier = new Map([
             [1, 1],
-            [2, 2.1],
-            [4, 2.8]
+            [2, 2],
+            [4, 4]
         ]);
 
-        this.addState("idle", new Idle(this, owner));
+        this.addState("idle", new Idle(this, owner, this.stats));
         this.addState("combat", new Combat(this, owner, this.stats));
 
         this.trigger = this.owner.getScene().add.graphic(GraphicType.POINT, "primary", {position: new Vec2(-100, -100)});
@@ -65,9 +63,19 @@ export default class CowAI extends StateMachineAI {
         this.initialize("idle");
     }
 
-    activate(stats: Record<string, any>) {
-        this.stats = stats;
-        this.addState("idle", new Idle(this, this.owner));
+    activate(newStats: Record<string, any>) {
+        if (newStats.type === "attackSpeed") {
+            this.stats.attackSpeed = newStats.attackSpeed;
+        } else if (newStats.type === "damage") {
+            this.stats.damage = newStats.damage;
+        } else if (newStats.type === "range") {
+            this.stats.range = newStats.range;
+        } else if (newStats.type === "hasAura") {
+            this.stats.hasAura = newStats.hasAura;
+        } else if (newStats.type === "hasConfusion") {
+            this.stats.hasConfusion = newStats.hasConfusion;
+        }
+        this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
     }
 }

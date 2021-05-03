@@ -2,9 +2,8 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import Label, { HAlign, VAlign } from "../../Wolfie2D/Nodes/UIElements/Label";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
@@ -12,6 +11,12 @@ import MainMenu from "./MainMenu";
 import SplashScreen from "./SplashScreen";
 
 export default class Help extends Scene {
+
+    static infHealth: boolean = true;
+    static infMoney: boolean = true;
+    static allLevels: boolean = false;
+    static allTowers: boolean = true;
+    static oneShot: boolean = false;
     
     loadScene(): void {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
@@ -81,9 +86,16 @@ export default class Help extends Scene {
         let infHealthBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(100, 600), text: ""});
         infHealthBtn.backgroundColor = Color.TRANSPARENT;
         infHealthBtn.borderColor = Color.BLACK;
+        infHealthBtn.textColor = Color.BLACK;
+        if (Help.infHealth) {
+            infHealthBtn.text = '\u2716';
+            infHealthBtn.setPadding(new Vec2(14, 8));
+        } else {
+            infHealthBtn.text = "";
+            infHealthBtn.setPadding(new Vec2(25, 8));
+        }
         infHealthBtn.borderRadius = 0;
         infHealthBtn.borderWidth = 3;
-        infHealthBtn.setPadding(new Vec2(25, 8));
 
         let infHealthLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(270, 600), text: "Infinite Health"});
         infHealthLabel.textColor = Color.BLACK;
@@ -95,9 +107,16 @@ export default class Help extends Scene {
         let infMoneyBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(480, 600), text: ""});
         infMoneyBtn.backgroundColor = Color.TRANSPARENT;
         infMoneyBtn.borderColor = Color.BLACK;
+        infMoneyBtn.textColor = Color.BLACK;
+        if (Help.infMoney) {
+            infMoneyBtn.text = '\u2716';
+            infMoneyBtn.setPadding(new Vec2(14, 8));
+        } else {
+            infMoneyBtn.text = "";
+            infMoneyBtn.setPadding(new Vec2(25, 8));
+        }
         infMoneyBtn.borderRadius = 0;
         infMoneyBtn.borderWidth = 3;
-        infMoneyBtn.setPadding(new Vec2(25, 8));
         
         let infMoneyLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(650, 600), text: "Infinite Money"});
         infMoneyLabel.textColor = Color.BLACK;
@@ -109,9 +128,16 @@ export default class Help extends Scene {
         let allLevelsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(860, 600), text: ""});
         allLevelsBtn.backgroundColor = Color.TRANSPARENT;
         allLevelsBtn.borderColor = Color.BLACK;
+        allLevelsBtn.textColor = Color.BLACK;
+        if (Help.allLevels) {
+            allLevelsBtn.text = '\u2716';
+            allLevelsBtn.setPadding(new Vec2(14, 8));
+        } else {
+            allLevelsBtn.text = "";
+            allLevelsBtn.setPadding(new Vec2(25, 8));
+        }
         allLevelsBtn.borderRadius = 0;
         allLevelsBtn.borderWidth = 3;
-        allLevelsBtn.setPadding(new Vec2(25, 8));
 
         let allLevelLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(1045, 600), text: "Unlock all Levels"});
         allLevelLabel.textColor = Color.BLACK;
@@ -123,9 +149,16 @@ export default class Help extends Scene {
         let allTowersBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(100, 700), text: ""});
         allTowersBtn.backgroundColor = Color.TRANSPARENT;
         allTowersBtn.borderColor = Color.BLACK;
+        allTowersBtn.textColor = Color.BLACK;
+        if (Help.allTowers) {
+            allTowersBtn.text = '\u2716';
+            allTowersBtn.setPadding(new Vec2(14, 8));
+        } else {
+            allTowersBtn.text = "";
+            allTowersBtn.setPadding(new Vec2(25, 8));
+        }
         allTowersBtn.borderRadius = 0;
         allTowersBtn.borderWidth = 3;
-        allTowersBtn.setPadding(new Vec2(25, 8));
 
         let allTowersLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(300, 700), text: "Unlock all Towers"});
         allTowersLabel.textColor = Color.BLACK;
@@ -137,9 +170,16 @@ export default class Help extends Scene {
         let oneShotBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(480, 700), text: ""});
         oneShotBtn.backgroundColor = Color.TRANSPARENT;
         oneShotBtn.borderColor = Color.BLACK;
+        oneShotBtn.textColor = Color.BLACK;
+        if (Help.oneShot) {
+            oneShotBtn.text = '\u2716';
+            oneShotBtn.setPadding(new Vec2(14, 8));
+        } else {
+            oneShotBtn.text = "";
+            oneShotBtn.setPadding(new Vec2(25, 8));
+        }
         oneShotBtn.borderRadius = 0;
         oneShotBtn.borderWidth = 3;
-        oneShotBtn.setPadding(new Vec2(25, 8));
 
         let oneShotLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(675, 700), text: "One shot enemies"});
         oneShotLabel.textColor = Color.BLACK;
@@ -178,12 +218,14 @@ export default class Help extends Scene {
 
         infHealthBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (infHealthBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                    infHealthBtn.backgroundColor = Color.BLACK;
-                    infHealthBtn.borderColor = Color.WHITE;
+                if (Help.infHealth) {
+                    infHealthBtn.text = "";
+                    infHealthBtn.setPadding(new Vec2(25, 8));
+                    Help.infHealth = false;
                 } else {
-                    infHealthBtn.backgroundColor = Color.TRANSPARENT;
-                    infHealthBtn.borderColor = Color.BLACK;
+                    infHealthBtn.text = '\u2716';
+                    infHealthBtn.setPadding(new Vec2(14, 8));
+                    Help.infHealth = true;
                 }
             }
         }
@@ -194,12 +236,14 @@ export default class Help extends Scene {
 
         infMoneyBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (infMoneyBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                    infMoneyBtn.backgroundColor = Color.BLACK;
-                    infMoneyBtn.borderColor = Color.WHITE;
+                if (Help.infMoney) {
+                    infMoneyBtn.text = "";
+                    infMoneyBtn.setPadding(new Vec2(25, 8));
+                    Help.infMoney = false;
                 } else {
-                    infMoneyBtn.backgroundColor = Color.TRANSPARENT;
-                    infMoneyBtn.borderColor = Color.BLACK;
+                    infMoneyBtn.text = '\u2716';
+                    infMoneyBtn.setPadding(new Vec2(14, 8));
+                    Help.infMoney = true;
                 }
             }
         }
@@ -210,12 +254,14 @@ export default class Help extends Scene {
 
         allLevelsBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (allLevelsBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                    allLevelsBtn.backgroundColor = Color.BLACK;
-                    allLevelsBtn.borderColor = Color.WHITE;
+                if (Help.allLevels) {
+                    allLevelsBtn.text = "";
+                    allLevelsBtn.setPadding(new Vec2(25, 8));
+                    Help.allLevels = false;
                 } else {
-                    allLevelsBtn.backgroundColor = Color.TRANSPARENT;
-                    allLevelsBtn.borderColor = Color.BLACK;
+                    allLevelsBtn.text = '\u2716';
+                    allLevelsBtn.setPadding(new Vec2(14, 8));
+                    Help.allLevels = true;
                 }
             }
         }
@@ -226,12 +272,14 @@ export default class Help extends Scene {
 
         allTowersBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (allTowersBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                    allTowersBtn.backgroundColor = Color.BLACK;
-                    allTowersBtn.borderColor = Color.WHITE;
+                if (Help.allTowers) {
+                    allTowersBtn.text = "";
+                    allTowersBtn.setPadding(new Vec2(25, 8));
+                    Help.allTowers = false;
                 } else {
-                    allTowersBtn.backgroundColor = Color.TRANSPARENT;
-                    allTowersBtn.borderColor = Color.BLACK;
+                    allTowersBtn.text = '\u2716';
+                    allTowersBtn.setPadding(new Vec2(14, 8));
+                    Help.allTowers = true;
                 }
             }
         }
@@ -242,12 +290,14 @@ export default class Help extends Scene {
 
         oneShotBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (oneShotBtn.backgroundColor.toStringRGBA() === Color.TRANSPARENT.toStringRGBA()) {
-                    oneShotBtn.backgroundColor = Color.BLACK;
-                    oneShotBtn.borderColor = Color.WHITE;
+                if (Help.oneShot) {
+                    oneShotBtn.text = "";
+                    oneShotBtn.setPadding(new Vec2(25, 8));
+                    Help.oneShot = false;
                 } else {
-                    oneShotBtn.backgroundColor = Color.TRANSPARENT;
-                    oneShotBtn.borderColor = Color.BLACK;
+                    oneShotBtn.text = '\u2716';
+                    oneShotBtn.setPadding(new Vec2(14, 8));
+                    Help.oneShot = true;
                 }
             }
         }

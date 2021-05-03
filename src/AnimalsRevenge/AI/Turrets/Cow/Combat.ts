@@ -1,14 +1,11 @@
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import Circle from "../../../../Wolfie2D/Nodes/Graphics/Circle";
 import CircleShape from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
-import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
 import CowAI from "./CowAI";
-import Color from "../../../../Wolfie2D/Utils/Color";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 export default class Combat extends State {
@@ -20,6 +17,7 @@ export default class Combat extends State {
     protected attackSpeed: number;
     protected range: number;
     protected hasConfusion: boolean;
+    protected targetDirection: Vec2;
 
     protected cooldownTimer: Timer;
     protected doOnce: boolean;
@@ -34,7 +32,7 @@ export default class Combat extends State {
         this.hasConfusion = stats.hasConfusion;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
-        this.parent.attackDuration = new Timer(5000);
+        this.parent.attackDuration = new Timer(4000);
     }
 
     onEnter(options: Record<string, any>): void {
@@ -47,6 +45,9 @@ export default class Combat extends State {
             this.parent.levelSpeed = event.data.get("levelSpeed");
             this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
             this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
+            if (this.parent.areaofEffect.visible) {
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
+            }
         }
         if (event.type === AR_Events.PAUSE_RESUME_GAME) {
             if (event.data.get("pausing")) {
@@ -97,14 +98,12 @@ export default class Combat extends State {
             if (this.cooldownTimer.isStopped()) {
                 try {
                     let targetPath = targetNode.mostRecentPath;
-                    let targetDirection = targetPath.getMoveDirection(targetNode);
-                    let preditictedTargetPosition = targetNode.position.clone().add(targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
+                    this.targetDirection = targetPath.getMoveDirection(targetNode);
+                    let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
                     this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
-                    let start = this.owner.position.clone().add(this.dir.scaled(25));
-                    this.end = preditictedTargetPosition;
                     this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
     
-                    this.parent.areaofEffect.position.set(start.x, start.y);
+                    this.parent.areaofEffect.position.set(targetNode.position.x, targetNode.position.y);
                     this.parent.areaofEffect.scale.set(0, 0);
                     this.parent.areaofEffect.visible = true;
                     this.owner.animation.play("Burping", false);
@@ -114,27 +113,27 @@ export default class Combat extends State {
                     return;
                 }
             }
-            let reachedTargetY = (this.parent.areaofEffect.position.y > this.end.y && this.dir.y > 0) || (this.parent.areaofEffect.position.y < this.end.y && this.dir.y < 0); 
-            let reachedTargetX = (this.parent.areaofEffect.position.x > this.end.x && this.dir.x > 0) || (this.parent.areaofEffect.position.x < this.end.x && this.dir.x < 0); 
-            if (this.parent.areaofEffect.scale.x >= 4.5 && (reachedTargetX || reachedTargetY) && !this.doOnce) {
+            if (this.parent.areaofEffect.scale.x >= 4.5 && !this.doOnce) {
                 this.parent.trigger.position.set(this.parent.areaofEffect.position.x, this.parent.areaofEffect.position.y);
-                this.parent.attackDuration.start();
                 this.parent.trigger.removePhysics();
                 this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, this.parent.areaofEffect.sizeWithZoom), undefined, false, false);
                 this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
+                this.parent.attackDuration.start();
                 this.doOnce = true;
-            } else {
-                if (this.parent.areaofEffect.scale.x < 4.5) {
-                    this.parent.areaofEffect.scale.add(new Vec2(0.07 * this.parent.levelSpeed, 0.07 * this.parent.levelSpeed));   
-                }
-                if (!(reachedTargetY || reachedTargetX)) {
-                    this.parent.areaofEffect.position.add(this.dir.scaled(2 * this.parent.levelSpeed));
-                }
+            } else if (!this.doOnce) {
+                try {
+                    let targetPath = targetNode.mostRecentPath;
+                    this.targetDirection = targetPath.getMoveDirection(targetNode);
+                    let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
+                    this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
+                    this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
+                    this.parent.areaofEffect.position.set(targetNode.position.x + (this.targetDirection.x * this.parent.levelSpeed), targetNode.position.y + (this.targetDirection.y * this.parent.levelSpeed));
+                } catch {}
+                this.parent.areaofEffect.scale.add(new Vec2(6 * deltaT * this.parent.levelSpeed, 6 * deltaT * this.parent.levelSpeed));  
             }
             if(this.parent.attackDuration.isStopped() && this.doOnce) {
                 this.parent.areaofEffect.visible = false;
-                this.doOnce = false;
-                this.parent.trigger.setTrigger("enemy", null, null, {damage: this.damage});
+                this.parent.trigger.setTrigger("enemy", null, null, {damage: 0});
             }
         }
     }
@@ -163,8 +162,7 @@ export default class Combat extends State {
         let distX = circle.x - pointX;
         let distY = circle.y - pointY;
         let distance = Math.sqrt((distX * distX) + (distY * distY));
-
-        if (distance <= circle.r) {
+        if (circle.r - distance >= 10) {
             return true;
         }
         return false;

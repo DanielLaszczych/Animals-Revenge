@@ -6,24 +6,26 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
-import ChickenAI from "./ChickenAI";
+import PengiuinAI from "./PenguinAI";
 
 export default class Combat extends State {
     
     protected owner: AnimatedSprite;
-    protected parent: ChickenAI;
+    protected parent: PengiuinAI;
 
     protected damage: number;
     protected attackSpeed: number;
     protected range: number;
+    protected hasStrongSlow: boolean;
 
     protected cooldownTimer: Timer;
 
-    constructor(parent: ChickenAI, owner: AnimatedSprite, stats: Record<string, any>) {
+    constructor(parent: PengiuinAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
         this.attackSpeed = stats.attackSpeed;
+        this.hasStrongSlow = stats.hasStrongSlow;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
         this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
@@ -86,12 +88,13 @@ export default class Combat extends State {
                     let dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
                     let start = this.owner.position.clone();
     
-                    let projectile = this.owner.getScene().add.sprite("egg", "primary");
+                    let projectile = this.owner.getScene().add.sprite("snowball", "primary");
                     projectile.scale.set(1.5, 1.5);
                     projectile.position.set(start.x, start.y);
                     projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
                     projectile.setGroup("projectile");
-                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, target: this.parent.target});
+                    let slowAmount = this.hasStrongSlow ? 25 : 15;
+                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, target: this.parent.target, slowAmount: slowAmount});
     
                     this.parent.projectiles.push({sprite: projectile, dir: dir, target: this.parent.target});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);

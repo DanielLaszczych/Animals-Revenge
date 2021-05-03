@@ -6,27 +6,21 @@ import { AR_Events } from "../../../animalrevenge_enums";
 import Combat from "./Combat";
 import Idle from "./Idle";
 
-export default class ChickenAI extends StateMachineAI {
+export default class EagleAI extends StateMachineAI {
     
     protected owner: AnimatedSprite;
 
     protected stats: Record<string, any>;
     public target: number;
-    public projectiles: Array<{sprite: Sprite, dir: Vec2, target: number}>;
+    public projectiles: Array<{sprite: Sprite, target: number, dir: Vec2}>;
     public isPaused: boolean = false;
     public levelSpeed: number;
-    public predictionMultiplier: Map<number, number>;
     
     initializeAI(owner: AnimatedSprite, stats: Record<string, any>) {
         this.owner = owner;
         this.stats = stats;
         this.projectiles = new Array();
         this.levelSpeed = 1;
-        this.predictionMultiplier = new Map([
-            [1, 24],
-            [2, 35],
-            [4, 45]
-        ]);
 
         this.addState("idle", new Idle(this, owner, this.stats));
         this.addState("combat", new Combat(this, owner, this.stats));
@@ -46,6 +40,8 @@ export default class ChickenAI extends StateMachineAI {
             this.stats.damage = newStats.damage;
         } else if (newStats.type === "range") {
             this.stats.range = newStats.range;
+        } else if (newStats.type === "hasDamageAura") {
+            this.stats.hasDamageAura = newStats.hasDamageAura;
         }
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
@@ -59,6 +55,7 @@ export default class ChickenAI extends StateMachineAI {
                 projectile.destroy();
                 continue;
             }
+
             let target = this.projectiles[i].target;
             let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
             if (targetNode !== undefined) {
@@ -68,7 +65,7 @@ export default class ChickenAI extends StateMachineAI {
                 projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage});
                 projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
             }
-            if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {
+            if (projectile.position.x > 1200) {
                 this.projectiles.splice(i, 1)[0];
                 projectile.destroy();
                 continue;

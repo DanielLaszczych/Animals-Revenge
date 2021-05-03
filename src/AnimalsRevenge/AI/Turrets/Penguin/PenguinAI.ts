@@ -6,7 +6,7 @@ import { AR_Events } from "../../../animalrevenge_enums";
 import Combat from "./Combat";
 import Idle from "./Idle";
 
-export default class ChickenAI extends StateMachineAI {
+export default class PenguinAI extends StateMachineAI {
     
     protected owner: AnimatedSprite;
 
@@ -46,6 +46,8 @@ export default class ChickenAI extends StateMachineAI {
             this.stats.damage = newStats.damage;
         } else if (newStats.type === "range") {
             this.stats.range = newStats.range;
+        } else if (newStats.type === "hasStrongSlow") {
+            this.stats.hasStrongSlow = newStats.hasStrongSlow;
         }
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
@@ -65,7 +67,8 @@ export default class ChickenAI extends StateMachineAI {
                 this.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
                 projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
             } else {
-                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage});
+                let slowAmount = this.stats.hasStrongSlow ? 25 : 15;
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage, slowAmount: slowAmount});
                 projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
             }
             if (projectile.position.x > 1200 || projectile.position.x < 0 || projectile.position.y > 800 || projectile.position.y < 0) {

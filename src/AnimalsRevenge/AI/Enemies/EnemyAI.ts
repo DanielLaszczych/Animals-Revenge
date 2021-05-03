@@ -1,5 +1,4 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { AR_Events } from "../../animalrevenge_enums";
 import Walk from "./Walk";
@@ -22,6 +21,7 @@ export default class EnemyAI extends StateMachineAI{
         this.receiver.subscribe(AR_Events.ENEMY_CONFUSED);
         this.receiver.subscribe(AR_Events.PAUSE_RESUME_GAME);
         this.receiver.subscribe(AR_Events.LEVEL_SPEED_CHANGE);
+        this.receiver.subscribe(AR_Events.ENEMY_SLOWED);
     }
 
     activate(options: Record<string, any>): void {

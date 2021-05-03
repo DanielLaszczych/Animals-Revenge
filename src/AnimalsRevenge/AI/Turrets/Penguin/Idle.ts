@@ -3,53 +3,44 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
-import CowAI from "./CowAI";
+import PenguinAI from "./PenguinAI";
 
 export default class Idle extends State {
-
+    
     protected owner: AnimatedSprite;
-    protected parent: CowAI;
+    protected parent: PenguinAI;
     protected idleTimer: Timer;
     protected damage: number;
-    protected hasConfusion: boolean;
 
-    constructor(parent: CowAI, owner: AnimatedSprite, stats: Record<string, any>) {
+    constructor(parent: PenguinAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
-        this.hasConfusion = stats.hasConfusion;
     }
-
+    
     onEnter(options: Record<string, any>): void {
         this.owner.animation.play("IDLE"); //this is a temporary fix to a bug that forces us to play an animation
         this.owner.animation.stop();
         this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
         this.idleTimer.levelSpeed = this.parent.levelSpeed;
         this.idleTimer.start();
-        this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
     }
 
     handleInput(event: GameEvent): void {
         if (event.type === AR_Events.LEVEL_SPEED_CHANGE) {
             this.parent.levelSpeed = event.data.get("levelSpeed");
             this.idleTimer.levelSpeed = this.parent.levelSpeed;
-            this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
-            if (this.parent.areaofEffect.visible) {
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
-            }
         }
         if (event.type === AR_Events.PAUSE_RESUME_GAME) {
             if (event.data.get("pausing")) {
                 this.parent.isPaused = true;
                 this.owner.animation.pause();
                 if (this.idleTimer.isRunning()) this.idleTimer.pause();
-                if (this.parent.attackDuration.isRunning()) this.parent.attackDuration.pause();
                 return;
             } else {
                 this.parent.isPaused = false;
                 this.owner.animation.resume();
                 if (this.idleTimer.isPaused()) this.idleTimer.resume();
-                if (this.parent.attackDuration.isPaused()) this.parent.attackDuration.resume();
                 return;
             }
         }
@@ -66,7 +57,7 @@ export default class Idle extends State {
             this.finished("combat");
         }
     }
-
+    
     update(deltaT: number): void {
         if (this.parent.isPaused) {
             return;
@@ -74,12 +65,10 @@ export default class Idle extends State {
         if (this.idleTimer.isStopped()) {
             this.owner.animation.play("IDLE");
             this.idleTimer = new Timer(1000 * (Math.random() * (8 - 3) + 3));
+            this.idleTimer.levelSpeed = this.parent.levelSpeed;
             this.idleTimer.start();
         }
-        if(this.parent.attackDuration.isStopped() && this.parent.areaofEffect.visible) {
-            this.parent.areaofEffect.visible = false;
-            this.parent.trigger.setTrigger("enemy", null, null, {damage: 0});
-        }
+        this.parent.updateProjectiles(deltaT);
     }
 
     onExit(): Record<string, any> {

@@ -2,7 +2,6 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
@@ -180,7 +179,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 1000, totalWaves: 10, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 1000, totalWaves: 10, towersUnlocked: 2}, sceneOptions);
             }
         }
 

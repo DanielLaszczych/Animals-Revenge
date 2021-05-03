@@ -7,5 +7,8 @@ export enum AR_Events {
     ENEMY_DIED = "EnemyDied",
     ENEMY_CONFUSED = "EnemyConfused",
     PAUSE_RESUME_GAME = "PauseResumeGame",
-    LEVEL_SPEED_CHANGE = "LevelSpeedChange"
+    LEVEL_SPEED_CHANGE = "LevelSpeedChange",
+    ENEMY_SLOWED = "EnemySlowed",
+    WAVE_START_END = "WaveStartEnd",
+    NEW_TARGET_LOCATION = "NewTargetLocation"
 }

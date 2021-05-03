@@ -1,4 +1,3 @@
-
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -11,10 +10,12 @@ export default class Idle extends State {
     protected owner: AnimatedSprite;
     protected parent: ChickenAI;
     protected idleTimer: Timer;
+    protected damage: number;
 
-    constructor(parent: ChickenAI, owner: AnimatedSprite) {
+    constructor(parent: ChickenAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
+        this.damage = stats.damage;
     }
     
     onEnter(options: Record<string, any>): void {
@@ -67,21 +68,7 @@ export default class Idle extends State {
             this.idleTimer.levelSpeed = this.parent.levelSpeed;
             this.idleTimer.start();
         }
-        for (let i = 0; i < this.parent.projectiles.length;) {
-            if (this.parent.projectiles[i].sprite.position.x === -1) { //this means they projectile collided and its position was set to -1
-                let projectile = this.parent.projectiles.splice(i, 1)[0].sprite;
-                projectile.destroy();
-                continue;
-            }
-            let newPosition = this.parent.projectiles[i].sprite.position.add(this.parent.projectiles[i].dir.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
-            this.parent.projectiles[i].sprite.position.set(newPosition.x, newPosition.y);
-            if (this.parent.projectiles[i].sprite.position.x > 1200 || this.parent.projectiles[i].sprite.position.x < 0) {
-                let projectile = this.parent.projectiles.splice(i, 1)[0].sprite;
-                projectile.destroy();
-                continue;
-            }
-            i++;
-        }
+        this.parent.updateProjectiles(deltaT);
     }
 
     onExit(): Record<string, any> {
