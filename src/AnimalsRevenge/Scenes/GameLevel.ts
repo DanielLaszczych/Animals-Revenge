@@ -102,8 +102,8 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("cowTower", "assets/spritesheets/cow.json");
         this.load.spritesheet("spiderTower", "assets/spritesheets/spider.json");
         this.load.spritesheet("eagleTower", "assets/spritesheets/eagle.json");
-        this.load.image("spiderTower", "assets/images/spider.png");
-        this.load.image("eagleTower", "assets/images/eagle.png"); 
+        // this.load.image("spiderTower", "assets/images/spider.png");
+        // this.load.image("eagleTower", "assets/images/eagle.png"); 
         this.load.image("elephantTower", "assets/images/Heart.png"); //TODO - Change to this elephant sprite when avaiable
         this.load.image("penguinTower", "assets/images/Heart.png"); //TODO - Change to this penguin sprite when avaiable
         this.load.image("coin", "assets/images/Coin.png");
