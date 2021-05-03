@@ -52,6 +52,7 @@ export default class GameLevel extends Scene {
     protected UILayer: Layer;
 
     protected towersUnlocked: number = 0;
+    protected currentLevel: number;
 
     protected size: Vec2;
 
@@ -110,6 +111,7 @@ export default class GameLevel extends Scene {
         this.currentWave = 1;
         this.levelSpeed = 1;
         this.towersUnlocked = init.towersUnlocked;
+        this.currentLevel = init.currentLevel;
     }
 
     loadScene(): void {
@@ -246,7 +248,29 @@ export default class GameLevel extends Scene {
         this.moneyCountLabel.textColor = Color.WHITE
         this.moneyCountLabel.font = "PixelSimple";
 
-        this.startWaveBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(810, 80), text: "Start Wave"});
+        this.waveCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(810, 30), text: "Wave " + this.currentWave + "/" + this.totalWaves});
+        this.waveCountLabel.textColor = Color.WHITE
+        this.waveCountLabel.font = "PixelSimple";
+
+        this.victoryLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: this.size, text: ""});
+        this.victoryLabel.textColor = Color.WHITE
+        this.victoryLabel.font = "PixelSimple";
+        this.victoryLabel.fontSize = 50;
+        this.victoryLabel.visible = false;
+
+        let sidePanel = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(1050, this.size.y), size: new Vec2(300, 800)});
+        sidePanel.color = new Color(186, 104, 30, 0.9);
+
+        let shopLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 40), text: "Shop"});
+        shopLabel.textColor = Color.WHITE;
+        shopLabel.font = "PixelSimple";
+        shopLabel.fontSize = 60;
+
+        let line = <Line>this.add.graphic(GraphicType.LINE, "UI", {start: new Vec2(900, 725), end: new Vec2(1200, 725)});
+        line.color = Color.BLACK;
+        line.thickness = 2;
+        
+        this.startWaveBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 760), text: "Start Wave"});
         this.startWaveBtn.backgroundColor = Color.TRANSPARENT;
         this.startWaveBtn.textColor = Color.BLACK;
         this.startWaveBtn.borderColor = Color.BLACK;
@@ -256,7 +280,7 @@ export default class GameLevel extends Scene {
         this.startWaveBtn.setPadding(new Vec2(10, 10));
 
         this.startWaveBtn.onClick = () => {
-            if (Input.getMousePressButton() === BUTTON.LEFTCLICK && !this.isPlacedTowerSelected) {
+            if (Input.getMousePressButton() === BUTTON.LEFTCLICK) {
                 this.startWaveBtn.visible = false;
                 if (this.currentWave >= 2) {
                     this.timeBetweenSpawn -= 100;
@@ -278,7 +302,7 @@ export default class GameLevel extends Scene {
             this.startWaveBtn.textColor = Color.BLACK;
         }
 
-        this.levelSpeedBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(80, 80), text: "Speed: " + this.levelSpeed + "x"});
+        this.levelSpeedBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 760), text: "Speed: " + this.levelSpeed + "x"});
         this.levelSpeedBtn.backgroundColor = Color.TRANSPARENT;
         this.levelSpeedBtn.textColor = Color.BLACK;
         this.levelSpeedBtn.borderColor = Color.BLACK;
@@ -311,24 +335,6 @@ export default class GameLevel extends Scene {
         this.levelSpeedBtn.onLeave = () => {
             this.levelSpeedBtn.textColor = Color.BLACK;
         }
-
-        this.waveCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(810, 30), text: "Wave " + this.currentWave + "/" + this.totalWaves});
-        this.waveCountLabel.textColor = Color.WHITE
-        this.waveCountLabel.font = "PixelSimple";
-
-        this.victoryLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: this.size, text: ""});
-        this.victoryLabel.textColor = Color.WHITE
-        this.victoryLabel.font = "PixelSimple";
-        this.victoryLabel.fontSize = 50;
-        this.victoryLabel.visible = false;
-
-        let sidePanel = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(1050, this.size.y), size: new Vec2(300, 800)});
-        sidePanel.color = new Color(186, 104, 30, 0.9);
-
-        let shopLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 40), text: "Shop"});
-        shopLabel.textColor = Color.WHITE;
-        shopLabel.font = "PixelSimple";
-        shopLabel.fontSize = 60;
 
         if (this.towersUnlocked >= 1 || Help.allTowers) {
             let chickenTowerImg = this.add.sprite("chickenTowerSprite", "UI");
@@ -472,40 +478,40 @@ export default class GameLevel extends Scene {
             }
         }
 
-        this.selectedTowerNameLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 350), text: ""});
+        this.selectedTowerNameLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 340), text: ""});
         this.selectedTowerNameLabel.textColor = Color.WHITE
         this.selectedTowerNameLabel.font = "PixelSimple";
-        this.selectedTowerNameLabel.fontSize = 40;
+        this.selectedTowerNameLabel.fontSize = 35;
         this.selectedTowerNameLabel.visible = false;
 
-        this.selectedTowerDamageLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 400), text: ""});
+        this.selectedTowerDamageLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 380), text: ""});
         this.selectedTowerDamageLabel.textColor = Color.WHITE
         this.selectedTowerDamageLabel.font = "PixelSimple";
-        this.selectedTowerDamageLabel.fontSize = 30;
+        this.selectedTowerDamageLabel.fontSize = 25;
         this.selectedTowerDamageLabel.visible = false;
 
-        this.selectedTowerSpeedLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 430), text: ""});
+        this.selectedTowerSpeedLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 410), text: ""});
         this.selectedTowerSpeedLabel.textColor = Color.WHITE
         this.selectedTowerSpeedLabel.font = "PixelSimple";
-        this.selectedTowerSpeedLabel.fontSize = 30;
+        this.selectedTowerSpeedLabel.fontSize = 25;
         this.selectedTowerSpeedLabel.visible = false;
 
-        this.selectedTowerRangeLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 460), text: ""});
+        this.selectedTowerRangeLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 440), text: ""});
         this.selectedTowerRangeLabel.textColor = Color.WHITE
         this.selectedTowerRangeLabel.font = "PixelSimple";
-        this.selectedTowerRangeLabel.fontSize = 30;
+        this.selectedTowerRangeLabel.fontSize = 25;
         this.selectedTowerRangeLabel.visible = false;
 
-        this.selectedTowerCostLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 520), text: ""});
+        this.selectedTowerCostLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 480), text: ""});
         this.selectedTowerCostLabel.textColor = Color.WHITE
         this.selectedTowerCostLabel.font = "PixelSimple";
-        this.selectedTowerCostLabel.fontSize = 30;
+        this.selectedTowerCostLabel.fontSize = 25;
         this.selectedTowerCostLabel.visible = false;
 
-        this.selectedTowerInfoLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 560), text: ""});
+        this.selectedTowerInfoLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1050, 520), text: ""});
         this.selectedTowerInfoLabel.textColor = Color.WHITE
         this.selectedTowerInfoLabel.font = "PixelSimple";
-        this.selectedTowerInfoLabel.fontSize = 25;
+        this.selectedTowerInfoLabel.fontSize = 20;
         this.selectedTowerInfoLabel.visible = false;
 
         this.deselectTowerShopBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 600), text: "Deselect"});
@@ -540,13 +546,13 @@ export default class GameLevel extends Scene {
             this.deselectTowerShopBtn.textColor = Color.BLACK;
         }
 
-        this.selectedTowerUpgrade1Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 540), text: ""});
+        this.selectedTowerUpgrade1Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 510), text: ""});
         this.selectedTowerUpgrade1Btn.backgroundColor = Color.TRANSPARENT;
         this.selectedTowerUpgrade1Btn.textColor = Color.BLACK;
         this.selectedTowerUpgrade1Btn.borderColor = Color.BLACK;
         this.selectedTowerUpgrade1Btn.borderRadius = 0;
         this.selectedTowerUpgrade1Btn.font = "PixelSimple";
-        this.selectedTowerUpgrade1Btn.fontSize = 30;
+        this.selectedTowerUpgrade1Btn.fontSize = 23;
         this.selectedTowerUpgrade1Btn.setPadding(new Vec2(10, 15));
         this.selectedTowerUpgrade1Btn.visible = false;
 
@@ -557,13 +563,13 @@ export default class GameLevel extends Scene {
             this.selectedTowerUpgrade1Btn.textColor = Color.BLACK;
         }
 
-        this.selectedTowerUpgrade2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 640), text: ""});
+        this.selectedTowerUpgrade2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 590), text: ""});
         this.selectedTowerUpgrade2Btn.backgroundColor = Color.TRANSPARENT;
         this.selectedTowerUpgrade2Btn.textColor = Color.BLACK;
         this.selectedTowerUpgrade2Btn.borderColor = Color.BLACK;;
         this.selectedTowerUpgrade2Btn.borderRadius = 0;
         this.selectedTowerUpgrade2Btn.font = "PixelSimple";
-        this.selectedTowerUpgrade2Btn.fontSize = 30;
+        this.selectedTowerUpgrade2Btn.fontSize = 23;
         this.selectedTowerUpgrade2Btn.setPadding(new Vec2(10, 15));
         this.selectedTowerUpgrade2Btn.visible = false;
 
@@ -574,13 +580,13 @@ export default class GameLevel extends Scene {
             this.selectedTowerUpgrade2Btn.textColor = Color.BLACK;
         }
 
-        this.selectedTowerSellBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 750), text: "Sell"});
+        this.selectedTowerSellBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1050, 680), text: "Sell"});
         this.selectedTowerSellBtn.backgroundColor = Color.TRANSPARENT;
         this.selectedTowerSellBtn.textColor = Color.BLACK;
         this.selectedTowerSellBtn.borderColor = Color.RED;
         this.selectedTowerSellBtn.borderRadius = 0;
         this.selectedTowerSellBtn.font = "PixelSimple";
-        this.selectedTowerSellBtn.fontSize = 35;
+        this.selectedTowerSellBtn.fontSize = 25;
         this.selectedTowerSellBtn.setPadding(new Vec2(30, 10));
         this.selectedTowerSellBtn.visible = false;
 
@@ -775,7 +781,7 @@ export default class GameLevel extends Scene {
                 break;
             case "cow":
                 {
-                    if (towerData.hasConfusion) {
+                    if (towerData.damageUpgradesRemaining === 0) {
                         ugprade1Text =  towerData.upgrade1 + "\nMaxed Out";
                     }
                     if (towerData.hasAura) {
@@ -805,7 +811,7 @@ export default class GameLevel extends Scene {
                 break;
             case "elephant":
                 {
-                    if (towerData.attackSpeedUpgradesRemaining === 0) {
+                    if (towerData.accuracyUpgradesRemaining === 0) {
                         ugprade1Text = towerData.upgrade1 + "\nMaxed Out";
                     }
                     if (towerData.damageUpgradesRemaining === 0) {
@@ -836,7 +842,6 @@ export default class GameLevel extends Scene {
                     let purchaseCost = 0;
                     switch (towerData.sprite.imageId) {
                         case "chicken":
-                        case "elephant":
                         case "penguin":
                             {
                                 if (towerData.attackSpeedUpgradesRemaining !== 0) {
@@ -856,19 +861,8 @@ export default class GameLevel extends Scene {
                                 }
                             }
                             break;
+                        case "eagle":
                         case "cow": 
-                            {
-                                if (!towerData.hasConfusion) {
-                                    purchaseCost = towerData.upgrade1Cost;
-                                    towerData.hasConfusion = true;
-                                    this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nMaxed Out");
-                                    this.selectedTowerUpgrade1Btn.sizeAssigned = false;
-                                    towerData.sprite.setAIActive(true, {type: "hasConfusion", hasConfusion: towerData.hasConfusion});
-                                    purchased = true;
-                                }
-                            }
-                            break;
-                        case "eagle": 
                             {   
                                 if (towerData.damageUpgradesRemaining !== 0) {
                                     purchaseCost = towerData.upgrade1Cost;
@@ -880,13 +874,35 @@ export default class GameLevel extends Scene {
                                     } else {
                                         this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nCost: " + towerData.upgrade1Cost);
                                     }
-                                    towerData.damage += 4;
+                                    if (towerData.sprite.imageId === "eagle") {
+                                        towerData.damage += 4;
+                                    } else if (towerData.sprite.imageId === "cow") {
+                                        towerData.damage += 0.15;
+                                    }
                                     this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
                                     towerData.sprite.setAIActive(true, {type: "damage", damage: towerData.damage});
                                     purchased = true;
                                 }
                             }
                             break;
+                        case "elephant": 
+                                {
+                                    if (towerData.accuracyUpgradesRemaining !== 0) {
+                                        purchaseCost = towerData.upgrade1Cost;
+                                        towerData.accuracyUpgradesRemaining--;
+                                        towerData.upgrade1Cost += 50;
+                                        if (towerData.accuracyUpgradesRemaining === 0) {
+                                            this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nMaxed Out");
+                                            this.selectedTowerUpgrade1Btn.sizeAssigned = false;
+                                        } else {
+                                            this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nCost: " + towerData.upgrade1Cost);
+                                        }
+                                        towerData.accuracy += 0.25
+                                        towerData.sprite.setAIActive(true, {type: "accuracy", accuracy: towerData.accuracy});
+                                        purchased = true;
+                                    }
+                                }
+                                break;
                         // case "spider":
                         //     {
                         //         if()
@@ -1036,6 +1052,7 @@ export default class GameLevel extends Scene {
                 this.victoryLabel.visible = true;
                 this.victoryLabel.text = "Defeat";
                 this.startWaveBtn.visible = false;
+                this.emitter.fireEvent(AR_Events.WAVE_START_END, {isWaveInProgress: false});
                 setTimeout(() => {
                         this.sceneManager.changeToScene(LevelSelection, {}, {});
                 }, 3000);
@@ -1323,9 +1340,6 @@ export default class GameLevel extends Scene {
                         if (event.data.get("data").slowAmount !== undefined) {
                             this.emitter.fireEvent(AR_Events.ENEMY_SLOWED, {id: id, slowAmount: event.data.get("data").slowAmount});
                         }
-                        if (event.data.get("data").confuseEnemy !== undefined && event.data.get("data").confuseEnemy) {
-                            this.emitter.fireEvent(AR_Events.ENEMY_CONFUSED, {id: id});
-                        }
                         if (newHealth <= 0) {
                             this.enemies.delete(enemy);
                             healthBar.destroy();
@@ -1399,7 +1413,7 @@ export default class GameLevel extends Scene {
                         case "cow":
                             {
                                 newTower.scale.set(3, 3);
-                                newTower.addAI(CowAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasAura: defaultTowerData.hasAura, hasConfusion: defaultTowerData.hasConfusion});
+                                newTower.addAI(CowAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasAura: defaultTowerData.hasAura});
                             } 
                             break;  
                         case "penguin":
@@ -1417,7 +1431,7 @@ export default class GameLevel extends Scene {
                         case "elephant":
                             {   
                                 newTower.scale.set(5.5, 5.5);
-                                newTower.addAI(ElephantAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range});
+                                newTower.addAI(ElephantAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, accuracy: defaultTowerData.accuracy});
                             }      
                             break;
                     }
@@ -1522,6 +1536,10 @@ export default class GameLevel extends Scene {
                     this.victoryLabel.text = "Victory!";
                     this.levelSpeedBtn.visible = false;
                     this.startWaveBtn.visible = false;
+                    this.emitter.fireEvent(AR_Events.WAVE_START_END, {isWaveInProgress: false});
+                    if (this.currentLevel === LevelSelection.levelsUnlocked) {
+                        LevelSelection.levelsUnlocked++;
+                    }
                     setTimeout(() => {
                           this.sceneManager.changeToScene(LevelSelection, {}, {});
                     }, 3000);

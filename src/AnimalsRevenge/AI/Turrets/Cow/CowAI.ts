@@ -72,8 +72,6 @@ export default class CowAI extends StateMachineAI {
             this.stats.range = newStats.range;
         } else if (newStats.type === "hasAura") {
             this.stats.hasAura = newStats.hasAura;
-        } else if (newStats.type === "hasConfusion") {
-            this.stats.hasConfusion = newStats.hasConfusion;
         }
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));

@@ -22,7 +22,7 @@
             "attackSpeedUpgradesRemaining": 3,
             "maxRange": 350,
             "receivedAttackSpeedAura": false,
-            "description": "The Chicken is a fully\noffensive turret with\nits ability to shoot\neggs. Its first upgrade\nincreases its attack\nspeed and its second\nupgrade increases its\nrange"
+            "description": "The Chicken is an offensive\ntower with a cannon that\nshoots eggs. Its damage and\nattack speed are both\naverage. Its first upgrade\nincreases its attack speed\nand its second upgrade\nincreases its range."
         },
         {
             "name": "Cow Tower",
@@ -30,13 +30,13 @@
             "damage": 0.2,
             "attackSpeed": 0.15,
             "range": 180,
-            "upgrade1": "Confusion Debuff",
-            "upgrade1Cost": 300,
-            "hasConfusion": false,
+            "upgrade1": "+ Damage",
+            "upgrade1Cost": 50,
+            "damageUpgradesRemaining": 3,
             "upgrade2": "Attack Speed Aura",
             "upgrade2Cost": 300,
             "hasAura": false,
-            "description": "The Cow is a jack of all\ntrades. It releases a\nburp cloud that deals\nconstant damage. Its\nfirst upgrade will allow\nits burp cloud to stun\nenemies for a second.\nIts second upgrade\nbuffs the attack speed\nof non-cow towers\nnear it."
+            "description": "The Cow has both offensive\nand supportive capabilties. It\nreleases a burp cloud that\ndeals constant damage. Its\nfirst upgrade increases its\ndamage and its second upgrade\nbuffs the attack speed of\nnon-cow towers near it."
         },
         {
             "name": "Spider Tower",
@@ -63,7 +63,7 @@
             "upgrade2Cost": 200,
             "damageUpgradesRemaining": 3,
             "hasDamageAura": false,
-            "description": "The Eagle is a hard\nhitter but it lacks the\nability to attack fast.\nIts first upgrade\nincreases its damage\nand its second upgrade\nprovides a damage buff\nto allies within its\nrange."
+            "description": "The Eagle is a hard hitter\nthat ignores some of the\nenemies defense. Its first\nupgrade increases its damage\nand its second upgrade\nprovides a damage buff to\nallies within its range."
         },
         {
             "name": "Elephant Tower",
@@ -71,13 +71,14 @@
             "damage": 15,
             "attackSpeed": 1,
             "range": "User Input",
-            "upgrade1": "+ Attack Speed",
+            "upgrade1": "+ Accuracy",
             "upgrade1Cost": 100,
             "upgrade2": "+ Damage",
             "upgrade2Cost": 100,
-            "attackSpeedUpgradesRemaining": 3,
+            "accuracy": 0.25,
+            "accuracyUpgradesRemaining": 3,
             "damageUpgradesRemaining": 3,
-            "description": "The Elephant has a\nrapid rate of fire but\nis slightly innacurate.\nYou control where they\nfire by pressing/holding\nX on a desired spot.\nIts first upgrade\nincreases its attack\nspeed and its second\nupgrade increases its\ndamage."
+            "description": "The Elephant is a mortar,\nhigh damage but inaccurate.\nYou control where they fire\nby pressing/holding X on a\ndesired spot when having them\nselected. Its first upgrade\nimproves its accuracy and its\nsecond upgrade increases its\ndamage."
         },
         {
             "name": "Penguin Tower",
@@ -91,7 +92,7 @@
             "upgrade2Cost": 200,
             "attackSpeedUpgradesRemaining": 3,
             "hasStrongSlow": false,
-            "description": "The Penguin has both\noffense and crowd\ncontrol at its disposal.\nIts attacks both pack a\npunch and slightly slow\nenemies. Its first\nupgrade increases its\nattack speed and its\nsecond upgrade\nincreases the slow on\nits attack."
+            "description": "The Penguin has both offense\nand crowd control at its\ndisposal. Its attacks deal\nsome damage and slightly\nslow enemies. Its first\nupgrade increases its attack\nspeed and its second upgrade\nincreases the slow on its\nattack."
         }
     ]
 }

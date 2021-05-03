@@ -11,13 +11,11 @@ export default class Idle extends State {
     protected parent: CowAI;
     protected idleTimer: Timer;
     protected damage: number;
-    protected hasConfusion: boolean;
 
     constructor(parent: CowAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
-        this.hasConfusion = stats.hasConfusion;
     }
 
     onEnter(options: Record<string, any>): void {
@@ -35,7 +33,7 @@ export default class Idle extends State {
             this.idleTimer.levelSpeed = this.parent.levelSpeed;
             this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
             if (this.parent.areaofEffect.visible) {
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed)});
             }
         }
         if (event.type === AR_Events.PAUSE_RESUME_GAME) {

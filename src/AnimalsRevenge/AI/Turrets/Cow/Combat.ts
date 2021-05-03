@@ -16,7 +16,6 @@ export default class Combat extends State {
     protected damage: number;
     protected attackSpeed: number;
     protected range: number;
-    protected hasConfusion: boolean;
     protected targetDirection: Vec2;
 
     protected cooldownTimer: Timer;
@@ -29,7 +28,6 @@ export default class Combat extends State {
         this.owner = owner;
         this.damage = stats.damage;
         this.attackSpeed = stats.attackSpeed;
-        this.hasConfusion = stats.hasConfusion;
         this.range = stats.range;
         this.cooldownTimer = new Timer((1.0 / this.attackSpeed) * 1000);
         this.parent.attackDuration = new Timer(4000);
@@ -46,7 +44,7 @@ export default class Combat extends State {
             this.cooldownTimer.levelSpeed = this.parent.levelSpeed;
             this.parent.attackDuration.levelSpeed = this.parent.levelSpeed;
             if (this.parent.areaofEffect.visible) {
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed)});
             }
         }
         if (event.type === AR_Events.PAUSE_RESUME_GAME) {
@@ -117,7 +115,7 @@ export default class Combat extends State {
                 this.parent.trigger.position.set(this.parent.areaofEffect.position.x, this.parent.areaofEffect.position.y);
                 this.parent.trigger.removePhysics();
                 this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, this.parent.areaofEffect.sizeWithZoom), undefined, false, false);
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed), confuseEnemy: this.hasConfusion});
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage * this.parent.damageMultiplier.get(this.parent.levelSpeed)});
                 this.parent.attackDuration.start();
                 this.doOnce = true;
             } else if (!this.doOnce) {

@@ -46,6 +46,9 @@ export default class ElephantAI extends StateMachineAI {
             this.stats.damage = newStats.damage;
         } else if (newStats.type === "range") {
             this.stats.range = newStats.range;
+        } else if (newStats.type === "accuracy") {
+            console.log(newStats.accuracy);
+            this.stats.accuracy = newStats.accuracy;
         }
         this.addState("idle", new Idle(this, this.owner));
         this.addState("combat", new Combat(this, this.owner, this.stats));
