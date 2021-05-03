@@ -291,8 +291,10 @@ export default class GameLevel extends Scene {
                 this.levelSpeedBtn.text = "Speed: " + this.levelSpeed + "x";
                 this.spawningEnemies = true;
                 this.waveInProgress = true;
-                this.levelSpeedBtn.visible = true;
                 this.emitter.fireEvent(AR_Events.WAVE_START_END, {isWaveInProgress: true});
+                setTimeout(() => {
+                    this.levelSpeedBtn.visible = true;
+                }, 100);
             }
         }
         this.startWaveBtn.onEnter = () => {
