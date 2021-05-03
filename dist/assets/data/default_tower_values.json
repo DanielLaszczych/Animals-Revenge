@@ -44,10 +44,12 @@
             "damage": 10,
             "attackSpeed": 3,
             "range": 250,
-            "upgrade1": "+ Attack Speed",
-            "upgrade1Cost": 100,
-            "upgrade2": "+ Range",
-            "upgrade2Cost": 100
+            "upgrade1": "+ Slow",
+            "upgrade1Cost": 250,
+            "upgrade2": "+ Defense Shred",
+            "upgrade2Cost": 250,
+            "canAttack": false,
+            "description": "The Spider is a support\nturret with the ability to slow down enemies as well as make enemies more vulnerable to other turrets' damage."
         },
         {
             "name": "Eagle Tower",

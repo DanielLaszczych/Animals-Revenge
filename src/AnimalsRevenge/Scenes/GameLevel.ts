@@ -24,6 +24,7 @@ import LevelSelection from "./LevelSelection";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import CowAI from "../AI/Turrets/Cow/CowAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
+// import SpiderAi from "../AI/Turrets/Spider/SpiderAi";
 
 export default class GameLevel extends Scene {
 
@@ -99,13 +100,17 @@ export default class GameLevel extends Scene {
         this.load.image("cowTowerSprite", "assets/sprites/Cow.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
         this.load.spritesheet("cowTower", "assets/spritesheets/cow.json");
-        this.load.image("spiderTower", "assets/images/Heart.png"); //TODO - Change to this spider sprite when avaiable
-        this.load.image("eagleTower", "assets/images/Heart.png"); //TODO - Change to this eagle sprite when avaiable
+        this.load.spritesheet("spiderTower", "assets/spritesheets/spider.json");
+        this.load.spritesheet("eagleTower", "assets/spritesheets/eagle.json");
+        this.load.image("spiderTower", "assets/images/spider.png");
+        this.load.image("eagleTower", "assets/images/eagle.png"); 
         this.load.image("elephantTower", "assets/images/Heart.png"); //TODO - Change to this elephant sprite when avaiable
         this.load.image("penguinTower", "assets/images/Heart.png"); //TODO - Change to this penguin sprite when avaiable
         this.load.image("coin", "assets/images/Coin.png");
-        this.load.image("egg", "assets/images/Egg.png")
-        this.load.image("fart", "assets/images/Fart.png")
+        this.load.image("egg", "assets/images/Egg.png");
+        this.load.image("fart", "assets/images/Fart.png");
+        this.load.image("cobweb", "assets/images/Cobweb.png")
+
         this.load.object("towerData", "assets/data/default_tower_values.json");
     }
 
@@ -729,6 +734,10 @@ export default class GameLevel extends Scene {
                                 }
                             }
                             break;
+                        // case "spider":
+                        //     {
+                        //         if()
+                        //     }
                     }
                     if (purchased) {
                         this.moneyCount += -purchaseCost;
@@ -881,8 +890,13 @@ export default class GameLevel extends Scene {
                 enemyHealth = 75;
                 enemyDefense = 1;
             }
-            enemySprite.position.set(0, 432);
+            if(this.currentWaveData.enemies[0] === "robot_dog"){
+                enemySprite = this.add.animatedSprite("robot_dog", "primary");
+                enemyHealth = 50;
+                enemyDefense = 2;
+            }
             enemySprite.scale.set(5, 5);
+            enemySprite.position.set(0, 432);
             enemySprite.animation.play("WALK");
             enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));
@@ -1143,7 +1157,13 @@ export default class GameLevel extends Scene {
                                 newTower.scale.set(3, 3);
                                 newTower.addAI(CowAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasAura: defaultTowerData.hasAura, hasConfusion: defaultTowerData.hasConfusion});
                             } 
-                            break;   
+                            break;
+                        // case "spider":
+                        //     {
+                        //         newTower.scale.set(3,3);
+                        //         newTower.addAI(SpiderAi, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, canAttack: defaultTowerData.canAttack});
+                        //     }
+                        //     break;
                     }
                     newTowerBtn.setPadding(newTower.sizeWithZoom);
                     newTowerBtn.addPhysics(new AABB(Vec2.ZERO, newTower.sizeWithZoom), undefined, true, true);

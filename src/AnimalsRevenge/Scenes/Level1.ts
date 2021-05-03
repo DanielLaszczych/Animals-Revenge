@@ -22,6 +22,10 @@ export default class Level1 extends GameLevel {
 
         // Loading enemy spritesheets
         this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json")
+        this.load.spritesheet("soldier", "assets/spritesheets/soldier.json")
+        this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json")
+
+
         
     }
 
