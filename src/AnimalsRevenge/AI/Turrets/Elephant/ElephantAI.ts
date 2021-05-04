@@ -1,6 +1,7 @@
 import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -80,6 +81,7 @@ export default class ElephantAI extends StateMachineAI {
                 splash.scale.scale(8, 8);
                 splash.position.set(target.x, target.y);
                 splash.animation.play("Splashing");
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "waterExplosion", loop: false});
                 let trigger = this.owner.getScene().add.graphic(GraphicType.POINT, "primary", {position: target});
                 trigger.color = Color.TRANSPARENT;
                 setTimeout(() => {

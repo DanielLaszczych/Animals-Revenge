@@ -3,6 +3,7 @@ import Circle from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
@@ -99,6 +100,9 @@ export default class Combat extends State {
                     this.parent.projectiles.push({sprite: projectile, dir: dir, target: this.parent.target});
                     this.owner.rotation = Vec2.UP.angleToCCW(dir);
                     this.owner.animation.play("Firing", false);
+                    setTimeout(() => {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "penguinFire", loop: false});
+                    }, 150);
                     this.cooldownTimer.start();
                 } catch {
                     return;

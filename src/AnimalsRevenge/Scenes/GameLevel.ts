@@ -31,6 +31,7 @@ import EagleAI from "../AI/Turrets/Eagle/EagleAI";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import ElephantAI from "../AI/Turrets/Elephant/ElephantAI";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class GameLevel extends Scene {
 
@@ -137,6 +138,13 @@ export default class GameLevel extends Scene {
         this.load.image("target", "assets/images/Target.png");
         this.load.object("towerData", "assets/data/default_tower_values.json");
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
+        this.load.audio("chickenFire", "assets/sounds/chickenFire.wav");
+        this.load.audio("penguinFire", "assets/sounds/penguinFire.wav");
+        this.load.audio("lightingStrike", "assets/sounds/lightingStrike.wav");
+        this.load.audio("cowBurp", "assets/sounds/cowBurp.wav");
+        this.load.audio("elephantFire", "assets/sounds/elephantFire.wav");
+        this.load.audio("enemyDeath", "assets/sounds/enemyDeath.wav");
+        this.load.audio("waterExplosion", "assets/sounds/waterExplosion.wav");
     }
 
     startScene(): void {
@@ -1334,6 +1342,7 @@ export default class GameLevel extends Scene {
                         }
                         let defense = this.enemies.get(enemy).defense;
                         if (event.data.get("data").electricAttack !== undefined){
+                            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lightingStrike", loop: false});
                             defense = defense / 2;
                         }
                         let newHealth;
@@ -1351,6 +1360,7 @@ export default class GameLevel extends Scene {
                             this.emitter.fireEvent(AR_Events.ENEMY_SLOWED, {id: id, slowAmount: event.data.get("data").slowAmount});
                         }
                         if (newHealth <= 0) {
+                            // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemyDeath", loop: false});
                             this.enemies.delete(enemy);
                             healthBar.destroy();
                             enemy.destroy();

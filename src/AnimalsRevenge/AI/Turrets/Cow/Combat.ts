@@ -7,6 +7,7 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
 import CowAI from "./CowAI";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 export default class Combat extends State {
 
@@ -105,6 +106,7 @@ export default class Combat extends State {
                     this.parent.areaofEffect.scale.set(0, 0);
                     this.parent.areaofEffect.visible = true;
                     this.owner.animation.play("Burping", false);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "cowBurp", loop: false});
                     this.cooldownTimer.start();
                     this.doOnce = false;
                 } catch {
