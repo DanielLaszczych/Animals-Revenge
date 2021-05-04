@@ -32,6 +32,8 @@ import Line from "../../Wolfie2D/Nodes/Graphics/Line";
 import ElephantAI from "../AI/Turrets/Elephant/ElephantAI";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Slider from "../../Wolfie2D/Nodes/UIElements/Slider";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 
 export default class GameLevel extends Scene {
 
@@ -228,6 +230,45 @@ export default class GameLevel extends Scene {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
                 this.sceneManager.changeToScene(LevelSelection, {}, {});
             }
+        }
+
+        let musicLabel = <Label>this.add.uiElement(UIElementType.LABEL, "pauseLayer", {position: new Vec2(this.size.x, this.size.y - 10), text: "Music"});
+        musicLabel.textColor = Color.BLACK;
+        musicLabel.font = "PixelSimple";
+        musicLabel.fontSize = 30;
+
+        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: 1});
+        
+        // UI Stuff
+        slider.size = new Vec2(200, 50);
+        slider.nibSize = new Vec2(30, 30);
+        slider.borderRadius = 15;
+        slider.nibColor = Color.ORANGE;
+        slider.sliderColor = Color.BLACK;
+
+        slider.onValueChange = (value: number) => {
+            // Use a non-linear value->volume function, since sound is wack
+            AudioManager.setVolume(AudioChannelType.MUSIC, value*value);
+        }
+
+        let sfxLabel = <Label>this.add.uiElement(UIElementType.LABEL, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 70), text: "Sound Effects"});
+        sfxLabel.textColor = Color.BLACK;
+        sfxLabel.font = "PixelSimple";
+        sfxLabel.fontSize = 30;
+
+        // Initialize value to 1 (music is at max)
+        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: 1});
+
+        // UI Stuff
+        sfxslider.size = new Vec2(200, 50);
+        sfxslider.nibSize = new Vec2(30, 30);
+        sfxslider.borderRadius = 15;
+        sfxslider.nibColor = Color.ORANGE;
+        sfxslider.sliderColor = Color.BLACK;
+
+        sfxslider.onValueChange = (value: number) => {
+            // Use a non-linear value->volume function, since sound is wack
+            AudioManager.setVolume(AudioChannelType.SFX, value*value);
         }
     }
 
@@ -1195,7 +1236,7 @@ export default class GameLevel extends Scene {
     protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile, size: size});
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
-        this.levelEndArea.color = new Color(0, 0, 0, 1);
+        this.levelEndArea.color = Color.TRANSPARENT;
         this.levelEndArea.setTrigger("enemy", AR_Events.ENEMY_ENTERED_LEVEL_END, null, null);
     }
 
@@ -1291,6 +1332,7 @@ export default class GameLevel extends Scene {
                 case AR_Events.ENEMY_ENTERED_LEVEL_END:
                     {
                         let node = this.sceneGraph.getNode(event.data.get("node"));
+                        this.enemies.get(node).healthBar.destroy();
                         this.enemies.delete(node);
                         node.destroy();
                         this.incHealth(-1);
@@ -1361,8 +1403,8 @@ export default class GameLevel extends Scene {
                         }
                         if (newHealth <= 0) {
                             // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemyDeath", loop: false});
-                            this.enemies.delete(enemy);
                             healthBar.destroy();
+                            this.enemies.delete(enemy);
                             enemy.destroy();
                             // this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: id});
                         } else {

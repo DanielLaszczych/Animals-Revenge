@@ -9,6 +9,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Help from "./Help";
 import Level1 from "./Level1";
+import Level4 from "./Level4";
 import Level5 from "./Level5";
 import MainMenu from "./MainMenu";
 
@@ -20,6 +21,7 @@ export default class LevelSelection extends Scene {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
         this.load.image("level1Map", "assets/images/Farm.png");
         this.load.image("level5Map", "assets/images/ParkingLot.png");
+        this.load.image("level4Map", "assets/images/SafariZoo.png");
     }
 
     startScene(): void {
@@ -119,7 +121,7 @@ export default class LevelSelection extends Scene {
             level3Btn.setPadding(level3Img.sizeWithZoom.sub(new Vec2(79, 25)));
         }
 
-        let level4Img = this.add.sprite("level1Map", "levelSelection");
+        let level4Img = this.add.sprite("level4Map", "levelSelection");
         level4Img.position.set(size.x - 400, size.y + 250);
         level4Img.scale.set(0.3, 0.3);
 
@@ -237,7 +239,19 @@ export default class LevelSelection extends Scene {
 
         level4Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                // this.sceneManager.changeToScene(MainMenu, {}, {});
+                
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["enemy", "projectile"],
+                        collisions:
+                        [
+                            [0, 0],
+                            [0, 0]
+                        ]
+                    }
+                }
+
+                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 150, towersUnlocked: 6}, sceneOptions);
             }
         }
 
