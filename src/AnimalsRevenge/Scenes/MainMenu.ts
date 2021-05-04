@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input, { BUTTON } from "../../Wolfie2D/Input/Input";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../Wolfie2D/Nodes/Graphics/Line";
@@ -6,6 +7,7 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Color from "../../Wolfie2D/Utils/Color";
 import Controls from "./Controls";
 import Help from "./Help";
@@ -14,15 +16,25 @@ import LevelSelection from "./LevelSelection";
 
 export default class MainMenu extends Scene {
 
+    static startMusicOnce: boolean = false;
+
     loadScene(): void {
         this.load.image("logo", "assets/images/Animals_Revenge_Logo.png");
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
+        this.load.audio("game_music", "assets/music/main_menu.mp3");
     }
 
     unloadScene(): void {
+        this.load.keepAudio("game_music");
     }
 
     startScene(): void {
+        if (!MainMenu.startMusicOnce) {
+            this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "game_music", loop: true, holdReference: true});
+            AudioManager.setVolume(AudioChannelType.MUSIC, 0.2 * 0.2);
+            MainMenu.startMusicOnce = true;
+        }        
+    
         let backgroundLayer = this.addUILayer("background");
         backgroundLayer.setDepth(0);
         let mainLayer = this.addUILayer("mainMenu");

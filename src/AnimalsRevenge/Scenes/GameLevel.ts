@@ -34,6 +34,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Slider from "../../Wolfie2D/Nodes/UIElements/Slider";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
+import Game from "../../Wolfie2D/Loop/Game";
 
 export default class GameLevel extends Scene {
 
@@ -100,6 +101,9 @@ export default class GameLevel extends Scene {
     protected timeBetweenSpawn: number = 1000;
     protected spawnTimer: Timer;
 
+    static musicValue: number = 0.2;
+    static sfxValue: number = 1;
+
     initScene(init: Record<string, any>) {
         if (Help.infHealth) {
             this.healthCount = Infinity;
@@ -150,6 +154,8 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
+        GameLevel.musicValue = 0.05;
+        AudioManager.setVolume(AudioChannelType.MUSIC, 0.05 * 0.05);
         this.initLayers();
         this.initViewPort();
         this.subscribeToEvents();
@@ -237,7 +243,7 @@ export default class GameLevel extends Scene {
         musicLabel.font = "PixelSimple";
         musicLabel.fontSize = 30;
 
-        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: 1});
+        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: GameLevel.musicValue});
         
         // UI Stuff
         slider.size = new Vec2(200, 50);
@@ -248,6 +254,7 @@ export default class GameLevel extends Scene {
 
         slider.onValueChange = (value: number) => {
             // Use a non-linear value->volume function, since sound is wack
+            GameLevel.musicValue = value;
             AudioManager.setVolume(AudioChannelType.MUSIC, value*value);
         }
 
@@ -257,7 +264,7 @@ export default class GameLevel extends Scene {
         sfxLabel.fontSize = 30;
 
         // Initialize value to 1 (music is at max)
-        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: 1});
+        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: GameLevel.sfxValue});
 
         // UI Stuff
         sfxslider.size = new Vec2(200, 50);
@@ -268,6 +275,7 @@ export default class GameLevel extends Scene {
 
         sfxslider.onValueChange = (value: number) => {
             // Use a non-linear value->volume function, since sound is wack
+            GameLevel.sfxValue = value;
             AudioManager.setVolume(AudioChannelType.SFX, value*value);
         }
     }
@@ -331,7 +339,7 @@ export default class GameLevel extends Scene {
         this.startWaveBtn.onClick = () => {
             if (Input.getMousePressButton() === BUTTON.LEFTCLICK) {
                 this.startWaveBtn.visible = false;
-                if (this.currentWave >= 2) {
+                if (this.currentWave >= 2 && this.timeBetweenSpawn >= 500) {
                     this.timeBetweenSpawn -= 100;
                 }
                 this.spawnTimer = new Timer(this.timeBetweenSpawn);
@@ -682,7 +690,7 @@ export default class GameLevel extends Scene {
             switch (tower) {
                 case "chickenTower":
                     {
-                        this.selectedTowerShopSprite.scale.set(4, 4);
+                        this.selectedTowerShopSprite.scale.set(3.8, 3.8);
                     }
                     break;
                 case "cowTower":
@@ -692,7 +700,7 @@ export default class GameLevel extends Scene {
                     break;
                 case "penguinTower":
                     {
-                        this.selectedTowerShopSprite.scale.set(4, 4);
+                        this.selectedTowerShopSprite.scale.set(3.8, 3.8);
                     }   
                     break;
                 case "eagleTower":
@@ -1184,7 +1192,7 @@ export default class GameLevel extends Scene {
                 enemySprite = this.add.animatedSprite("robot_dog", "primary");
                 enemySprite.scale.set(2, 2);
                 enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
-                enemyHealth = 20;
+                enemyHealth = 35;
                 enemyDefense = 0.4;
                 speed = 150;
             }
@@ -1192,7 +1200,7 @@ export default class GameLevel extends Scene {
                 enemySprite = this.add.animatedSprite("drone", "primary");
                 enemySprite.scale.set(2, 2);
                 enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(18, 18)));
-                enemyHealth = 15;
+                enemyHealth = 40;
                 enemyDefense = 0.3;
                 speed = 125;
             }
@@ -1385,7 +1393,7 @@ export default class GameLevel extends Scene {
                         let defense = this.enemies.get(enemy).defense;
                         if (event.data.get("data").electricAttack !== undefined){
                             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lightingStrike", loop: false});
-                            defense = defense / 2;
+                            defense = defense / 3;
                         }
                         let newHealth;
                         if (Help.oneShot) {

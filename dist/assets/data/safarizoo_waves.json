@@ -3,32 +3,32 @@
     "waveData":[
         {
             "totalEnemies": 9,
-            "enemies": ["farmer", "soldier", "robot_dog", "drone"],
-            "numberEnemies": [3, 2, 2, 2],
+            "enemies": ["soldier"],
+            "numberEnemies": [9],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 30,
-            "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [2, 3, 25],
+            "totalEnemies": 25,
+            "enemies": ["soldier"],
+            "numberEnemies": [25],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 48,
-            "enemies": ["farmer", "farmer"],
-            "numberEnemies": [6, 42],
-            "route": [0, 1, 2, 3, 4, 5, 6, 7]
-        },
-        {
-            "totalEnemies": 58,
-            "enemies": ["farmer", "farmer"],
-            "numberEnemies": [5, 53],
+            "totalEnemies": 40,
+            "enemies": ["soldier", "robot_dog", "soldier", "drone"],
+            "numberEnemies": [15, 5, 10, 10],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
             "totalEnemies": 70,
-            "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [6, 6, 58],
+            "enemies": ["soldier", "robot_dog", "drone", "soldier", "robot_dog", "drone"],
+            "numberEnemies": [5, 5, 10, 20, 15, 15],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 100,
+            "enemies": ["robot_dog", "drone", "soldier", "robot_dog", "drone", "soldier", "robot_dog"],
+            "numberEnemies": [5, 5, 25, 20, 10, 30, 5],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         }
     ]

@@ -238,7 +238,7 @@ export default class LevelSelection extends Scene {
         }
 
         level4Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 4 || Help.allLevels)) {
                 
                 let sceneOptions = {
                     physics: {
@@ -251,12 +251,12 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 150, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 300, towersUnlocked: 6}, sceneOptions);
             }
         }
 
         level5Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 5 || Help.allLevels)) {
                 
                 let sceneOptions = {
                     physics: {
@@ -269,7 +269,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 150, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 6}, sceneOptions);
             }
         }
 

@@ -3,8 +3,8 @@
     "waveData":[
         {
             "totalEnemies": 9,
-            "enemies": ["farmer", "soldier", "robot_dog", "drone"],
-            "numberEnemies": [3, 2, 2, 2],
+            "enemies": ["farmer"],
+            "numberEnemies": [9],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         },
         {

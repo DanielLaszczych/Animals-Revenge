@@ -53,8 +53,8 @@
         },
         {
             "name": "Eagle Tower",
-            "cost": 100,
-            "damage": 20,
+            "cost": 150,
+            "damage": 25,
             "attackSpeed": 1,
             "range": 275,
             "upgrade1": "+ Damage",
@@ -67,7 +67,7 @@
         },
         {
             "name": "Elephant Tower",
-            "cost": 100,
+            "cost": 200,
             "damage": 15,
             "attackSpeed": 1,
             "range": "User Input",
