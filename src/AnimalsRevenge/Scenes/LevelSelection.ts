@@ -225,7 +225,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, totalWaves: 10, towersUnlocked: 2, currentLevel: 1}, sceneOptions);
+                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, towersUnlocked: 2, currentLevel: 1}, sceneOptions);
             }
         }
 
@@ -244,7 +244,7 @@ export default class LevelSelection extends Scene {
                         }
                     }
     
-                    this.sceneManager.changeToScene(Level2, {startHealth: 10, startMoney: 200, towersUnlocked: 3}, sceneOptions);
+                    this.sceneManager.changeToScene(Level2, {startHealth: 10, startMoney: 200, towersUnlocked: 3, currentLevel: 2}, sceneOptions);
                 }
             }
         }
@@ -263,7 +263,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 4}, sceneOptions);
+                this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 4, currentLevel: 3}, sceneOptions);
             }
         }
 
@@ -281,7 +281,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 300, towersUnlocked: 5}, sceneOptions);
+                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 300, towersUnlocked: 5, currentLevel: 4}, sceneOptions);
             }
         }
 
@@ -299,7 +299,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 5}, sceneOptions);
+                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 5, currentLevel: 5}, sceneOptions);
             }
         }
 
