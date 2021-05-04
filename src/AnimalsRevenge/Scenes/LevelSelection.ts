@@ -18,7 +18,7 @@ export default class LevelSelection extends Scene {
     
     loadScene(): void {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
-        this.load.image("level1Map", "assets/images/Level1_Map.png");
+        this.load.image("level1Map", "assets/images/Farm.png");
         this.load.image("level5Map", "assets/images/ParkingLot.png");
     }
 

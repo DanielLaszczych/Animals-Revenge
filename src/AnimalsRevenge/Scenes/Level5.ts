@@ -24,9 +24,8 @@ export default class Level5 extends GameLevel {
         this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json")
         this.load.spritesheet("soldier", "assets/spritesheets/soldier.json")
         this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json")
+        this.load.spritesheet("drone", "assets/spritesheets/drone.json")
 
-
-        
     }
 
     startScene(): void {

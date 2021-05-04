@@ -89,7 +89,7 @@ export default class Combat extends State {
                     projectile.position.set(targetNode.position.x - 300, targetNode.position.y - 800);
                     projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(4, 4)), undefined, false, false);
                     projectile.setGroup("projectile");
-                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, target: this.parent.target});
+                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.damage, target: this.parent.target, electricAttack: true});
                     let projectileDir = targetNode.position.clone().sub(projectile.position).normalize();
     
                     this.parent.projectiles.push({sprite: projectile, target: this.parent.target, dir: projectileDir});

@@ -62,7 +62,7 @@ export default class EagleAI extends StateMachineAI {
                 this.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
                 projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
             } else {
-                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage});
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage, electricAttack: true});
                 projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
             }
             if (projectile.position.x > 1200) {

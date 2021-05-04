@@ -92,7 +92,11 @@ export default class Walk extends State {
         if (this.owner.imageId === "soldier") {
             addTurn = 0.9;
         }
-        this.owner.rotation = Vec2.RIGHT.angleToCCW(this.currentPath.getMoveDirection(this.owner)) + addTurn;
+        if (this.owner.imageId === "drone") {
+            this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner))
+        } else {
+            this.owner.rotation = Vec2.RIGHT.angleToCCW(this.currentPath.getMoveDirection(this.owner)) + addTurn;
+        }
     }
 
     onExit(): Record<string, any> {

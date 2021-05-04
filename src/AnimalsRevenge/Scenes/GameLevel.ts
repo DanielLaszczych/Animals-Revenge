@@ -648,7 +648,7 @@ export default class GameLevel extends Scene {
                     break;
                 case "eagleTower":
                     {
-                        this.selectedTowerShopSprite.scale.set(4, 4);
+                        this.selectedTowerShopSprite.scale.set(3.5, 3.5);
                     }   
                     break;
                 case "elephantTower":
@@ -1128,7 +1128,7 @@ export default class GameLevel extends Scene {
                 enemySprite.scale.set(4, 4);
                 enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 35)));
                 enemyHealth = 75;
-                enemyDefense = 1;
+                enemyDefense = 0.25;
                 speed = 75;
             }
             if(this.currentWaveData.enemies[0] === "robot_dog"){
@@ -1136,8 +1136,16 @@ export default class GameLevel extends Scene {
                 enemySprite.scale.set(2, 2);
                 enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
                 enemyHealth = 20;
-                enemyDefense = 2;
+                enemyDefense = 0.4;
                 speed = 150;
+            }
+            if(this.currentWaveData.enemies[0] === "drone"){
+                enemySprite = this.add.animatedSprite("drone", "primary");
+                enemySprite.scale.set(2, 2);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(18, 18)));
+                enemyHealth = 15;
+                enemyDefense = 0.3;
+                speed = 125;
             }
             enemySprite.position.set(this.levelStart.x, this.levelStart.y);
             enemySprite.animation.play("WALK");
@@ -1325,14 +1333,14 @@ export default class GameLevel extends Scene {
                             projectile.position.set(-1, -1);
                         }
                         let defense = this.enemies.get(enemy).defense;
-                        if(defense > event.data.get("data").damage){
-                            defense = event.data.get("data").damage / 2;
+                        if (event.data.get("data").electricAttack !== undefined){
+                            defense = defense / 2;
                         }
                         let newHealth;
                         if (Help.oneShot) {
                             newHealth = 0;
                         } else {
-                            newHealth = this.enemies.get(enemy).health - (event.data.get("data").damage - defense);
+                            newHealth = this.enemies.get(enemy).health - (event.data.get("data").damage * (1 - defense));
                         }
                         let healthBar = <Rect>this.enemies.get(enemy).healthBar;
                         let enemyWidth = enemy.sizeWithZoom.x * 2;
@@ -1426,7 +1434,7 @@ export default class GameLevel extends Scene {
                             break;
                         case "eagle":
                             {   
-                                newTower.scale.set(4, 4);
+                                newTower.scale.set(3.5, 3.5);
                                 newTower.addAI(EagleAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, hasDamageAura: defaultTowerData.hasDamageAura});
                             }      
                             break;

@@ -1,4 +1,11 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "target":"."
+        }
+    },
  "height":25,
  "infinite":false,
  "layers":[
@@ -31,6 +38,11 @@
                  "name":"Collidable",
                  "type":"bool",
                  "value":true
+                }, 
+                {
+                 "name":"Group",
+                 "type":"string",
+                 "value":"enemyPath"
                 }],
          "type":"tilelayer",
          "visible":true,
@@ -48,7 +60,7 @@
         {
          "columns":1,
          "firstgid":1,
-         "image":"..\/flower.png",
+         "image":"Farm_Tiles\/flower.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -61,7 +73,7 @@
         {
          "columns":1,
          "firstgid":2,
-         "image":"..\/grass.png",
+         "image":"Farm_Tiles\/grass.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -74,7 +86,7 @@
         {
          "columns":1,
          "firstgid":3,
-         "image":"..\/green.png",
+         "image":"Farm_Tiles\/green.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -87,7 +99,7 @@
         {
          "columns":1,
          "firstgid":4,
-         "image":"..\/fence1.png",
+         "image":"Farm_Tiles\/fence1.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -100,11 +112,11 @@
         {
          "columns":1,
          "firstgid":5,
-         "image":"..\/frence2.png",
+         "image":"Farm_Tiles\/fence2.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
-         "name":"frence2",
+         "name":"fence2",
          "spacing":0,
          "tilecount":1,
          "tileheight":16,
@@ -113,7 +125,7 @@
         {
          "columns":1,
          "firstgid":6,
-         "image":"path1.png",
+         "image":"Farm_Tiles\/path1.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -126,7 +138,7 @@
         {
          "columns":1,
          "firstgid":7,
-         "image":"fence4.png",
+         "image":"Farm_Tiles\/fence4.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -139,7 +151,7 @@
         {
          "columns":1,
          "firstgid":8,
-         "image":"fence3.png",
+         "image":"Farm_Tiles\/fence3.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -152,7 +164,7 @@
         {
          "columns":1,
          "firstgid":9,
-         "image":"fence5.png",
+         "image":"Farm_Tiles\/fence5.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -165,7 +177,7 @@
         {
          "columns":1,
          "firstgid":10,
-         "image":"Pinkflower.png",
+         "image":"Farm_Tiles\/Pinkflower.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -178,7 +190,7 @@
         {
          "columns":1,
          "firstgid":11,
-         "image":"Blueflower.png",
+         "image":"Farm_Tiles\/Blueflower.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -191,7 +203,7 @@
         {
          "columns":1,
          "firstgid":12,
-         "image":"RedBarn.png",
+         "image":"Farm_Tiles\/RedBarn.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -204,7 +216,7 @@
         {
          "columns":1,
          "firstgid":13,
-         "image":"BarnDoor.png",
+         "image":"Farm_Tiles\/BarnDoor.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -217,7 +229,7 @@
         {
          "columns":1,
          "firstgid":14,
-         "image":"BarnRoof1.png",
+         "image":"Farm_Tiles\/BarnRoof1.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -230,7 +242,7 @@
         {
          "columns":1,
          "firstgid":15,
-         "image":"BarnRoof2.png",
+         "image":"Farm_Tiles\/BarnRoof2.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -243,7 +255,7 @@
         {
          "columns":1,
          "firstgid":16,
-         "image":"path.png",
+         "image":"Farm_Tiles\/path.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -256,7 +268,7 @@
         {
          "columns":1,
          "firstgid":17,
-         "image":"path2.png",
+         "image":"Farm_Tiles\/path2.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -269,7 +281,7 @@
         {
          "columns":1,
          "firstgid":18,
-         "image":"path3.png",
+         "image":"Farm_Tiles\/path3.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -282,7 +294,7 @@
         {
          "columns":1,
          "firstgid":19,
-         "image":"path5.png",
+         "image":"Farm_Tiles\/path5.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -295,7 +307,7 @@
         {
          "columns":1,
          "firstgid":20,
-         "image":"path6.png",
+         "image":"Farm_Tiles\/path6.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -308,7 +320,7 @@
         {
          "columns":1,
          "firstgid":21,
-         "image":"path7.png",
+         "image":"Farm_Tiles\/path7.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -321,7 +333,7 @@
         {
          "columns":1,
          "firstgid":22,
-         "image":"path8.png",
+         "image":"Farm_Tiles\/path8.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -334,7 +346,7 @@
         {
          "columns":1,
          "firstgid":23,
-         "image":"fence6.png",
+         "image":"Farm_Tiles\/fence6.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -347,7 +359,7 @@
         {
          "columns":1,
          "firstgid":24,
-         "image":"fence7.png",
+         "image":"Farm_Tiles\/fence7.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -360,7 +372,7 @@
         {
          "columns":1,
          "firstgid":25,
-         "image":"path4.png",
+         "image":"Farm_Tiles\/path4.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
