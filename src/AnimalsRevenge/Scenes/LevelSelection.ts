@@ -9,6 +9,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Help from "./Help";
 import Level1 from "./Level1";
+import Level2 from "./Level2";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
 import MainMenu from "./MainMenu";
@@ -20,6 +21,7 @@ export default class LevelSelection extends Scene {
     loadScene(): void {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
         this.load.image("level1Map", "assets/images/Farm.png");
+        this.load.image("level2Map", "assets/images/Forest.png");
         this.load.image("level5Map", "assets/images/ParkingLot.png");
         this.load.image("level4Map", "assets/images/SafariZoo.png");
     }
@@ -73,9 +75,9 @@ export default class LevelSelection extends Scene {
         level1Btn.fontSize = 0;
         level1Btn.setPadding(level1Img.sizeWithZoom);
 
-        let level2Img = this.add.sprite("level1Map", "levelSelection");
+        let level2Img = this.add.sprite("level2Map", "levelSelection");
         level2Img.position.set(size.x, size.y - 50);
-        level2Img.scale.set(0.3, 0.3);
+        level2Img.scale.set(0.47, 0.47);
 
         let level2Label = <Label>this.add.uiElement(UIElementType.LABEL, "levelSelection", {position: new Vec2(size.x, (size.y - 50) - 130), text: "Level 2"});
         level2Label.textColor = Color.BLACK;
@@ -227,7 +229,21 @@ export default class LevelSelection extends Scene {
 
         level2Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                // this.sceneManager.changeToScene(MainMenu, {}, {});
+                if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 4 || Help.allLevels)) {
+                
+                    let sceneOptions = {
+                        physics: {
+                            groupNames: ["enemy", "projectile"],
+                            collisions:
+                            [
+                                [0, 0],
+                                [0, 0]
+                            ]
+                        }
+                    }
+    
+                    this.sceneManager.changeToScene(Level2, {startHealth: 10, startMoney: 200, towersUnlocked: 2}, sceneOptions);
+                }
             }
         }
 
