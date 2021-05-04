@@ -1,6 +1,6 @@
 {
     "name": "spider",
-    "spriteSheetImage": "spider.png",
+    "spriteSheetImage": "Spider.png",
     "spriteWidth": 32,
     "spriteHeight": 32,
     "leftBuffer": 0,

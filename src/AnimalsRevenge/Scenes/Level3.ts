@@ -20,7 +20,7 @@ export default class Level3 extends GameLevel {
         this.load.object("waveData", "assets/data/penguinzoo_waves.json");
 
         this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json");
-        this.load.spritesheet("superSoldier", "assets/spritesheets/superSoldier.json");
+        this.load.spritesheet("superSoldier", "assets/spritesheets/supersoldier.json");
         this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json");
         this.load.spritesheet("drone", "assets/spritesheets/drone.json");
 
