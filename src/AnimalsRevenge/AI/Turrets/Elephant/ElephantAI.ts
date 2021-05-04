@@ -89,8 +89,10 @@ export default class ElephantAI extends StateMachineAI {
                     trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: this.stats.damage, explosionId: trigger.id});
                 }, 200);
                 setTimeout(() => {
-                    splash.destroy();
-                    trigger.destroy();
+                    try {
+                        splash.destroy();
+                        trigger.destroy();
+                    } catch {}
                 }, 500);
                 continue;
             }

@@ -1373,10 +1373,12 @@ export default class GameLevel extends Scene {
             switch(event.type) {
                 case AR_Events.ENEMY_ENTERED_LEVEL_END:
                     {
-                        let node = this.sceneGraph.getNode(event.data.get("node"));
-                        this.enemies.get(node).healthBar.destroy();
-                        this.enemies.delete(node);
-                        node.destroy();
+                        try {
+                            let node = this.sceneGraph.getNode(event.data.get("node"));
+                            this.enemies.get(node).healthBar.destroy();
+                            this.enemies.delete(node);
+                            node.destroy();
+                        } catch {}
                         this.incHealth(-1);
                     }
                     break;
