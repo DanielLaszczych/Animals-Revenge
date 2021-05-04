@@ -30,6 +30,8 @@ export default class Level5 extends GameLevel {
 
     startScene(): void {
         this.add.tilemap("level5", new Vec2(2, 2));
+        this.setSpawnArrow(new Vec2(50, 752), Vec2.RIGHT);
+
         super.startScene();
 
         this.addLevelStart(new Vec2(0, 752));

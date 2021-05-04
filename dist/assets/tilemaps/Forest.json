@@ -38,6 +38,11 @@
                  "name":"Collidable",
                  "type":"bool",
                  "value":true
+                }, 
+                {
+                 "name":"Group",
+                 "type":"string",
+                 "value":"enemyPath"
                 }],
          "type":"tilelayer",
          "visible":true,
@@ -55,7 +60,7 @@
         {
          "columns":1,
          "firstgid":1,
-         "image":"Forest/green1.png",
+         "image":"Forest\/green1.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -68,7 +73,7 @@
         {
          "columns":1,
          "firstgid":2,
-         "image":"Forest/dirtpath.png",
+         "image":"Forest\/dirtpath.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -81,11 +86,11 @@
         {
          "columns":1,
          "firstgid":3,
-         "image":"Forest/dirtpath1.png",
+         "image":"Forest\/dirtpath1.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
-         "name":"Forest/dirtpath1",
+         "name":"Forest\/dirtpath1",
          "spacing":0,
          "tilecount":1,
          "tileheight":16,
@@ -94,7 +99,7 @@
         {
          "columns":1,
          "firstgid":4,
-         "image":"Forest/dirtpath2.png",
+         "image":"Forest\/dirtpath2.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -107,7 +112,7 @@
         {
          "columns":1,
          "firstgid":5,
-         "image":"Forest/dirtpath3.png",
+         "image":"Forest\/dirtpath3.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -120,7 +125,7 @@
         {
          "columns":1,
          "firstgid":6,
-         "image":"Forest/dirtpath4.png",
+         "image":"Forest\/dirtpath4.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -133,7 +138,7 @@
         {
          "columns":1,
          "firstgid":7,
-         "image":"Forest/dirtpath5.png",
+         "image":"Forest\/dirtpath5.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -146,7 +151,7 @@
         {
          "columns":1,
          "firstgid":8,
-         "image":"Forest/dirtpath6.png",
+         "image":"Forest\/dirtpath6.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -159,7 +164,7 @@
         {
          "columns":1,
          "firstgid":9,
-         "image":"Forest/dirtpath7.png",
+         "image":"Forest\/dirtpath7.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -172,7 +177,7 @@
         {
          "columns":1,
          "firstgid":10,
-         "image":"Forest/dirtpath8.png",
+         "image":"Forest\/dirtpath8.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -185,7 +190,7 @@
         {
          "columns":1,
          "firstgid":11,
-         "image":"Forest/lake.png",
+         "image":"Forest\/lake.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -198,7 +203,7 @@
         {
          "columns":1,
          "firstgid":12,
-         "image":"Forest/lake1.png",
+         "image":"Forest\/lake1.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -211,7 +216,7 @@
         {
          "columns":1,
          "firstgid":13,
-         "image":"Forest/lake2.png",
+         "image":"Forest\/lake2.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -224,7 +229,7 @@
         {
          "columns":1,
          "firstgid":14,
-         "image":"Forest/lake3.png",
+         "image":"Forest\/lake3.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -237,7 +242,7 @@
         {
          "columns":1,
          "firstgid":15,
-         "image":"Forest/lake4.png",
+         "image":"Forest\/lake4.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -250,7 +255,7 @@
         {
          "columns":1,
          "firstgid":16,
-         "image":"Forest/lake5.png",
+         "image":"Forest\/lake5.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -263,7 +268,7 @@
         {
          "columns":1,
          "firstgid":17,
-         "image":"Forest/lake6.png",
+         "image":"Forest\/lake6.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -276,7 +281,7 @@
         {
          "columns":1,
          "firstgid":18,
-         "image":"Forest/lake7.png",
+         "image":"Forest\/lake7.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -289,7 +294,7 @@
         {
          "columns":1,
          "firstgid":19,
-         "image":"Forest/lake8.png",
+         "image":"Forest\/lake8.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -302,7 +307,7 @@
         {
          "columns":1,
          "firstgid":20,
-         "image":"Forest/tree.png",
+         "image":"Forest\/tree.png",
          "imageheight":32,
          "imagewidth":16,
          "margin":0,
@@ -315,7 +320,7 @@
         {
          "columns":1,
          "firstgid":22,
-         "image":"Forest/Mushrooms.png",
+         "image":"Forest\/Mushrooms.png",
          "imageheight":16,
          "imagewidth":16,
          "margin":0,
@@ -328,7 +333,7 @@
         {
          "columns":2,
          "firstgid":23,
-         "image":"Forest/log.png",
+         "image":"Forest\/log.png",
          "imageheight":16,
          "imagewidth":32,
          "margin":0,

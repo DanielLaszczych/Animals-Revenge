@@ -14,7 +14,7 @@ export default class Help extends Scene {
 
     static infHealth: boolean = false;
     static infMoney: boolean = false;
-    static allLevels: boolean = true;
+    static allLevels: boolean = false;
     static allTowers: boolean = false;
     static oneShot: boolean = false;
     

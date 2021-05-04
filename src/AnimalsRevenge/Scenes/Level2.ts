@@ -21,14 +21,15 @@ export default class Level2 extends GameLevel {
         this.load.object("waveData", "assets/data/forest_waves.json");
 
         // Loading enemy spritesheets
-        this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json")
-        this.load.spritesheet("soldier", "assets/spritesheets/soldier.json")
-        this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json")
-        this.load.spritesheet("drone", "assets/spritesheets/drone.json")
+        this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json");
+        this.load.spritesheet("superSoldier", "assets/spritesheets/supersoldier.json");
+        this.load.spritesheet("drone", "assets/spritesheets/drone.json");
     }
 
     startScene(): void {
         this.add.tilemap("level2", new Vec2(2, 2));
+        this.setSpawnArrow(new Vec2(175, 750), Vec2.UP);
+
         super.startScene();
 
         this.addLevelStart(new Vec2(175, 800));

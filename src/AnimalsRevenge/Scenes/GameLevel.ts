@@ -92,6 +92,9 @@ export default class GameLevel extends Scene {
 
     protected levelEndArea: Rect;
     protected levelStart: Vec2;
+    protected spawnArrow: Sprite;
+    protected spawnArrowPosition: Vec2;
+    protected spawnArrowDirection: Vec2;
 
     protected tilemap: OrthogonalTilemap;
 
@@ -147,6 +150,7 @@ export default class GameLevel extends Scene {
         this.load.image("target", "assets/images/Target.png");
         this.load.object("towerData", "assets/data/default_tower_values.json");
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
+        this.load.image("arrow", "assets/images/Arrow.png");
         this.load.audio("chickenFire", "assets/sounds/chickenFire.wav");
         this.load.audio("penguinFire", "assets/sounds/penguinFire.wav");
         this.load.audio("lightingStrike", "assets/sounds/lightingStrike.wav");
@@ -284,6 +288,11 @@ export default class GameLevel extends Scene {
     }
 
     protected addUI(): void {
+        this.spawnArrow = this.add.sprite("arrow", "UI");
+        this.spawnArrow.rotation = Vec2.DOWN.angleToCCW(this.spawnArrowDirection);
+        this.spawnArrow.position.set(this.spawnArrowPosition.x, this.spawnArrowPosition.y);
+        this.spawnArrow.scale.set(4, 4);
+
         let heart = this.add.sprite("heart", "UI");
         heart.scale.set(2.5, 2.5);
         heart.position.set(30, 30);
@@ -345,6 +354,7 @@ export default class GameLevel extends Scene {
                 if (this.currentWave >= 2 && this.timeBetweenSpawn >= 500) {
                     this.timeBetweenSpawn -= 100;
                 }
+                this.spawnArrow.visible = false;
                 this.spawnTimer = new Timer(this.timeBetweenSpawn);
                 this.levelSpeed = 1;
                 this.emitter.fireEvent(AR_Events.LEVEL_SPEED_CHANGE, {levelSpeed: this.levelSpeed});
@@ -445,12 +455,12 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 3 || Help.allTowers) {
+        if (this.towersUnlocked >= 8) {
             let spiderTowerImg = this.add.sprite("spiderTowerSprite", "UI");
-            spiderTowerImg.position.set(975, 200);
+            spiderTowerImg.position.set(1125, 275); //975, 200
             spiderTowerImg.scale.set(2, 2);
 
-            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: ""});
+            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
             spiderTowerBtn.backgroundColor = Color.TRANSPARENT;
             spiderTowerBtn.textColor = Color.BLACK;
             spiderTowerBtn.borderColor = Color.TRANSPARENT;
@@ -466,17 +476,16 @@ export default class GameLevel extends Scene {
                 this.displayTowerInfoFromShop("spiderTower");
             }
             spiderTowerBtn.onLeave = () => {
-                // spiderTowerBtn.textColor = Color.BLACK;
                 this.hideTowerInfoFromShop();
             }
         }
 
-        if (this.towersUnlocked >= 4 || Help.allTowers) {
+        if (this.towersUnlocked >= 3 || Help.allTowers) {
             let eagleTowerImg = this.add.sprite("eagleTowerSprite", "UI");
-            eagleTowerImg.position.set(1125, 200);
-            eagleTowerImg.scale.set(2.5, 2.5);
+            eagleTowerImg.position.set(975, 200); //1125, 200
+            eagleTowerImg.scale.set(2, 2);
 
-            let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: ""});
+            let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: ""});
             eagleTowerBtn.backgroundColor = Color.TRANSPARENT;
             eagleTowerBtn.borderColor = Color.TRANSPARENT;
             eagleTowerBtn.borderRadius = 0;
@@ -494,10 +503,10 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 5  || Help.allTowers) {
+        if (this.towersUnlocked >= 5 || Help.allTowers) {
             let elephantTowerImg = this.add.sprite("elephantTowerSprite", "UI");
-            elephantTowerImg.position.set(975, 275);
-            elephantTowerImg.scale.set(3.5, 3.5);
+            elephantTowerImg.position.set(975, 275); //975, 275
+            elephantTowerImg.scale.set(3.5, 3.36);
 
             let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: ""});
             elephantTowerBtn.backgroundColor = Color.TRANSPARENT;
@@ -519,12 +528,12 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 6  || Help.allTowers) {
+        if (this.towersUnlocked >= 4 || Help.allTowers) {
             let penguinTowerImg = this.add.sprite("penguinTowerSprite", "UI");
-            penguinTowerImg.position.set(1125, 275);
+            penguinTowerImg.position.set(1125, 200); //1125, 275
             penguinTowerImg.scale.set(4, 4);
 
-            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
+            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: ""});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
             penguinTowerBtn.borderColor = Color.TRANSPARENT;
             penguinTowerBtn.borderRadius = 0;
@@ -712,7 +721,7 @@ export default class GameLevel extends Scene {
                     break;
                 case "eagleTower":
                     {
-                        this.selectedTowerShopSprite.scale.set(3.5, 3.5);
+                        this.selectedTowerShopSprite.scale.set(3.3, 3.3);
                     }   
                     break;
                 case "elephantTower":
@@ -1216,6 +1225,14 @@ export default class GameLevel extends Scene {
                 enemyDefense = 0.3;
                 speed = 125;
             }
+            if(this.currentWaveData.enemies[0] === "superSoldier"){
+                enemySprite = this.add.animatedSprite("superSoldier", "primary");
+                enemySprite.scale.set(3.5, 3.5);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 24)));
+                enemyHealth = 40;
+                enemyDefense = 0.2;
+                speed = 100;
+            }
             enemySprite.position.set(this.levelStart.x, this.levelStart.y);
             enemySprite.animation.play("WALK");
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));
@@ -1248,6 +1265,11 @@ export default class GameLevel extends Scene {
 
     protected addLevelStart(start: Vec2) {
         this.levelStart = start;
+    }
+
+    protected setSpawnArrow(position: Vec2, direction: Vec2) {
+        this.spawnArrowPosition = position;
+        this.spawnArrowDirection = direction;
     }
 
     /**
@@ -1289,7 +1311,7 @@ export default class GameLevel extends Scene {
 
 					// Calculate collision area between the node and the tile
 					let area = node.sweptRect.overlapArea(collider);
-					if(area > 0){
+					if(area > 250){
 						// We had a collision
 						return true;
 					} 
@@ -1631,6 +1653,7 @@ export default class GameLevel extends Scene {
                           this.sceneManager.changeToScene(LevelSelection, {}, {});
                     }, 3000);
                 } else {
+                    this.spawnArrow.visible = true;
                     this.startWaveBtn.visible = true;
                     this.victoryLabel.visible = true;
                     this.levelSpeedBtn.visible = false;

@@ -91,8 +91,8 @@ export default class Controls extends Scene {
         upgradeTower2.textColor = Color.BLACK;
         upgradeTower2.fontSize = 40;
 
-        let sellTowerText1 = "Left Click on the sell button or press DEL on a";
-        let sellTowerText2 = "selected tower to sell it";
+        let sellTowerText1 = "Left Click on the sell button to sell a selected";
+        let sellTowerText2 = "tower";
         let sellTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 230), text: sellTowerText1});
         let sellTower2 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 270), text: sellTowerText2});
         

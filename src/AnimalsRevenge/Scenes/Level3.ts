@@ -19,15 +19,19 @@ export default class Level3 extends GameLevel {
         // Loading the wave data
         this.load.object("waveData", "assets/data/penguinzoo_waves.json");
 
-        this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json")
-        this.load.spritesheet("soldier", "assets/spritesheets/soldier.json")
-        this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json")
+        this.load.spritesheet("farmer", "assets/spritesheets/enemy_farmer.json");
+        this.load.spritesheet("superSoldier", "assets/spritesheets/superSoldier.json");
+        this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json");
+        this.load.spritesheet("drone", "assets/spritesheets/drone.json");
 
     }
 
     startScene(): void {
         this.add.tilemap("level3", new Vec2(2, 2));
+        this.setSpawnArrow(new Vec2(368, 50), Vec2.DOWN);
+        
         super.startScene();
+
         this.addLevelStart(new Vec2(368, 0));
         this.addLevelEnd(new Vec2(384, 960), new Vec2(100, 100));
         this.addLevelEnd(new Vec2(-108, 448), new Vec2(100, 100));

@@ -79,7 +79,7 @@ export default class LevelSelection extends Scene {
 
         let level2Img = this.add.sprite("level2Map", "levelSelection");
         level2Img.position.set(size.x, size.y - 50);
-        level2Img.scale.set(0.47, 0.47);
+        level2Img.scale.set(0.3, 0.3);
 
         let level2Label = <Label>this.add.uiElement(UIElementType.LABEL, "levelSelection", {position: new Vec2(size.x, (size.y - 50) - 130), text: "Level 2"});
         level2Label.textColor = Color.BLACK;
@@ -182,20 +182,20 @@ export default class LevelSelection extends Scene {
         level6Label.font = "PixelSimple";
         level6Label.fontSize = 40;
         
-        let level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level6Img.position, text: "Locked"});
+        let level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level6Img.position, text: ""});
         level6Btn.borderColor = Color.TRANSPARENT;
         level6Btn.borderRadius = 0;
-        if (LevelSelection.levelsUnlocked >= 6 || Help.allLevels) {
-            level6Btn.backgroundColor = Color.TRANSPARENT;
-            level6Btn.fontSize = 0;
-            level6Btn.setPadding(level6Img.sizeWithZoom);
-        } else {
-            level6Btn.backgroundColor = Color.BLACK;
-            level6Btn.fontSize = 50;
-            level6Btn.font = "PixelSimple";
-            level6Btn.text = "Locked";
-            level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(79, 25)));
-        }
+        // if (LevelSelection.levelsUnlocked >= 6 || Help.allLevels) {
+        //     level6Btn.backgroundColor = Color.TRANSPARENT;
+        //     level6Btn.fontSize = 0;
+        //     level6Btn.setPadding(level6Img.sizeWithZoom);
+        // } else {
+        level6Btn.backgroundColor = Color.BLACK;
+        level6Btn.fontSize = 50;
+        level6Btn.font = "PixelSimple";
+        level6Btn.text = "WIP";
+        level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(45, 25)));
+        // }
 
         backBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
@@ -231,7 +231,7 @@ export default class LevelSelection extends Scene {
 
         level2Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 4 || Help.allLevels)) {
+                if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 2 || Help.allLevels)) {
                 
                     let sceneOptions = {
                         physics: {
@@ -244,7 +244,7 @@ export default class LevelSelection extends Scene {
                         }
                     }
     
-                    this.sceneManager.changeToScene(Level2, {startHealth: 10, startMoney: 200, towersUnlocked: 2}, sceneOptions);
+                    this.sceneManager.changeToScene(Level2, {startHealth: 10, startMoney: 200, towersUnlocked: 3}, sceneOptions);
                 }
             }
         }
@@ -263,7 +263,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 4}, sceneOptions);
             }
         }
 
@@ -281,7 +281,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 300, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level4, {startHealth: 10, startMoney: 300, towersUnlocked: 5}, sceneOptions);
             }
         }
 
@@ -299,7 +299,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 6}, sceneOptions);
+                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 5}, sceneOptions);
             }
         }
 
