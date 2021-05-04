@@ -35,6 +35,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Slider from "../../Wolfie2D/Nodes/UIElements/Slider";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Game from "../../Wolfie2D/Loop/Game";
+import SpiderAI from "../AI/Turrets/Spider/SpiderAI";
 
 export default class GameLevel extends Scene {
 
@@ -127,10 +128,11 @@ export default class GameLevel extends Scene {
         this.load.image("cowTowerSprite", "assets/sprites/Cow.png");
         this.load.image("penguinTowerSprite", "assets/sprites/Penguin.png");
         this.load.image("eagleTowerSprite", "assets/sprites/Eagle.png");
+        this.load.image("spiderTowerSprite", "assets/sprites/Spider.png");
         this.load.image("elephantTowerSprite", "assets/sprites/Elephant.png");
         this.load.spritesheet("chickenTower", "assets/spritesheets/chicken.json");
         this.load.spritesheet("cowTower", "assets/spritesheets/cow.json");
-        this.load.image("spiderTower", "assets/images/Heart.png"); //TODO - Change to this spider sprite when avaiable
+        this.load.spritesheet("spiderTower", "assets/spritesheets/spider.json");
         this.load.spritesheet("eagleTower", "assets/spritesheets/eagle.json");
         this.load.spritesheet("elephantTower", "assets/spritesheets/elephant.json");
         this.load.spritesheet("penguinTower", "assets/spritesheets/penguin.json");
@@ -138,6 +140,7 @@ export default class GameLevel extends Scene {
         this.load.image("egg", "assets/images/Egg.png")
         this.load.image("fart", "assets/images/Fart.png")
         this.load.image("snowball", "assets/images/Snowball.png");
+        this.load.image("cobweb", "assets/images/Cobweb.png");
         this.load.spritesheet("lightingBolt", "assets/spritesheets/lightingBolt.json");
         this.load.image("waterBomb", "assets/images/WaterBomb.png");
         this.load.spritesheet("splash", "assets/spritesheets/splash.json");
@@ -443,31 +446,35 @@ export default class GameLevel extends Scene {
         }
 
         if (this.towersUnlocked >= 3 || Help.allTowers) {
-            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: "?"});
+            let spiderTowerImg = this.add.sprite("spiderTowerSprite", "UI");
+            spiderTowerImg.position.set(975, 200);
+            spiderTowerImg.scale.set(2, 2);
+
+            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: ""});
             spiderTowerBtn.backgroundColor = Color.TRANSPARENT;
             spiderTowerBtn.textColor = Color.BLACK;
-            spiderTowerBtn.borderColor = Color.BLACK;
+            spiderTowerBtn.borderColor = Color.TRANSPARENT;
             spiderTowerBtn.borderRadius = 0;
             spiderTowerBtn.font = "PixelSimple";
             spiderTowerBtn.setPadding(new Vec2(30, 15));
 
             spiderTowerBtn.onClick = () => {
-                // this.createTowerFromShop("spiderTower");
+                this.createTowerFromShop("spiderTower");
             }
             spiderTowerBtn.onEnter = () => {
                 spiderTowerBtn.textColor = Color.WHITE;
-                // this.displayTowerInfoFromShop("spiderTower");
+                this.displayTowerInfoFromShop("spiderTower");
             }
             spiderTowerBtn.onLeave = () => {
-                spiderTowerBtn.textColor = Color.BLACK;
-                // this.hideTowerInfoFromShop();
+                // spiderTowerBtn.textColor = Color.BLACK;
+                this.hideTowerInfoFromShop();
             }
         }
 
         if (this.towersUnlocked >= 4 || Help.allTowers) {
             let eagleTowerImg = this.add.sprite("eagleTowerSprite", "UI");
             eagleTowerImg.position.set(1125, 200);
-            eagleTowerImg.scale.set(4, 4);
+            eagleTowerImg.scale.set(2.5, 2.5);
 
             let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: ""});
             eagleTowerBtn.backgroundColor = Color.TRANSPARENT;
@@ -712,6 +719,11 @@ export default class GameLevel extends Scene {
                     {
                         this.selectedTowerShopSprite.scale.set(5.5, 5.5);
                     }   
+                    break;
+                case "spiderTower":
+                    {
+                        this.selectedTowerShopSprite.scale.set(2.5, 2.5);
+                    }
                     break;
             }
             this.selectedTowerShopSprite.addPhysics();
@@ -1504,6 +1516,11 @@ export default class GameLevel extends Scene {
                                 newTower.addAI(ElephantAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, accuracy: defaultTowerData.accuracy});
                             }      
                             break;
+                        case "spider":
+                            {
+                                newTower.scale.set(2.5, 2.5);
+                                newTower.addAI(SpiderAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range});
+                            }
                     }
                     newTowerBtn.setPadding(newTower.sizeWithZoom);
                     newTowerBtn.addPhysics(new AABB(Vec2.ZERO, newTower.sizeWithZoom), undefined, true, true);

@@ -49,7 +49,7 @@
             "upgrade2": "+ Defense Shred",
             "upgrade2Cost": 250,
             "canAttack": false,
-            "description": "The Spider is a support\nturret with the ability to slow down enemies as well as make enemies more vulnerable to other turrets' damage."
+            "description": "The Spider is a support\nturret with the ability\nto slow down enemies\nas well as make enemies\nweaker to other \nturrets'damage. Its\nfirst upgrade increases\nits slow. Its \nsecond upgrade allows\nit to attack enemies."
         },
         {
             "name": "Eagle Tower",

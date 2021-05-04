@@ -10,6 +10,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Help from "./Help";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
+import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
 import MainMenu from "./MainMenu";
@@ -22,6 +23,7 @@ export default class LevelSelection extends Scene {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
         this.load.image("level1Map", "assets/images/Farm.png");
         this.load.image("level2Map", "assets/images/Forest.png");
+        this.load.image("level3Map", "assets/images/PenguinExhibit.png");
         this.load.image("level5Map", "assets/images/ParkingLot.png");
         this.load.image("level4Map", "assets/images/SafariZoo.png");
     }
@@ -99,7 +101,7 @@ export default class LevelSelection extends Scene {
             level2Btn.setPadding(level2Img.sizeWithZoom.sub(new Vec2(79, 25)));
         }
 
-        let level3Img = this.add.sprite("level1Map", "levelSelection");
+        let level3Img = this.add.sprite("level3Map", "levelSelection");
         level3Img.position.set(size.x + 400, size.y - 50);
         level3Img.scale.set(0.3, 0.3);
 
@@ -248,8 +250,20 @@ export default class LevelSelection extends Scene {
         }
 
         level3Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                // this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 3 || Help.allLevels)) {
+                
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["enemy", "projectile"],
+                        collisions:
+                        [
+                            [0, 0],
+                            [0, 0]
+                        ]
+                    }
+                }
+
+                this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 6}, sceneOptions);
             }
         }
 
