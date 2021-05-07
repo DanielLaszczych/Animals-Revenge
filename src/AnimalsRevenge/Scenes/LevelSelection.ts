@@ -9,6 +9,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Help from "./Help";
 import Level1 from "./Level1";
+import Level1Story from "./Level1Story";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
@@ -214,18 +215,7 @@ export default class LevelSelection extends Scene {
         level1Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
                 
-                let sceneOptions = {
-                    physics: {
-                        groupNames: ["enemy", "projectile"],
-                        collisions:
-                        [
-                            [0, 0],
-                            [0, 0]
-                        ]
-                    }
-                }
-
-                this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, towersUnlocked: 2, currentLevel: 1}, sceneOptions);
+                this.sceneManager.changeToScene(Level1Story, {}, {});
             }
         }
 

@@ -22,15 +22,19 @@ export default class SplashScreen extends Scene {
     }
 
     startScene(): void {
+        let size = this.viewport.getHalfSize();
+        this.viewport.setFocus(size);
+        this.viewport.setZoomLevel(1);
+
         let backgroundLayer = this.addUILayer("background");
         backgroundLayer.setDepth(0);
         let splashLayer = this.addUILayer("splashScreen");
         splashLayer.setDepth(1);
 
-        let size = this.viewport.getHalfSize();
-        this.viewport.setFocus(size);
-
-        this.viewport.setZoomLevel(1);
+        this.clickLabel = <Label>this.add.uiElement(UIElementType.LABEL, "splashScreen", {position: new Vec2(size.x, size.y + 330), text: "\"Click anywhere to start\""});
+        this.clickLabel.textColor = new Color(0, 0, 0, 1);
+        this.clickLabel.font = "PixelSimple";
+        this.clickLabel.fontSize = 60;
 
         let background = this.add.sprite("backgroundImage", "background");
         background.position.set(size.x, size.y);
@@ -39,12 +43,6 @@ export default class SplashScreen extends Scene {
         logo.position.set(size.x, size.y + 20);
         logo.scale.set(3.7, 3.8); 
 
-        this.clickLabel = <Label>this.add.uiElement(UIElementType.LABEL, "splashScreen", {position: new Vec2(size.x, size.y + 330), text: "\"Click anywhere to start\""});
-        this.clickLabel.textColor = new Color(0, 0, 0, 1);
-        this.clickLabel.font = "PixelSimple";
-        this.clickLabel.fontSize = 60;
-
-        this.clickLabelAlphaModifier = -0.1;
         this.numberofUpdates = 0;
 
     }
