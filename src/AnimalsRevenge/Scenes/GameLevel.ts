@@ -455,7 +455,7 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 8) {
+        if (this.towersUnlocked >= 1) {
             let spiderTowerImg = this.add.sprite("spiderTowerSprite", "UI");
             spiderTowerImg.position.set(1125, 275); //975, 200
             spiderTowerImg.scale.set(2, 2);
@@ -901,6 +901,15 @@ export default class GameLevel extends Scene {
                     this.selectedTowerTarget.visible = true;
                 }
                 break;
+            case "spider":
+                {
+                    if (towerData.slowUpgrade){
+                        ugprade1Text = towerData.upgrade1 + "\nMaxed Out";
+                    }
+                    if (towerData.canAttack){
+                        ugprade1Text = towerData.upgrade2 + "\nMaxed Out";
+                    }
+                }
         }
         
         this.selectedTowerUpgrade1Btn.setText(ugprade1Text);
@@ -983,10 +992,18 @@ export default class GameLevel extends Scene {
                                     }
                                 }
                                 break;
-                        // case "spider":
-                        //     {
-                        //         if()
-                        //     }
+                        case "spider":
+                            {
+                                if(!towerData.slowUpgrade){
+                                    purchaseCost = towerData.upgrade1Cost;
+                                    towerData.slowUpgrade = true;
+                                    this.selectedTowerUpgrade1Btn.setText(towerData.upgrade1 + "\nMaxed Out");
+                                    this.selectedTowerUpgrade1Btn.sizeAssigned = false;
+                                    towerData.sprite.setAIActive(true, {type: "slowUpgrade", slowUpgrade: towerData.slowUpgrade});
+                                    purchased = true;
+                                }
+                            }
+                            break;
                     }
                     if (purchased) {
                         this.incMoney(-purchaseCost);
@@ -1109,6 +1126,19 @@ export default class GameLevel extends Scene {
                                     towerData.sprite.setAIActive(true, {type: "damage", damage: towerData.damage});
                                     purchased = true;
                                 }
+                            }
+                            break;
+                        case "spider":
+                            {
+                                if (!towerData.canAttack){
+                                    purchaseCost = towerData.upgrade2Cost;
+                                    towerData.canAttack = true;
+                                    this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nMaxed Out");
+                                    this.selectedTowerUpgrade2Btn.sizeAssigned = false;
+                                    towerData.sprite.setAIActive(true, {type: "canAttack", canAttack: towerData.canAttack});
+                                    purchased = true;
+                                }
+    
                             }
                             break;
                     }
@@ -1543,7 +1573,7 @@ export default class GameLevel extends Scene {
                         case "spider":
                             {
                                 newTower.scale.set(2.5, 2.5);
-                                newTower.addAI(SpiderAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range});
+                                newTower.addAI(SpiderAI, {damage: defaultTowerData.damage, attackSpeed: defaultTowerData.attackSpeed, range: defaultTowerData.range, canAttack: defaultTowerData.canAttack, slowUpgrade: defaultTowerData.slowUpgrade});
                             }
                     }
                     newTowerBtn.setPadding(newTower.sizeWithZoom);

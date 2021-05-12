@@ -1,0 +1,17 @@
+{
+    "numWaves": 2,
+    "waveData": [
+        {
+            "totalEnemies": 9,
+            "enemies": ["robot_dog"],
+            "numberEnemies": [9],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 9,
+            "enemies": ["robot_dog"],
+            "numberEnemies": [9],
+            "route": [0, 1, 8, 9, 10, 11, 12, 7]
+        }
+    ]
+}

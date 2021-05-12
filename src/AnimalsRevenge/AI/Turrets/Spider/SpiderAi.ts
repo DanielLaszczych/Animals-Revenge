@@ -42,7 +42,7 @@ export default class SpiderAI extends StateMachineAI {
         this.areaofEffect = this.owner.getScene().add.sprite("cobweb", "UI");
         this.areaofEffect.position.set(-100, -100);
         this.areaofEffect.visible = false;
-        this.areaofEffect.alpha = 0.5;
+        this.areaofEffect.alpha = 1;
 
         this.receiver.subscribe(AR_Events.ENEMY_ENTERED_TOWER_RANGE);
         this.receiver.subscribe(AR_Events.ENEMY_DIED);
@@ -62,6 +62,8 @@ export default class SpiderAI extends StateMachineAI {
             this.stats.hasAura = newStats.hasAura;
         } else if (newStats.type === "canAttack") {
             this.stats.canAttack = newStats.canAttack;
+        } else if (newStats.type === "slowUpgrade"){
+            this.stats.slowUpgrade = newStats.slowUpgrade;
         }
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));

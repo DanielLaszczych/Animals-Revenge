@@ -14,6 +14,7 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
+import Level6 from "./Level6"
 import MainMenu from "./MainMenu";
 
 export default class LevelSelection extends Scene {
@@ -27,6 +28,7 @@ export default class LevelSelection extends Scene {
         this.load.image("level3Map", "assets/images/PenguinExhibit.png");
         this.load.image("level5Map", "assets/images/ParkingLot.png");
         this.load.image("level4Map", "assets/images/SafariZoo.png");
+        this.load.image("level6Map", "assets/images/WhiteHouseLawn.png");
     }
 
     startScene(): void {
@@ -174,7 +176,7 @@ export default class LevelSelection extends Scene {
             level5Btn.setPadding(level5Img.sizeWithZoom.sub(new Vec2(79, 25)));
         }
 
-        let level6Img = this.add.sprite("level1Map", "levelSelection");
+        let level6Img = this.add.sprite("level6Map", "levelSelection");
         level6Img.position.set(size.x + 400, size.y + 250);
         level6Img.scale.set(0.3, 0.3);
 
@@ -186,17 +188,17 @@ export default class LevelSelection extends Scene {
         let level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "levelSelection", {position: level6Img.position, text: ""});
         level6Btn.borderColor = Color.TRANSPARENT;
         level6Btn.borderRadius = 0;
-        // if (LevelSelection.levelsUnlocked >= 6 || Help.allLevels) {
-        //     level6Btn.backgroundColor = Color.TRANSPARENT;
-        //     level6Btn.fontSize = 0;
-        //     level6Btn.setPadding(level6Img.sizeWithZoom);
-        // } else {
-        level6Btn.backgroundColor = Color.BLACK;
-        level6Btn.fontSize = 50;
-        level6Btn.font = "PixelSimple";
-        level6Btn.text = "WIP";
-        level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(45, 25)));
-        // }
+        if (LevelSelection.levelsUnlocked >= 6 || Help.allLevels) {
+            level6Btn.backgroundColor = Color.TRANSPARENT;
+            level6Btn.fontSize = 0;
+            level6Btn.setPadding(level6Img.sizeWithZoom);
+        } else {
+            level6Btn.backgroundColor = Color.BLACK;
+            level6Btn.fontSize = 50;
+            level6Btn.font = "PixelSimple";
+            level6Btn.text = "Locked";
+            level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(45, 25)));
+        }
 
         backBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
@@ -294,8 +296,19 @@ export default class LevelSelection extends Scene {
         }
 
         level6Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                // this.sceneManager.changeToScene(MainMenu, {}, {});
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 6 || Help.allLevels)) {
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["enemy", "projectile"],
+                        collisions:
+                        [
+                            [0, 0],
+                            [0, 0]
+                        ]
+                    }
+                }
+
+                this.sceneManager.changeToScene(Level6, {startHealth: 10, startMoney: 350, towersUnlocked: 6, currentLevel: 6}, sceneOptions);
             }
         }
     }

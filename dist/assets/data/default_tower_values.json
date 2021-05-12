@@ -48,6 +48,7 @@
             "upgrade1Cost": 250,
             "upgrade2": "+ Defense Shred",
             "upgrade2Cost": 250,
+            "slowUpgrade": false,
             "canAttack": false,
             "description": "The Spider is a support\nturret with the ability\nto slow down enemies\nas well as make enemies\nweaker to other \nturrets'damage. Its\nfirst upgrade increases\nits slow. Its \nsecond upgrade allows\nit to attack enemies."
         },
