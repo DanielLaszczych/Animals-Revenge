@@ -197,7 +197,7 @@ export default class LevelSelection extends Scene {
             level6Btn.fontSize = 50;
             level6Btn.font = "PixelSimple";
             level6Btn.text = "Locked";
-            level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(45, 25)));
+            level6Btn.setPadding(level6Img.sizeWithZoom.sub(new Vec2(79, 25)));
         }
 
         backBtn.onClick = () => {
@@ -291,7 +291,7 @@ export default class LevelSelection extends Scene {
                     }
                 }
 
-                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 5, currentLevel: 5}, sceneOptions);
+                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 6, currentLevel: 5}, sceneOptions);
             }
         }
 
