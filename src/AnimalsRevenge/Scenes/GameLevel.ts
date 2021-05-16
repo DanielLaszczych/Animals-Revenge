@@ -1263,6 +1263,14 @@ export default class GameLevel extends Scene {
                 enemyDefense = 0.2;
                 speed = 100;
             }
+            if(this.currentWaveData.enemies[0] === "president"){
+                enemySprite = this.add.animatedSprite("president", "primary");
+                enemySprite.scale.set(4, 4);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 24)));
+                enemyHealth = 100;
+                enemyDefense = 0.3;
+                speed = 80;
+            }
             enemySprite.position.set(this.levelStart.x, this.levelStart.y);
             enemySprite.animation.play("WALK");
             let path = this.currentWaveData.route.map((index: number) => this.graph.getNodePosition(index));

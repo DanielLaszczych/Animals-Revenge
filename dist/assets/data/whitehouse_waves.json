@@ -2,9 +2,9 @@
     "numWaves": 2,
     "waveData": [
         {
-            "totalEnemies": 9,
-            "enemies": ["robot_dog"],
-            "numberEnemies": [9],
+            "totalEnemies": 10,
+            "enemies": ["president", "robot_dog"],
+            "numberEnemies": [1, 9],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
