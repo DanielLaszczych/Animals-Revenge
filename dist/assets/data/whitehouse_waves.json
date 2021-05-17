@@ -1,17 +1,35 @@
 {
-    "numWaves": 2,
+    "numWaves": 5,
     "waveData": [
         {
-            "totalEnemies": 10,
-            "enemies": ["robot_dog"],
-            "numberEnemies": [10],
+            "totalEnemies": 20,
+            "enemies": ["farmer","robot_dog","superSoldier","soldier", "robot_dog", "drone"],
+            "numberEnemies": [10, 1, 3, 2, 1, 3],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 10,
-            "enemies": ["robot_dog", "president"],
-            "numberEnemies": [9, 1],
+            "totalEnemies": 70,
+            "enemies": ["farmer", "superSoldier", "soldier"],
+            "numberEnemies": [20, 30, 20],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 80,
+            "enemies": ["robot_dog", "drone","soldier"],
+            "numberEnemies": [30, 30, 20],
             "route": [0, 1, 8, 9, 10, 11, 12, 7]
+        },
+        {
+            "totalEnemies": 121,
+            "enemies": ["farmer","robot_dog","superSoldier","robot_dog","soldier", "robot_dog", "drone", "robot_dog", "president"],
+            "numberEnemies": [20, 10, 20, 10, 20, 10, 20, 10, 1],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        {
+            "totalEnemies": 200,
+            "enemies": ["farmer","robot_dog","superSoldier","robot_dog","soldier", "robot_dog", "drone", "robot_dog", "president"],
+            "numberEnemies": [30, 20, 30, 20, 30, 20, 30, 15, 20],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7]
         }
     ]
 }

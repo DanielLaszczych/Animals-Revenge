@@ -119,7 +119,7 @@ export default class Level6Story extends Scene {
                         }
                     }
     
-                    this.sceneManager.changeToScene(Level6, {startHealth: 10, startMoney: 350, towersUnlocked: 6, currentLevel: 6}, sceneOptions);
+                    this.sceneManager.changeToScene(Level6, {startHealth: 10, startMoney: 400, towersUnlocked: 6, currentLevel: 6}, sceneOptions);
                 } else {
                     this.textLabel.text = "";
                     this.currentTalker = this.talkers.shift();

@@ -8,27 +8,27 @@
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8]
         },
         {
-            "totalEnemies": 30,
+            "totalEnemies": 25,
             "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [2, 3, 25],
+            "numberEnemies": [2, 3, 20],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8]
         },
         {
-            "totalEnemies": 48,
+            "totalEnemies": 65,
             "enemies": ["farmer", "superSoldier"],
-            "numberEnemies": [18, 30],
+            "numberEnemies": [25, 40],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8]
         },
         {
-            "totalEnemies": 58,
+            "totalEnemies": 80,
             "enemies": ["farmer", "superSoldier"],
-            "numberEnemies": [5, 53],
+            "numberEnemies": [20, 60],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8]
         },
         {
-            "totalEnemies": 70,
+            "totalEnemies": 90,
             "enemies": ["farmer", "superSoldier", "drone"],
-            "numberEnemies": [6, 58, 6],
+            "numberEnemies": [20, 60, 10],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8]
         }
     ]

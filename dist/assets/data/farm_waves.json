@@ -2,33 +2,33 @@
     "numWaves": 5,
     "waveData":[
         {
-            "totalEnemies": 9,
+            "totalEnemies": 5,
             "enemies": ["farmer"],
-            "numberEnemies": [9],
+            "numberEnemies": [5],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         },
         {
-            "totalEnemies": 30,
+            "totalEnemies": 32,
             "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [2, 3, 25],
+            "numberEnemies": [2, 5, 25],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         },
         {
-            "totalEnemies": 48,
+            "totalEnemies": 47,
             "enemies": ["farmer", "farmer"],
-            "numberEnemies": [6, 42],
-            "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        },
-        {
-            "totalEnemies": 58,
-            "enemies": ["farmer", "farmer"],
-            "numberEnemies": [5, 53],
+            "numberEnemies": [6, 41],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         },
         {
             "totalEnemies": 70,
+            "enemies": ["farmer", "farmer"],
+            "numberEnemies": [15, 55],
+            "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        },
+        {
+            "totalEnemies": 90,
             "enemies": ["farmer", "farmer", "farmer"],
-            "numberEnemies": [6, 6, 58],
+            "numberEnemies": [20, 10, 60],
             "route": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         }
     ]

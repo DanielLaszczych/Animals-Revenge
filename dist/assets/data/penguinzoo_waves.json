@@ -2,33 +2,33 @@
     "numWaves": 5,
     "waveData":[
         {
-            "totalEnemies": 10,
-            "enemies": ["superSoldier"],
-            "numberEnemies": [10],
+            "totalEnemies": 15,
+            "enemies": ["superSoldier","soldier"],
+            "numberEnemies": [13, 2],
             "route": [0, 1, 2, 3, 4, 5]
         },
         {
-            "totalEnemies": 30,
-            "enemies": ["superSoldier", "drone"],
-            "numberEnemies": [25, 5],
+            "totalEnemies": 28,
+            "enemies": ["superSoldier", "soldier", "drone"],
+            "numberEnemies": [20, 5, 3],
             "route": [0, 1, 2, 3, 4, 6]
         },
         {
-            "totalEnemies": 48,
-            "enemies": ["superSoldier", "drone", "superSoldier"],
-            "numberEnemies": [20, 13, 15],
+            "totalEnemies": 45,
+            "enemies": ["superSoldier", "drone", "superSoldier", "soldier"],
+            "numberEnemies": [20, 10, 10, 5],
             "route": [0, 1, 2, 3, 4, 6]
         },
         {
-            "totalEnemies": 58,
-            "enemies": ["drone", "robot_dog", "superSoldier", "robot_dog"],
-            "numberEnemies": [10, 10, 30, 8],
+            "totalEnemies": 60,
+            "enemies": ["drone", "soldier", "superSoldier", "soldier"],
+            "numberEnemies": [15, 5, 35, 5],
             "route": [0, 1, 2, 3, 4, 5]
         },
         {
             "totalEnemies": 70,
-            "enemies": ["drone", "robot_dog", "superSoldier"],
-            "numberEnemies": [20, 20, 30],
+            "enemies": ["drone", "soldier", "superSoldier", "robot_dog"],
+            "numberEnemies": [20, 10, 30, 10],
             "route": [0, 1, 2, 3, 4, 5]
         }
     ]

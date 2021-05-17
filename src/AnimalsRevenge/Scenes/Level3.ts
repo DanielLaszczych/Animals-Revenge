@@ -23,6 +23,7 @@ export default class Level3 extends GameLevel {
         this.load.spritesheet("superSoldier", "assets/spritesheets/supersoldier.json");
         this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json");
         this.load.spritesheet("drone", "assets/spritesheets/drone.json");
+        this.load.spritesheet("soldier", "assets/spritesheets/soldier.json");
 
     }
 
