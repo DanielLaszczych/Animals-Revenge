@@ -25,6 +25,7 @@ export default class Level6 extends GameLevel {
         this.load.spritesheet("soldier", "assets/spritesheets/soldier.json");
         this.load.spritesheet("robot_dog", "assets/spritesheets/robot_dog.json");
         this.load.spritesheet("drone", "assets/spritesheets/drone.json");
+        this.load.spritesheet("superSoldier", "assets/spritesheets/supersoldier.json");
         this.load.spritesheet("president", "assets/spritesheets/president.json")
 
     }
