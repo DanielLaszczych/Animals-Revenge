@@ -41,6 +41,7 @@ export default class Combat extends State{
 
     onEnter(options: Record<string, any>){
         this.webTimer.levelSpeed = this.parent.levelSpeed;
+        this.attackTimer.levelSpeed = this.parent.levelSpeed;
     }
 
     handleInput(event: GameEvent): void{
@@ -86,7 +87,6 @@ export default class Combat extends State{
         if (targetNode === undefined || !isTargetInRange) {
             this.finished("idle");
         } else {
-            let slowAmount = this.slowUpgrade ? 35 : 20
             
             if(this.webTimer.isStopped()){
                 let targetPath = targetNode.mostRecentPath;
@@ -99,8 +99,6 @@ export default class Combat extends State{
                 this.parent.areaofEffect.visible = true;
                 this.owner.animation.play("ATTACKING", false);
                 this.webOnScene = true;
-                console.log(this.canAttack);
-                console.log(this.slowUpgrade);
                 this.webTimer.start();
             }else{
                 if(!this.webTimer.isRunning()){
@@ -108,17 +106,28 @@ export default class Combat extends State{
                 }
             }
             if(this.webOnScene){
+                let slowAmount = this.slowUpgrade ? 35 : 20
                 this.parent.trigger.position.set(this.parent.areaofEffect.position.x, this.parent.areaofEffect.position.y);
                 this.parent.trigger.removePhysics();
                 this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, this.parent.areaofEffect.sizeWithZoom), undefined, false, false);
                 this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0, slowAmount: slowAmount});
                 this.webOnScene = false;
             }
-            if(this.canAttack && this.attackTimer.isStopped()){
+            if(this.canAttack && this.attackTimer.isStopped() && !this.owner.animation.isPlaying("ATTACKING")){
                 let targetPath = targetNode.mostRecentPath;
                 this.targetDirection = targetPath.getMoveDirection(targetNode);
                 let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
                 this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
+
+                let projectile = this.owner.getScene().add.animatedSprite("poison", "primary");
+                projectile.animation.play("Flying");
+                projectile.scale.set(1.5, 1.5);
+                projectile.position.set(this.owner.position.x, this.owner.position.y);
+                projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
+                projectile.setGroup("projectile");
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0, target: this.parent.target, poison: true});
+
+                this.parent.projectiles.push({sprite: projectile, target: this.parent.target, dir: this.dir});
                 this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
                 this.owner.animation.play("ATTACKING", false);
                 this.attackTimer.start();
@@ -126,6 +135,7 @@ export default class Combat extends State{
             }else if(!this.attackTimer.isRunning()){
                 this.attackTimer.start();
             }
+            this.parent.updateProjectiles(deltaT);
         }
     }
 

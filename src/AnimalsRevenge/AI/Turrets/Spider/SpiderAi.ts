@@ -20,12 +20,13 @@ export default class SpiderAI extends StateMachineAI {
     public isPaused: boolean = false;
     public target: number;
     public predictionMultiplier: Map<number, number>;
+    public projectiles: Array<{sprite: Sprite, target: number, dir: Vec2}>;
 
     initializeAI(owner: AnimatedSprite, stats: Record<string, any>) {
         this.owner = owner;
         this.stats = stats;
         this.levelSpeed = 1;
-
+        this.projectiles = new Array();
         this.addState("idle", new Idle(this, owner, this.stats));
         this.addState("combat", new Combat(this, owner, this.stats));
 
@@ -67,5 +68,30 @@ export default class SpiderAI extends StateMachineAI {
         }
         this.addState("idle", new Idle(this, this.owner, this.stats));
         this.addState("combat", new Combat(this, this.owner, this.stats));
+    }
+
+    updateProjectiles(deltaT: number): void {
+        for (let i = 0; i < this.projectiles.length; i++) {
+            let projectile = this.projectiles[i].sprite;
+            if (projectile.position.x === -1) { //this means they projectile collided and its position was set to -1
+                this.projectiles.splice(i, 1)[0];
+                projectile.destroy();
+                continue;
+            }
+            let target = this.projectiles[i].target;
+            let targetNode = this.owner.getScene().getSceneGraph().getNode(target);
+            if (targetNode !== undefined) {
+                this.projectiles[i].dir = targetNode.position.clone().sub(projectile.position).normalize();
+                projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
+            } else {
+                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0, poison: true});
+                projectile.position.add(this.projectiles[i].dir.scaled(800 * deltaT * this.levelSpeed));
+            }
+            if (projectile.position.x > 1200) {
+                this.projectiles.splice(i, 1)[0];
+                projectile.destroy();
+                continue;
+            }
+        }
     }
 }

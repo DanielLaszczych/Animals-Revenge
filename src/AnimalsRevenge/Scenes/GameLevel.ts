@@ -145,6 +145,7 @@ export default class GameLevel extends Scene {
         this.load.image("snowball", "assets/images/Snowball.png");
         this.load.image("cobweb", "assets/images/Cobweb.png");
         this.load.spritesheet("lightingBolt", "assets/spritesheets/lightingBolt.json");
+        this.load.spritesheet("poison", "assets/spritesheets/poison.json");
         this.load.image("waterBomb", "assets/images/WaterBomb.png");
         this.load.spritesheet("splash", "assets/spritesheets/splash.json");
         this.load.image("target", "assets/images/Target.png");
@@ -1474,6 +1475,9 @@ export default class GameLevel extends Scene {
                         let id = enemy.id;
                         if (event.data.get("data").slowAmount !== undefined) {
                             this.emitter.fireEvent(AR_Events.ENEMY_SLOWED, {id: id, slowAmount: event.data.get("data").slowAmount});
+                        }
+                        if  (event.data.get("data").poison !== undefined){
+                            console.log("Hello");
                         }
                         if (newHealth <= 0) {
                             // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemyDeath", loop: false});
