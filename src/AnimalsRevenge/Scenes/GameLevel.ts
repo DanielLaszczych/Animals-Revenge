@@ -911,7 +911,7 @@ export default class GameLevel extends Scene {
                         ugprade1Text = towerData.upgrade1 + "\nMaxed Out";
                     }
                     if (towerData.canAttack){
-                        ugprade1Text = towerData.upgrade2 + "\nMaxed Out";
+                        upgrade2Text = towerData.upgrade2 + "\nMaxed Out";
                     }
                 }
         }
