@@ -73,7 +73,7 @@ export default class UIElementRenderer {
             this.ctx.fillText(label.text, offset.x - label.size.x/2, (offset.y - label.size.y/2));
         } else {
             for (let i = 0; i < lines.length; i++) {
-                let additionalY = i * (label.size.y/2 + 10);
+                let additionalY = i * (label.size.y/2 + (label.fontSize === 40 ? 20 : 10));
                 label.text = lines[i];
                 offset = label.calculateTextOffset(this.ctx);
                 this.ctx.fillText(lines[i], (offset.x - label.size.x/2), (offset.y - label.size.y/2 + additionalY));

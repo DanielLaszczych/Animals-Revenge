@@ -9,10 +9,9 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Color from "../../Wolfie2D/Utils/Color";
-import Level1 from "./Level1";
-import MainMenu from "./MainMenu";
+import Level6 from "./Level6";
 
-export default class Level1Story extends Scene {
+export default class Level6Story extends Scene {
 
     protected talkers: Array<string>;
     protected texts: Array<string>;
@@ -21,37 +20,24 @@ export default class Level1Story extends Scene {
     protected currentSubStringIndex: number;
     protected textLabel: Label;
     protected numberofUpdates: number;
-    protected farmer: Sprite;
+    protected soldier: Sprite;
 
     initScene(init: Record<string, any>) {
         this.talkers = new Array();
         this.texts = new Array();
 
+        this.talkers.push("Soldier: ");
+        this.talkers.push("President: ");
         this.talkers.push("Chicken: ");
-        this.talkers.push("Cow: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Cow: ");
-        this.talkers.push("Chicken: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Cow: ");
-        this.talkers.push("Chicken: ");
-        this.talkers.push("Farmer: ");
+        this.talkers.push("Soldier: ");
+        this.talkers.push("President: ");
 
-        this.texts.push("...");
-        this.texts.push("...");
-        this.texts.push("...");
-        this.texts.push("Hey guys, what are you doing out of your coup\nand fencing");
-        this.texts.push("Moo...Moo");
-        this.texts.push("Cluck...Cluck");
-        this.texts.push("Margret, look, it looks like the chickens and cows\nare fed up with their horrible living conditions and are\nplanning a revolution that would include exterminating all of\nhumanity. Haha, the ideas I come up with.");
-        this.texts.push("Hehe, now go on back to your cage little one");
-        this.texts.push("MOO");
-        this.texts.push("CLUCK");
-        this.texts.push("OH GOD MARGRET THEY ACTUALLY ARE FIGHTING BACK");
+        this.texts.push("Mr. President, the animals are coming");
+        this.texts.push("Animals don't scare me, we have the best military\nin the...");
+        this.texts.push("CLUCKKKKKKKKK");
+        this.texts.push("GET DOWN MR. PRESIDENT");
+        this.texts.push("GAHHHHHH");
 
-        
         this.currentSubStringIndex = 0;
         this.currentTalker = this.talkers.shift();
         this.currentText = this.texts.shift();
@@ -60,11 +46,11 @@ export default class Level1Story extends Scene {
     }
 
     loadScene(): void {
-        this.load.image("cow", "assets/images/Cow_Portrait.png");
         this.load.image("chicken", "assets/images/Chicken_Portrait.png");
-        this.load.image("farmer_normal", "assets/images/Farmer_Portrait_Normal.png");
-        this.load.image("farmer_suprised", "assets/images/Farmer_Portrait_Surprised.png");
-        this.load.image("backgroundImage", "assets/images/Farm.png");
+        this.load.image("soldier_saluting", "assets/images/Soldier_Portrait_Saluting.png");
+        this.load.image("soldier_president", "assets/images/Soldier_Portrait_President.png");
+        this.load.image("president", "assets/images/President_Portrait.png");
+        this.load.image("backgroundImage", "assets/images/WhiteHouseLawn.png");
         this.load.audio("textScroll", "assets/sounds/textScroll.wav");
     }
 
@@ -89,16 +75,16 @@ export default class Level1Story extends Scene {
         sidePanel.borderColor = Color.BLACK;
         sidePanel.borderWidth = 5;
 
-        this.farmer = this.add.sprite("farmer_normal", "UI");
-        this.farmer.position.set(100, 496);
-        this.farmer.scale.set(1.5, 1.5);
+        this.soldier = this.add.sprite("soldier_saluting", "UI");
+        this.soldier.position.set(100, 500);
+        this.soldier.scale.set(1.5, 1.5);
 
-        let cow = this.add.sprite("cow", "UI");
-        cow.position.set(1100, 496);
-        cow.scale.set(1.5, 1.5);
+        let president = this.add.sprite("president", "UI");
+        president.position.set(300, 465);
+        president.scale.set(2, 2);
 
         let chicken = this.add.sprite("chicken", "UI");
-        chicken.position.set(900, 527);
+        chicken.position.set(850, 527);
         chicken.scale.set(1, 1);
 
         this.textLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, size.y + 240), text: this.currentTalker});
@@ -114,6 +100,12 @@ export default class Level1Story extends Scene {
         if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
             if (this.textLabel.text.normalize() !== (this.currentTalker.normalize() + this.currentText.normalize())) {
                 this.textLabel.text = this.currentTalker + this.currentText;
+                if (this.texts.length === 2) {
+                    this.soldier.destroy();
+                    this.soldier = this.add.sprite("soldier_president", "UI");
+                    this.soldier.position.set(100, 496);
+                    this.soldier.scale.set(1.5, 1.5);
+                }
             } else {
                 if (this.texts.length === 0) {
                     let sceneOptions = {
@@ -127,16 +119,16 @@ export default class Level1Story extends Scene {
                         }
                     }
     
-                    this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, towersUnlocked: 2, currentLevel: 1}, sceneOptions);
+                    this.sceneManager.changeToScene(Level6, {startHealth: 10, startMoney: 350, towersUnlocked: 6, currentLevel: 6}, sceneOptions);
                 } else {
                     this.textLabel.text = "";
                     this.currentTalker = this.talkers.shift();
                     this.currentText = this.texts.shift();
-                    if (this.texts.length === 0) {
-                        this.farmer.destroy();
-                        this.farmer = this.add.sprite("farmer_suprised", "UI");
-                        this.farmer.position.set(100, 496);
-                        this.farmer.scale.set(1.5, 1.5);
+                    if (this.texts.length === 2) {
+                        this.soldier.destroy();
+                        this.soldier = this.add.sprite("soldier_president", "UI");
+                        this.soldier.position.set(100, 496);
+                        this.soldier.scale.set(1.5, 1.5);
                     }
                     this.textLabel.text += this.currentTalker;
                     this.currentSubStringIndex = 0;

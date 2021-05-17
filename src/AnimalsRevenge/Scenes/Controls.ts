@@ -52,63 +52,48 @@ export default class Controls extends Scene {
         objectiveLabel.textColor = Color.BLACK;
         objectiveLabel.fontSize = 35;
 
-        let selectTowerText1 = "Left Click to select a tower in the shop";
-        let selectTowerText2 = "or a tower that is already placed";
-        let selectTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 130), text: selectTowerText1});
-        let selectTower2 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 90), text: selectTowerText2});
-        
+        let dialogueText = "Left Click to progress through dialogue";
+        let dialogue = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 130), text: dialogueText});
+
+        dialogue.font = "PixelSimple";
+        dialogue.textColor = Color.BLACK;
+        dialogue.fontSize = 35;
+
+        let selectTowerText1 = "Left Click to select a tower in the shop or a tower that\nis already placed";
+        let selectTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 60), text: selectTowerText1});
+
         selectTower1.font = "PixelSimple";
         selectTower1.textColor = Color.BLACK;
-        selectTower1.fontSize = 40;
+        selectTower1.fontSize = 35;
 
-        selectTower2.font = "PixelSimple";
-        selectTower2.textColor = Color.BLACK;
-        selectTower2.fontSize = 40;
-
-        let purchaseTowerText1 = "Left Click on a free space to place and purcahse";
-        let purchaseTowerText2 = "the tower you selected from the shop";
-        let purchaseTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y - 10), text: purchaseTowerText1});
-        let purchaseTower2 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 30), text: purchaseTowerText2});
+        let purchaseTowerText1 = "Left Click on a free space to place and purchase the tower\nyou selected from the shop";
+        let purchaseTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 30), text: purchaseTowerText1});
         
         purchaseTower1.font = "PixelSimple";
         purchaseTower1.textColor = Color.BLACK;
-        purchaseTower1.fontSize = 40;
+        purchaseTower1.fontSize = 35;
 
-        purchaseTower2.font = "PixelSimple";
-        purchaseTower2.textColor = Color.BLACK;
-        purchaseTower2.fontSize = 40;
-
-        let upgradeTowerText1 = "Left Click on an upgrade to purchase it and upgrade";
-        let upgradeTowerText2 = "the selected tower";
-        let upgradeTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 110), text: upgradeTowerText1});
-        let upgradeTower2 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 150), text: upgradeTowerText2});
+        let upgradeTowerText1 = "Left Click on an upgrade to purchase it and upgrade the\nselected tower";
+        let upgradeTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 120), text: upgradeTowerText1});
         
         upgradeTower1.font = "PixelSimple";
         upgradeTower1.textColor = Color.BLACK;
-        upgradeTower1.fontSize = 40;
+        upgradeTower1.fontSize = 35;
 
-        upgradeTower2.font = "PixelSimple";
-        upgradeTower2.textColor = Color.BLACK;
-        upgradeTower2.fontSize = 40;
 
-        let sellTowerText1 = "Left Click on the sell button to sell a selected";
-        let sellTowerText2 = "tower";
-        let sellTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 230), text: sellTowerText1});
-        let sellTower2 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 270), text: sellTowerText2});
+        let sellTowerText1 = "Left Click on the sell button to sell a selected tower";
+        let sellTower1 = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 210), text: sellTowerText1});
         
         sellTower1.font = "PixelSimple";
         sellTower1.textColor = Color.BLACK;
-        sellTower1.fontSize = 40;
+        sellTower1.fontSize = 35;
 
-        sellTower2.font = "PixelSimple";
-        sellTower2.textColor = Color.BLACK;
-        sellTower2.fontSize = 40;
-
-        let pauseGame = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 350), text: "Press ESC to pause/resume the game"});
+        let pauseGameText = "Press ESC to pause/resume the game. Left click the speed\nbutton to speed the game up and right click to slow the game down";
+        let pauseGame = <Label>this.add.uiElement(UIElementType.LABEL, "controls", {position: new Vec2(size.x, size.y + 280), text: pauseGameText});
         
         pauseGame.font = "PixelSimple";
         pauseGame.textColor = Color.BLACK;
-        pauseGame.fontSize = 40;
+        pauseGame.fontSize = 35;
 
         backBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {

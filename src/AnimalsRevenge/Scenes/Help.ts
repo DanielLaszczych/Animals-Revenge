@@ -74,7 +74,7 @@ export default class Help extends Scene {
         about3.textColor = Color.BLACK;
         about3.fontSize = 35;
 
-        let cutSceneBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(size.x, size.y), text: "Reply Backstory Cut Scene"});
+        let cutSceneBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(size.x, size.y), text: "Go Back To Splash Screen"});
         cutSceneBtn.backgroundColor = Color.TRANSPARENT;
         cutSceneBtn.textColor = Color.BLACK;
         cutSceneBtn.borderColor = Color.BLACK;
