@@ -3,13 +3,14 @@ import Circle from "../../../../Wolfie2D/DataTypes/Shapes/Circle";
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { AR_Events } from "../../../animalrevenge_enums";
 import SpiderAI from "./SpiderAI";
 
-export default class Combat extends State{
-    
+export default class Combat extends State {
+
     protected owner: AnimatedSprite;
     protected parent: SpiderAI;
 
@@ -26,7 +27,7 @@ export default class Combat extends State{
     protected end: Vec2;
     protected webOnScene: boolean;
 
-    constructor(parent: SpiderAI, owner: AnimatedSprite, stats: Record<string, any>){
+    constructor(parent: SpiderAI, owner: AnimatedSprite, stats: Record<string, any>) {
         super(parent);
         this.owner = owner;
         this.damage = stats.damage;
@@ -39,17 +40,17 @@ export default class Combat extends State{
         this.attackTimer = new Timer(2000);
     }
 
-    onEnter(options: Record<string, any>){
+    onEnter(options: Record<string, any>) {
         this.webTimer.levelSpeed = this.parent.levelSpeed;
         this.attackTimer.levelSpeed = this.parent.levelSpeed;
     }
 
-    handleInput(event: GameEvent): void{
+    handleInput(event: GameEvent): void {
         if (event.type === AR_Events.LEVEL_SPEED_CHANGE) {
             this.parent.levelSpeed = event.data.get("levelSpeed");
             this.webTimer.levelSpeed = this.parent.levelSpeed;
             if (this.parent.areaofEffect.visible) {
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0});
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, { damage: 0 });
             }
         }
         if (event.type === AR_Events.PAUSE_RESUME_GAME) {
@@ -70,10 +71,10 @@ export default class Combat extends State{
         }
         if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
             return;
-        } 
+        }
     }
 
-    update(deltaT: number): void{
+    update(deltaT: number): void {
         if (this.parent.isPaused) {
             return;
         }
@@ -87,59 +88,68 @@ export default class Combat extends State{
         if (targetNode === undefined || !isTargetInRange) {
             this.finished("idle");
         } else {
-            
-            if(this.webTimer.isStopped()){
-                let targetPath = targetNode.mostRecentPath;
-                this.targetDirection = targetPath.getMoveDirection(targetNode);
-                let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
-                this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
-                this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
-                this.parent.areaofEffect.position.set(targetNode.position.x, targetNode.position.y);
-                this.parent.areaofEffect.scale.set(5, 5);
-                this.parent.areaofEffect.visible = true;
-                this.owner.animation.play("ATTACKING", false);
-                this.webOnScene = true;
-                this.webTimer.start();
-            }else{
-                if(!this.webTimer.isRunning()){
+
+            if (this.webTimer.isStopped() && !this.owner.animation.isPlaying("ATTACKING")) {
+                try {
+                    let targetPath = targetNode.mostRecentPath;
+                    this.targetDirection = targetPath.getMoveDirection(targetNode);
+                    let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
+                    this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
+                    this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
+                    this.parent.areaofEffect.position.set(targetNode.position.x, targetNode.position.y);
+                    this.parent.areaofEffect.scale.set(6, 6);
+                    this.parent.areaofEffect.visible = true;
+                    this.owner.animation.play("ATTACKING", false);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "spiderWeb", loop: false });
+                    this.webOnScene = true;
+                    this.webTimer.start();
+
+                } catch {}
+            } else {
+                if (!this.webTimer.isRunning()) {
                     this.webTimer.start()
                 }
             }
-            if(this.webOnScene){
-                let slowAmount = this.slowUpgrade ? 35 : 20
+            if (this.webOnScene) {
+                let slowAmount = this.slowUpgrade ? 40 : 25
                 this.parent.trigger.position.set(this.parent.areaofEffect.position.x, this.parent.areaofEffect.position.y);
                 this.parent.trigger.removePhysics();
                 this.parent.trigger.addPhysics(new AABB(Vec2.ZERO, this.parent.areaofEffect.sizeWithZoom), undefined, false, false);
-                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0, slowAmount: slowAmount});
+                this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, { damage: 0, slowAmount: slowAmount });
                 this.webOnScene = false;
             }
-            if(this.canAttack && this.attackTimer.isStopped() && !this.owner.animation.isPlaying("ATTACKING")){
-                let targetPath = targetNode.mostRecentPath;
-                this.targetDirection = targetPath.getMoveDirection(targetNode);
-                let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
-                this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
+            if (this.canAttack && this.attackTimer.isStopped() && !this.owner.animation.isPlaying("ATTACKING")) {
+                try {
+                    let targetPath = targetNode.mostRecentPath;
+                    this.targetDirection = targetPath.getMoveDirection(targetNode);
+                    let preditictedTargetPosition = targetNode.position.clone().add(this.targetDirection.scaled(this.parent.predictionMultiplier.get(this.parent.levelSpeed)));
+                    this.dir = preditictedTargetPosition.clone().sub(this.owner.position).normalize();
 
-                let projectile = this.owner.getScene().add.animatedSprite("poison", "primary");
-                projectile.animation.play("Flying");
-                projectile.scale.set(1.5, 1.5);
-                projectile.position.set(this.owner.position.x, this.owner.position.y);
-                projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
-                projectile.setGroup("projectile");
-                projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0, target: this.parent.target, poison: true});
+                    let projectile = this.owner.getScene().add.animatedSprite("poison", "primary");
+                    projectile.animation.play("Flying");
+                    projectile.scale.set(1.5, 1.5);
+                    projectile.position.set(this.owner.position.x, this.owner.position.y);
+                    projectile.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)), undefined, false, false);
+                    projectile.setGroup("projectile");
+                    projectile.setTrigger("enemy", AR_Events.ENEMY_HIT, null, { damage: 5, target: this.parent.target, poison: true });
 
-                this.parent.projectiles.push({sprite: projectile, target: this.parent.target, dir: this.dir});
-                this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
-                this.owner.animation.play("ATTACKING", false);
-                this.attackTimer.start();
+                    this.parent.projectiles.push({ sprite: projectile, target: this.parent.target, dir: this.dir });
+                    this.owner.rotation = Vec2.UP.angleToCCW(this.dir);
+                    this.owner.animation.play("ATTACKING", false);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: "spiderPoison", loop: false });
+                    this.attackTimer.start();
+                } catch {
 
-            }else if(!this.attackTimer.isRunning()){
+                }
+
+            } else if (!this.attackTimer.isRunning()) {
                 this.attackTimer.start();
             }
             this.parent.updateProjectiles(deltaT);
         }
     }
 
-    onExit(): Record<string, any>{
+    onExit(): Record<string, any> {
         return null;
     }
 
@@ -168,5 +178,5 @@ export default class Combat extends State{
             return true;
         }
         return false;
-	}
+    }
 }

@@ -159,6 +159,9 @@ export default class GameLevel extends Scene {
         this.load.audio("elephantFire", "assets/sounds/elephantFire.wav");
         this.load.audio("enemyDeath", "assets/sounds/enemyDeath.wav");
         this.load.audio("waterExplosion", "assets/sounds/waterExplosion.wav");
+        this.load.audio("spiderWeb", "assets/sounds/SpiderWeb.wav");
+        this.load.audio("spiderPoison", "assets/sounds/SpiderPoisonSpitting.wav");
+
     }
 
     startScene(): void {
@@ -1139,7 +1142,6 @@ export default class GameLevel extends Scene {
                                     towerData.sprite.setAIActive(true, {type: "canAttack", canAttack: towerData.canAttack});
                                     purchased = true;
                                 }
-    
                             }
                             break;
                     }
@@ -1468,7 +1470,10 @@ export default class GameLevel extends Scene {
                         let defense = this.enemies.get(enemy).defense;
                         if (event.data.get("data").electricAttack !== undefined){
                             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lightingStrike", loop: false});
-                            defense = defense / 3;
+                            this.enemies.get(enemy).defense = defense / 3;
+                        }
+                        if (event.data.get("data").poison !== undefined){
+                            this.enemies.get(enemy).defense = defense / 2;
                         }
                         let newHealth;
                         if (Help.oneShot) {
@@ -1484,9 +1489,7 @@ export default class GameLevel extends Scene {
                         if (event.data.get("data").slowAmount !== undefined) {
                             this.emitter.fireEvent(AR_Events.ENEMY_SLOWED, {id: id, slowAmount: event.data.get("data").slowAmount});
                         }
-                        if  (event.data.get("data").poison !== undefined){
-                            console.log("Hello");
-                        }
+
                         if (newHealth <= 0) {
                             // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemyDeath", loop: false});
                             healthBar.destroy();
