@@ -244,7 +244,7 @@ export default class LevelSelection extends Scene {
         }
 
         level3Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 3 || Help.allLevels)) {
                 this.sceneManager.changeToScene(Level3Story, {}, {});
             }
         }
@@ -268,13 +268,13 @@ export default class LevelSelection extends Scene {
         }
 
         level5Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 5 || Help.allLevels)) {
                 this.sceneManager.changeToScene(Level5Story, {}, {});
             }
         }
 
         level6Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 6 || Help.allLevels)) {
                 this.sceneManager.changeToScene(Level6Story, {}, {});
             }
         }
