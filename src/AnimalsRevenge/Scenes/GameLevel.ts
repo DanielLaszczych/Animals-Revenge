@@ -788,7 +788,8 @@ export default class GameLevel extends Scene {
         this.selectedTowerNameLabel.visible = true;
         this.selectedTowerCostLabel.text = "Cost: " + towerData.cost;
         this.selectedTowerCostLabel.visible = true;
-        this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
+        let damage = towerData.damage;
+        this.selectedTowerDamageLabel.text = "Damage: " + (Number(towerData.damage).toFixed(2));
         this.selectedTowerDamageLabel.visible = true;
         this.selectedTowerSpeedLabel.text = "Attack Speed: " + towerData.attackSpeed;
         this.selectedTowerSpeedLabel.visible = true;
@@ -817,7 +818,7 @@ export default class GameLevel extends Scene {
         let towerData = this.placedTowers.get(towerId);
         this.selectedTowerNameLabel.text = towerData.name;
         this.selectedTowerNameLabel.visible = true;
-        this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
+        this.selectedTowerDamageLabel.text = "Damage: " + (Number(towerData.damage).toFixed(2));
         this.selectedTowerDamageLabel.visible = true;
         this.selectedTowerSpeedLabel.text = "Attack Speed: " + towerData.attackSpeed;
         this.selectedTowerSpeedLabel.visible = true;
@@ -973,7 +974,7 @@ export default class GameLevel extends Scene {
                                     } else if (towerData.sprite.imageId === "cow") {
                                         towerData.damage += 0.15;
                                     }
-                                    this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
+                                    this.selectedTowerDamageLabel.text = "Damage: " + (Number(towerData.damage).toFixed(2));
                                     towerData.sprite.setAIActive(true, {type: "damage", damage: towerData.damage});
                                     purchased = true;
                                 }
@@ -1127,7 +1128,7 @@ export default class GameLevel extends Scene {
                                         this.selectedTowerUpgrade2Btn.setText(towerData.upgrade2 + "\nCost: " + towerData.upgrade2Cost);
                                     }
                                     towerData.damage += 1;
-                                    this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
+                                    this.selectedTowerDamageLabel.text = "Damage: " + (Number(towerData.damage).toFixed(2));
                                     towerData.sprite.setAIActive(true, {type: "damage", damage: towerData.damage});
                                     purchased = true;
                                 }
