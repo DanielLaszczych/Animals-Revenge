@@ -456,12 +456,12 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 1) {
+        if (this.towersUnlocked >= 3 || Help.allTowers) {
             let spiderTowerImg = this.add.sprite("spiderTowerSprite", "UI");
-            spiderTowerImg.position.set(1125, 275); //975, 200
+            spiderTowerImg.position.set(975, 200);
             spiderTowerImg.scale.set(2, 2);
 
-            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
+            let spiderTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: ""});
             spiderTowerBtn.backgroundColor = Color.TRANSPARENT;
             spiderTowerBtn.textColor = Color.BLACK;
             spiderTowerBtn.borderColor = Color.TRANSPARENT;
@@ -481,12 +481,12 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 3 || Help.allTowers) {
+        if (this.towersUnlocked >= 4 || Help.allTowers) {
             let eagleTowerImg = this.add.sprite("eagleTowerSprite", "UI");
-            eagleTowerImg.position.set(975, 200); //1125, 200
+            eagleTowerImg.position.set(1125, 200);
             eagleTowerImg.scale.set(2, 2);
 
-            let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 200), text: ""});
+            let eagleTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: ""});
             eagleTowerBtn.backgroundColor = Color.TRANSPARENT;
             eagleTowerBtn.borderColor = Color.TRANSPARENT;
             eagleTowerBtn.borderRadius = 0;
@@ -506,7 +506,7 @@ export default class GameLevel extends Scene {
 
         if (this.towersUnlocked >= 5 || Help.allTowers) {
             let elephantTowerImg = this.add.sprite("elephantTowerSprite", "UI");
-            elephantTowerImg.position.set(975, 275); //975, 275
+            elephantTowerImg.position.set(975, 275);
             elephantTowerImg.scale.set(3.5, 3.36);
 
             let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: ""});
@@ -529,12 +529,12 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.towersUnlocked >= 4 || Help.allTowers) {
+        if (this.towersUnlocked >= 6 || Help.allTowers) {
             let penguinTowerImg = this.add.sprite("penguinTowerSprite", "UI");
-            penguinTowerImg.position.set(1125, 200); //1125, 275
+            penguinTowerImg.position.set(1125, 275);
             penguinTowerImg.scale.set(4, 4);
 
-            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 200), text: ""});
+            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
             penguinTowerBtn.borderColor = Color.TRANSPARENT;
             penguinTowerBtn.borderRadius = 0;
@@ -1263,6 +1263,14 @@ export default class GameLevel extends Scene {
                 enemyHealth = 40;
                 enemyDefense = 0.2;
                 speed = 100;
+            }
+            if(this.currentWaveData.enemies[0] === "president"){
+                enemySprite = this.add.animatedSprite("president", "primary");
+                enemySprite.scale.set(4, 4);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 24)));
+                enemyHealth = 100;
+                enemyDefense = 0.3;
+                speed = 80;
             }
             enemySprite.position.set(this.levelStart.x, this.levelStart.y);
             enemySprite.animation.play("WALK");
