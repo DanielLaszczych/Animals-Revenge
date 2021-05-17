@@ -509,36 +509,11 @@ export default class GameLevel extends Scene {
         }
 
         if (this.towersUnlocked >= 5 || Help.allTowers) {
-            let elephantTowerImg = this.add.sprite("elephantTowerSprite", "UI");
-            elephantTowerImg.position.set(975, 275);
-            elephantTowerImg.scale.set(3.5, 3.36);
-
-            let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: ""});
-            elephantTowerBtn.backgroundColor = Color.TRANSPARENT;
-            elephantTowerBtn.borderColor = Color.TRANSPARENT;
-            elephantTowerBtn.borderRadius = 0;
-            elephantTowerBtn.fontSize = 0;
-            elephantTowerBtn.setPadding(elephantTowerImg.sizeWithZoom);
-
-            elephantTowerBtn.onClick = () => {
-                this.createTowerFromShop("elephantTower");
-            }
-            elephantTowerBtn.onEnter = () => {
-                elephantTowerBtn.textColor = Color.WHITE;
-                this.displayTowerInfoFromShop("elephantTower");
-            }
-            elephantTowerBtn.onLeave = () => {
-                elephantTowerBtn.textColor = Color.BLACK;
-                this.hideTowerInfoFromShop();
-            }
-        }
-
-        if (this.towersUnlocked >= 6 || Help.allTowers) {
             let penguinTowerImg = this.add.sprite("penguinTowerSprite", "UI");
-            penguinTowerImg.position.set(1125, 275);
+            penguinTowerImg.position.set(975, 275);
             penguinTowerImg.scale.set(4, 4);
 
-            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
+            let penguinTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(975, 275), text: ""});
             penguinTowerBtn.backgroundColor = Color.TRANSPARENT;
             penguinTowerBtn.borderColor = Color.TRANSPARENT;
             penguinTowerBtn.borderRadius = 0;
@@ -554,6 +529,31 @@ export default class GameLevel extends Scene {
             }
             penguinTowerBtn.onLeave = () => {
                 penguinTowerBtn.textColor = Color.BLACK;
+                this.hideTowerInfoFromShop();
+            }
+        }
+
+        if (this.towersUnlocked >= 6 || Help.allTowers) {
+            let elephantTowerImg = this.add.sprite("elephantTowerSprite", "UI");
+            elephantTowerImg.position.set(1125, 275);
+            elephantTowerImg.scale.set(3.5, 3.36);
+
+            let elephantTowerBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(1125, 275), text: ""});
+            elephantTowerBtn.backgroundColor = Color.TRANSPARENT;
+            elephantTowerBtn.borderColor = Color.TRANSPARENT;
+            elephantTowerBtn.borderRadius = 0;
+            elephantTowerBtn.fontSize = 0;
+            elephantTowerBtn.setPadding(elephantTowerImg.sizeWithZoom);
+
+            elephantTowerBtn.onClick = () => {
+                this.createTowerFromShop("elephantTower");
+            }
+            elephantTowerBtn.onEnter = () => {
+                elephantTowerBtn.textColor = Color.WHITE;
+                this.displayTowerInfoFromShop("elephantTower");
+            }
+            elephantTowerBtn.onLeave = () => {
+                elephantTowerBtn.textColor = Color.BLACK;
                 this.hideTowerInfoFromShop();
             }
         }
