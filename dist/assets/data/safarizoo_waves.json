@@ -2,33 +2,33 @@
     "numWaves": 5,
     "waveData":[
         {
-            "totalEnemies": 9,
+            "totalEnemies": 8,
             "enemies": ["soldier"],
-            "numberEnemies": [9],
+            "numberEnemies": [8],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
             "totalEnemies": 25,
-            "enemies": ["soldier"],
-            "numberEnemies": [25],
+            "enemies": ["soldier", "robot_dog"],
+            "numberEnemies": [20, 5],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 40,
+            "totalEnemies": 50,
             "enemies": ["soldier", "robot_dog", "soldier", "drone"],
-            "numberEnemies": [15, 5, 10, 10],
+            "numberEnemies": [20, 10, 10, 10],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 70,
+            "totalEnemies": 80,
             "enemies": ["soldier", "robot_dog", "drone", "soldier", "robot_dog", "drone"],
-            "numberEnemies": [5, 5, 10, 20, 15, 15],
+            "numberEnemies": [10, 10, 10, 20, 15, 15],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         },
         {
-            "totalEnemies": 100,
+            "totalEnemies": 120,
             "enemies": ["robot_dog", "drone", "soldier", "robot_dog", "drone", "soldier", "robot_dog"],
-            "numberEnemies": [5, 5, 25, 20, 10, 30, 5],
+            "numberEnemies": [10, 10, 30, 20, 10, 30, 10],
             "route": [0, 1, 2, 3, 4, 5, 6, 7]
         }
     ]
