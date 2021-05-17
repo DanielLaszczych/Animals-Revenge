@@ -10,9 +10,10 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./Level1";
+import Level3 from "./Level3";
 import MainMenu from "./MainMenu";
 
-export default class Level1Story extends Scene {
+export default class Level3Story extends Scene {
 
     protected talkers: Array<string>;
     protected texts: Array<string>;
@@ -21,37 +22,20 @@ export default class Level1Story extends Scene {
     protected currentSubStringIndex: number;
     protected textLabel: Label;
     protected numberofUpdates: number;
-    protected farmer: Sprite;
+    protected soldier: Sprite;
 
     initScene(init: Record<string, any>) {
         this.talkers = new Array();
         this.texts = new Array();
 
-        this.talkers.push("Chicken: ");
+        this.talkers.push("Soldier: ");
         this.talkers.push("Cow: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Cow: ");
-        this.talkers.push("Chicken: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Farmer: ");
-        this.talkers.push("Cow: ");
-        this.talkers.push("Chicken: ");
-        this.talkers.push("Farmer: ");
+        this.talkers.push("Soldier: ");
 
-        this.texts.push("...");
-        this.texts.push("...");
-        this.texts.push("...");
-        this.texts.push("Hey guys, what are you doing out of your coup\nand fencing");
-        this.texts.push("Moo...Moo");
-        this.texts.push("Cluck...Cluck");
-        this.texts.push("Margret, look, it looks like the chickens and cows\nare fed up with their horrible living conditions and are\nplanning a revolution that would include exterminating all of\nhumanity. Haha, the ideas I come up with.");
-        this.texts.push("Hehe, now go on back to your cage little one");
-        this.texts.push("MOO");
-        this.texts.push("CLUCK");
-        this.texts.push("OH GOD MARGRET THEY ACTUALLY ARE FIGHTING BACK");
+        this.texts.push("Captain, reporting the situation, the animals have\nreached the eastern front and it won’t be long till they\nreach the city");
+        this.texts.push("Moo...Moo...MOOOOOOOOOOOOOOO");
+        this.texts.push("OH MY GOD, TAKE COVER, BURP CLOUDS ROLLING IN\nFROM THE SOUTH, TELL MY WIFE I LOVE H...");
 
-        
         this.currentSubStringIndex = 0;
         this.currentTalker = this.talkers.shift();
         this.currentText = this.texts.shift();
@@ -61,10 +45,9 @@ export default class Level1Story extends Scene {
 
     loadScene(): void {
         this.load.image("cow", "assets/images/Cow_Portrait.png");
-        this.load.image("chicken", "assets/images/Chicken_Portrait.png");
-        this.load.image("farmer_normal", "assets/images/Farmer_Portrait_Normal.png");
-        this.load.image("farmer_suprised", "assets/images/Farmer_Portrait_Surprised.png");
-        this.load.image("backgroundImage", "assets/images/Farm.png");
+        this.load.image("soldier_talking", "assets/images/Soldier_Portrait_Talking.png");
+        this.load.image("soldier_faint", "assets/images/Soldier_Portrait_Faint.png");
+        this.load.image("backgroundImage", "assets/images/PenguinExhibit.png");
         this.load.audio("textScroll", "assets/sounds/textScroll.wav");
     }
 
@@ -89,17 +72,9 @@ export default class Level1Story extends Scene {
         sidePanel.borderColor = Color.BLACK;
         sidePanel.borderWidth = 5;
 
-        this.farmer = this.add.sprite("farmer_normal", "UI");
-        this.farmer.position.set(100, 496);
-        this.farmer.scale.set(1.5, 1.5);
-
-        let cow = this.add.sprite("cow", "UI");
-        cow.position.set(1100, 496);
-        cow.scale.set(1.5, 1.5);
-
-        let chicken = this.add.sprite("chicken", "UI");
-        chicken.position.set(900, 527);
-        chicken.scale.set(1, 1);
+        this.soldier = this.add.sprite("soldier_talking", "UI");
+        this.soldier.position.set(100, 496);
+        this.soldier.scale.set(1.5, 1.5);
 
         this.textLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, size.y + 240), text: this.currentTalker});
         this.textLabel.textColor = new Color(0, 0, 0, 1);
@@ -114,6 +89,12 @@ export default class Level1Story extends Scene {
         if (Input.isMouseJustPressed() && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
             if (this.textLabel.text.normalize() !== (this.currentTalker.normalize() + this.currentText.normalize())) {
                 this.textLabel.text = this.currentTalker + this.currentText;
+                if (this.texts.length === 0) {
+                    this.soldier.destroy();
+                    this.soldier = this.add.sprite("soldier_faint", "UI");
+                    this.soldier.position.set(100, 496);
+                    this.soldier.scale.set(1.5, 1.5);
+                }
             } else {
                 if (this.texts.length === 0) {
                     let sceneOptions = {
@@ -127,16 +108,15 @@ export default class Level1Story extends Scene {
                         }
                     }
     
-                    this.sceneManager.changeToScene(Level1, {startHealth: 10, startMoney: 150, towersUnlocked: 2, currentLevel: 1}, sceneOptions);
+                    this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 4, currentLevel: 3}, sceneOptions);
                 } else {
                     this.textLabel.text = "";
                     this.currentTalker = this.talkers.shift();
                     this.currentText = this.texts.shift();
-                    if (this.texts.length === 0) {
-                        this.farmer.destroy();
-                        this.farmer = this.add.sprite("farmer_suprised", "UI");
-                        this.farmer.position.set(100, 496);
-                        this.farmer.scale.set(1.5, 1.5);
+                    if (this.texts.length === 1) {
+                        let cow = this.add.sprite("cow", "UI");
+                        cow.position.set(1100, 495);
+                        cow.scale.set(1.5, 1.5);
                     }
                     this.textLabel.text += this.currentTalker;
                     this.currentSubStringIndex = 0;
@@ -147,6 +127,14 @@ export default class Level1Story extends Scene {
         
         if (this.textLabel.text.normalize() !== (this.currentTalker.normalize() + this.currentText.normalize()) && this.numberofUpdates === 4) {
                 this.textLabel.text += this.currentText.substring(this.currentSubStringIndex, ++this.currentSubStringIndex);
+                if (this.textLabel.text.normalize() === (this.currentTalker.normalize() + this.currentText.normalize())) {
+                    if (this.texts.length === 0) {
+                        this.soldier.destroy();
+                        this.soldier = this.add.sprite("soldier_faint", "UI");
+                        this.soldier.position.set(100, 496);
+                        this.soldier.scale.set(1.5, 1.5);
+                    }
+                }
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "textScroll", loop: false});
 
                 this.numberofUpdates = 0;

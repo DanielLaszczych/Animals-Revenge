@@ -12,9 +12,12 @@ import Level1 from "./Level1";
 import Level1Story from "./Level1Story";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
+import Level3Story from "./Level3Story";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
+import Level5Story from "./Level5Story";
 import Level6 from "./Level6"
+import Level6Story from "./Level6Story";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelection extends Scene {
@@ -216,7 +219,6 @@ export default class LevelSelection extends Scene {
 
         level1Btn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
-                
                 this.sceneManager.changeToScene(Level1Story, {}, {});
             }
         }
@@ -242,20 +244,8 @@ export default class LevelSelection extends Scene {
         }
 
         level3Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 3 || Help.allLevels)) {
-                
-                let sceneOptions = {
-                    physics: {
-                        groupNames: ["enemy", "projectile"],
-                        collisions:
-                        [
-                            [0, 0],
-                            [0, 0]
-                        ]
-                    }
-                }
-
-                this.sceneManager.changeToScene(Level3, {startHealth: 10, startMoney: 300, towersUnlocked: 4, currentLevel: 3}, sceneOptions);
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(Level3Story, {}, {});
             }
         }
 
@@ -278,37 +268,14 @@ export default class LevelSelection extends Scene {
         }
 
         level5Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 5 || Help.allLevels)) {
-                
-                let sceneOptions = {
-                    physics: {
-                        groupNames: ["enemy", "projectile"],
-                        collisions:
-                        [
-                            [0, 0],
-                            [0, 0]
-                        ]
-                    }
-                }
-
-                this.sceneManager.changeToScene(Level5, {startHealth: 10, startMoney: 250, towersUnlocked: 6, currentLevel: 5}, sceneOptions);
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(Level5Story, {}, {});
             }
         }
 
         level6Btn.onClick = () => {
-            if (Input.getMousePressButton() == BUTTON.LEFTCLICK && (LevelSelection.levelsUnlocked >= 6 || Help.allLevels)) {
-                let sceneOptions = {
-                    physics: {
-                        groupNames: ["enemy", "projectile"],
-                        collisions:
-                        [
-                            [0, 0],
-                            [0, 0]
-                        ]
-                    }
-                }
-
-                this.sceneManager.changeToScene(Level6, {startHealth: 10, startMoney: 350, towersUnlocked: 6, currentLevel: 6}, sceneOptions);
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                this.sceneManager.changeToScene(Level6Story, {}, {});
             }
         }
     }

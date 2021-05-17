@@ -106,7 +106,7 @@ export default class GameLevel extends Scene {
     protected spawnTimer: Timer;
 
     static musicValue: number = 0.2;
-    static sfxValue: number = 1;
+    static sfxValue: number = 0.7;
 
     initScene(init: Record<string, any>) {
         if (Help.infHealth) {
@@ -166,7 +166,8 @@ export default class GameLevel extends Scene {
 
     startScene(): void {
         GameLevel.musicValue = 0.05;
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.05 * 0.05);
+        AudioManager.setVolume(AudioChannelType.MUSIC, GameLevel.musicValue * GameLevel.musicValue);
+        AudioManager.setVolume(AudioChannelType.SFX, GameLevel.sfxValue * GameLevel.sfxValue);
         this.initLayers();
         this.initViewPort();
         this.subscribeToEvents();
