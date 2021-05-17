@@ -971,7 +971,7 @@ export default class GameLevel extends Scene {
                                     if (towerData.sprite.imageId === "eagle") {
                                         towerData.damage += 4;
                                     } else if (towerData.sprite.imageId === "cow") {
-                                        towerData.damage += 0.15;
+                                        towerData.damage += 0.10;
                                     }
                                     this.selectedTowerDamageLabel.text = "Damage: " + towerData.damage;
                                     towerData.sprite.setAIActive(true, {type: "damage", damage: towerData.damage});
