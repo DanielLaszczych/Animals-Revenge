@@ -63,6 +63,13 @@ export default class Idle extends State {
             this.parent.target = event.data.get("target");
             this.finished("combat");
         }
+        if (event.type === AR_Events.SELL_TOWER) {
+            if (event.data.get("id") === this.owner.id) {
+                this.parent.areaofEffect.destroy();
+                this.parent.trigger.destroy();
+                this.owner.destroy();
+            }
+        } 
     }
 
     update(deltaT: number): void {

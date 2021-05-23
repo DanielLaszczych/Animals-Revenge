@@ -11,5 +11,6 @@ export enum AR_Events {
     ENEMY_SLOWED = "EnemySlowed",
     WAVE_START_END = "WaveStartEnd",
     NEW_TARGET_LOCATION = "NewTargetLocation",
-    ENEMY_ARMOR_SHRED = "EnemyArmorShred"
+    ENEMY_ARMOR_SHRED = "EnemyArmorShred",
+    SELL_TOWER = "SellTower"
 }

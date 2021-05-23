@@ -31,7 +31,7 @@ export default class MainMenu extends Scene {
     startScene(): void {
         if (!MainMenu.startMusicOnce) {
             this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "game_music", loop: true, holdReference: true});
-            AudioManager.setVolume(AudioChannelType.MUSIC, 0.2 * 0.2);
+            AudioManager.setVolume(AudioChannelType.MUSIC, 1.0);
             AudioManager.setVolume(AudioChannelType.SFX, 0.7 * 0.7);
             MainMenu.startMusicOnce = true;
         }        

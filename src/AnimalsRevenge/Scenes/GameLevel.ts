@@ -165,8 +165,8 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-        GameLevel.musicValue = 0.05;
-        AudioManager.setVolume(AudioChannelType.MUSIC, GameLevel.musicValue * GameLevel.musicValue);
+        GameLevel.musicValue = 0.5;
+        AudioManager.setVolume(AudioChannelType.MUSIC, GameLevel.musicValue);
         AudioManager.setVolume(AudioChannelType.SFX, GameLevel.sfxValue * GameLevel.sfxValue);
         this.initLayers();
         this.initViewPort();
@@ -839,8 +839,10 @@ export default class GameLevel extends Scene {
         this.selectedTowerSellBtn.onClick = () => {
             if (!this.waveInProgress && Input.getMousePressButton() === BUTTON.LEFTCLICK) {
                 this.incMoney(towerData.totalValue * 0.75);
-                towerData.sprite.destroy();
+                this.emitter.fireEvent(AR_Events.SELL_TOWER, {id: towerData.sprite.id});
+                // towerData.sprite.destroy();
                 towerData.button.destroy();
+                this.selectedTowerTarget.visible = false;
                 this.selectedTowerRange.destroy();
                 this.selectedTowerRange = null;
                 this.placedTowers.delete(towerId);
@@ -1250,7 +1252,7 @@ export default class GameLevel extends Scene {
                 enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
                 enemyHealth = 35;
                 enemyDefense = 0.4;
-                speed = 150;
+                speed = 130;
             }
             if(this.currentWaveData.enemies[0] === "drone"){
                 enemySprite = this.add.animatedSprite("drone", "primary");

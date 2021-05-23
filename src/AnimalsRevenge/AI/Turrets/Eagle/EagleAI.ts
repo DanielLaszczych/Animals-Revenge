@@ -29,6 +29,7 @@ export default class EagleAI extends StateMachineAI {
         this.receiver.subscribe(AR_Events.ENEMY_DIED);
         this.receiver.subscribe(AR_Events.PAUSE_RESUME_GAME);
         this.receiver.subscribe(AR_Events.LEVEL_SPEED_CHANGE);
+        this.receiver.subscribe(AR_Events.SELL_TOWER);
 
         this.initialize("idle");
     }

@@ -36,6 +36,7 @@ export default class ElephantAI extends StateMachineAI {
         this.receiver.subscribe(AR_Events.LEVEL_SPEED_CHANGE);
         this.receiver.subscribe(AR_Events.WAVE_START_END);
         this.receiver.subscribe(AR_Events.NEW_TARGET_LOCATION);
+        this.receiver.subscribe(AR_Events.SELL_TOWER);
 
         this.initialize("idle");
     }

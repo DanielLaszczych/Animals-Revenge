@@ -72,6 +72,18 @@ export default class Combat extends State {
         if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
             return;
         }
+        if (event.type === AR_Events.SELL_TOWER) {
+            if (event.data.get("id") === this.owner.id) {
+                for (let i = 0; i < this.parent.projectiles.length;) {
+                    let projectile = this.parent.projectiles[i].sprite;
+                    this.parent.projectiles.splice(i, 1)[0];
+                    projectile.destroy();
+                }
+                this.parent.areaofEffect.destroy();
+                this.parent.trigger.destroy();
+                this.owner.destroy();
+            }
+        } 
     }
 
     update(deltaT: number): void {

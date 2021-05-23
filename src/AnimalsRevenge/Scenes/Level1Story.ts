@@ -69,7 +69,7 @@ export default class Level1Story extends Scene {
     }
 
     startScene(): void {
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.1 * 0.1);
+        AudioManager.setVolume(AudioChannelType.MUSIC, 0.5);
         
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);
