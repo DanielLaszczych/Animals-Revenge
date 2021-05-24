@@ -12,11 +12,12 @@ import SplashScreen from "./SplashScreen";
 
 export default class Help extends Scene {
 
-    static infHealth: boolean = true;
-    static infMoney: boolean = true;
-    static allLevels: boolean = true;
-    static allTowers: boolean = true;
+    static infHealth: boolean = false;
+    static infMoney: boolean = false;
+    static allLevels: boolean = false;
+    static allTowers: boolean = false;
     static oneShot: boolean = false;
+    static freePlay: boolean = false;
     
     loadScene(): void {
         this.load.image("backgroundImage", "assets/images/Background_Lighter.png");
@@ -188,6 +189,27 @@ export default class Help extends Scene {
         oneShotLabel.font = "PixelSimple";
         oneShotLabel.fontSize = 35;
 
+        let freePlayBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(860, 700), text: ""});
+        freePlayBtn.backgroundColor = Color.TRANSPARENT;
+        freePlayBtn.borderColor = Color.BLACK;
+        freePlayBtn.textColor = Color.BLACK;
+        if (Help.freePlay) {
+            freePlayBtn.text = '\u2716';
+            freePlayBtn.setPadding(new Vec2(14, 8));
+        } else {
+            freePlayBtn.text = "";
+            freePlayBtn.setPadding(new Vec2(25, 8));
+        }
+        freePlayBtn.borderRadius = 0;
+        freePlayBtn.borderWidth = 3;
+
+        let freePlayLabel = <Button>this.add.uiElement(UIElementType.BUTTON, "help", {position: new Vec2(1045, 700), text: "Unlock Free Play"});
+        freePlayLabel.textColor = Color.BLACK;
+        freePlayLabel.backgroundColor = Color.TRANSPARENT;
+        freePlayLabel.borderColor = Color.TRANSPARENT;
+        freePlayLabel.font = "PixelSimple";
+        freePlayLabel.fontSize = 35;
+
         backBtn.onClick = () => {
             if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
                 this.sceneManager.changeToScene(MainMenu, {}, {});
@@ -304,6 +326,24 @@ export default class Help extends Scene {
 
         oneShotBtn.calculateBackgroundColor = (): Color => {
             return oneShotBtn.backgroundColor;
+        }
+
+        freePlayBtn.onClick = () => {
+            if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                if (Help.freePlay) {
+                    freePlayBtn.text = "";
+                    freePlayBtn.setPadding(new Vec2(25, 8));
+                    Help.freePlay = false;
+                } else {
+                    freePlayBtn.text = '\u2716';
+                    freePlayBtn.setPadding(new Vec2(14, 8));
+                    Help.freePlay = true;
+                }
+            }
+        }
+
+        freePlayBtn.calculateBackgroundColor = (): Color => {
+            return freePlayBtn.backgroundColor;
         }
     }
 }

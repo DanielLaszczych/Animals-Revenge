@@ -10,6 +10,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Color from "../../Wolfie2D/Utils/Color";
 import Controls from "./Controls";
+import FreePlayLevel from "./FreePlayLevel";
 import Help from "./Help";
 import LevelSelection from "./LevelSelection";
 
@@ -62,7 +63,7 @@ export default class MainMenu extends Scene {
         logo.position.set(size.x, size.y - 120);
         logo.scale.set(1.5, 1.5);
 
-        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 80), text: "Play"});
+        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 30), text: "Play"});
         playBtn.backgroundColor = Color.TRANSPARENT;
         playBtn.textColor = Color.BLACK;
         playBtn.borderColor = Color.BLACK;
@@ -71,7 +72,46 @@ export default class MainMenu extends Scene {
         playBtn.setPadding(new Vec2(50, 10));
         playBtn.font = "PixelSimple";
 
-        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 180), text: "Controls"});
+        let additionalY = 0;
+        if (Help.freePlay || LevelSelection.levelsUnlocked > 6) {
+            let freePlayBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 130), text: "Free Play"});
+            freePlayBtn.backgroundColor = Color.TRANSPARENT;
+            freePlayBtn.textColor = Color.BLACK;
+            freePlayBtn.borderColor = Color.BLACK;
+            freePlayBtn.borderRadius = 0;
+            freePlayBtn.borderWidth = 3;
+            freePlayBtn.setPadding(new Vec2(50, 10));
+            freePlayBtn.font = "PixelSimple";
+            
+            freePlayBtn.onClick = () => {
+                if (Input.getMousePressButton() == BUTTON.LEFTCLICK) {
+                    let sceneOptions = {
+                        physics: {
+                            groupNames: ["enemy", "projectile"],
+                            collisions:
+                            [
+                                [0, 0],
+                                [0, 0]
+                            ]
+                        }
+                    }
+    
+                    this.sceneManager.changeToScene(FreePlayLevel, {startHealth: 10, startMoney: 200, towersUnlocked: 6, currentLevel: 7}, sceneOptions);
+                }
+            }
+    
+            freePlayBtn.onEnter = () => {
+                freePlayBtn.textColor = Color.ORANGE;
+            }
+            
+            freePlayBtn.onLeave = () => {
+                freePlayBtn.textColor = Color.BLACK;
+            }
+
+            additionalY = 100;
+        }
+
+        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 130 + additionalY), text: "Controls"});
         controlsBtn.backgroundColor = Color.TRANSPARENT;
         controlsBtn.textColor = Color.BLACK;
         controlsBtn.borderColor = Color.BLACK;
@@ -80,7 +120,7 @@ export default class MainMenu extends Scene {
         controlsBtn.setPadding(new Vec2(50, 10));
         controlsBtn.font = "PixelSimple";
 
-        let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 280), text: "Help"});
+        let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(size.x, size.y + 230 + additionalY), text: "Help"});
         helpBtn.backgroundColor = Color.TRANSPARENT;
         helpBtn.textColor = Color.BLACK;
         helpBtn.borderColor = Color.BLACK;
