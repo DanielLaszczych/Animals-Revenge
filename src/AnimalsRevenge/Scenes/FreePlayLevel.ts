@@ -19,13 +19,11 @@ import EnemyAI from "../AI/Enemies/EnemyAI";
 import { AR_Events } from "../animalrevenge_enums";
 import ChickenAI from "../AI/Turrets/Chicken/ChickenAI";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
-import LevelSelection from "./LevelSelection";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import CowAI from "../AI/Turrets/Cow/CowAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
 
 import Help from "./Help";
-import GameLevel from "./GameLevel";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import PenguinAI from "../AI/Turrets/Penguin/PenguinAI";
 import EagleAI from "../AI/Turrets/Eagle/EagleAI";
@@ -176,9 +174,12 @@ export default class FreePlayLevel extends Scene {
     }
 
     startScene(): void {
-        GameLevel.musicValue = 0.5;
-        AudioManager.setVolume(AudioChannelType.MUSIC, GameLevel.musicValue);
-        AudioManager.setVolume(AudioChannelType.SFX, GameLevel.sfxValue * GameLevel.sfxValue);
+        if (!MainMenu.lowerMusicOnce) {
+            MainMenu.musicVolume = 0.5;
+            MainMenu.lowerMusicOnce = true;
+        }
+        AudioManager.setVolume(AudioChannelType.MUSIC, MainMenu.musicVolume);
+        AudioManager.setVolume(AudioChannelType.SFX, MainMenu.sfxVolume);
         this.setSpawnArrow(new Vec2(896, 416), Vec2.LEFT);
         this.add.tilemap("level6", new Vec2(2, 2));
         this.initLayers();
@@ -269,7 +270,7 @@ export default class FreePlayLevel extends Scene {
         musicLabel.font = "PixelSimple";
         musicLabel.fontSize = 30;
 
-        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: GameLevel.musicValue});
+        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: MainMenu.musicVolume});
         
         // UI Stuff
         slider.size = new Vec2(200, 50);
@@ -280,8 +281,8 @@ export default class FreePlayLevel extends Scene {
 
         slider.onValueChange = (value: number) => {
             // Use a non-linear value->volume function, since sound is wack
-            GameLevel.musicValue = value;
-            AudioManager.setVolume(AudioChannelType.MUSIC, value*value);
+            MainMenu.musicVolume = value;
+            AudioManager.setVolume(AudioChannelType.MUSIC, value);
         }
 
         let sfxLabel = <Label>this.add.uiElement(UIElementType.LABEL, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 70), text: "Sound Effects"});
@@ -290,7 +291,7 @@ export default class FreePlayLevel extends Scene {
         sfxLabel.fontSize = 30;
 
         // Initialize value to 1 (music is at max)
-        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: GameLevel.sfxValue});
+        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: MainMenu.sfxVolume});
 
         // UI Stuff
         sfxslider.size = new Vec2(200, 50);
@@ -301,8 +302,8 @@ export default class FreePlayLevel extends Scene {
 
         sfxslider.onValueChange = (value: number) => {
             // Use a non-linear value->volume function, since sound is wack
-            GameLevel.sfxValue = value;
-            AudioManager.setVolume(AudioChannelType.SFX, value*value);
+            MainMenu.sfxVolume = value;
+            AudioManager.setVolume(AudioChannelType.SFX, value);
         }
     }
 
@@ -382,38 +383,38 @@ export default class FreePlayLevel extends Scene {
                 }
                 if (this.currentWave <= 5) {
                     this.farmerSpawnChance = 0.85;
-                    this.soldierSpawnChance = 1.0;
-                    this.robotDogSpawnChance = 0;
-                    this.superSoldierSpawnChance = 0;
+                    this.superSoldierSpawnChance = 1.0;
                     this.droneSpawnChance = 0;
+                    this.soldierSpawnChance = 0;
+                    this.robotDogSpawnChance = 0;
                     this.presidentSpawnChance = 0;
                 } else if (this.currentWave <= 10) {
                     this.farmerSpawnChance = 0.20;
-                    this.soldierSpawnChance = 0.70;
-                    this.robotDogSpawnChance = 1.0;
-                    this.superSoldierSpawnChance = 0;
-                    this.droneSpawnChance = 0;
+                    this.superSoldierSpawnChance = 0.70;
+                    this.droneSpawnChance = 1.0;
+                    this.soldierSpawnChance = 0;
+                    this.robotDogSpawnChance = 0;
                     this.presidentSpawnChance = 0;
                 } else if (this.currentWave <= 15) {
                     this.farmerSpawnChance = 0;
-                    this.soldierSpawnChance = 0.40;
-                    this.robotDogSpawnChance = 0.70;
-                    this.superSoldierSpawnChance = 0.90;
-                    this.droneSpawnChance = 1.0;
+                    this.superSoldierSpawnChance = 0.40;
+                    this.droneSpawnChance = 0.70;
+                    this.soldierSpawnChance = 0.90;
+                    this.robotDogSpawnChance = 1.0;
                     this.presidentSpawnChance = 0;
                 } else if (this.currentWave <= 20) {
                     this.farmerSpawnChance = 0;
-                    this.soldierSpawnChance = 0;
-                    this.robotDogSpawnChance = 0.20;
-                    this.superSoldierSpawnChance = 0.70;
-                    this.droneSpawnChance = 0.90;
+                    this.superSoldierSpawnChance = 0;
+                    this.droneSpawnChance = 0.20;
+                    this.soldierSpawnChance = 0.70;
+                    this.robotDogSpawnChance = 0.90;
                     this.presidentSpawnChance = 1.0;
                 } else if (this.currentWave <= 25) {
                     this.farmerSpawnChance = 0;
-                    this.soldierSpawnChance = 0;
-                    this.robotDogSpawnChance = 0;
-                    this.superSoldierSpawnChance = 0.50;
-                    this.droneSpawnChance = 0.80;
+                    this.superSoldierSpawnChance = 0;
+                    this.droneSpawnChance = 0;
+                    this.soldierSpawnChance = 0.50;
+                    this.robotDogSpawnChance = 0.80;
                     this.presidentSpawnChance = 1.0;
                 }
                 this.newWave = true;
@@ -1229,7 +1230,7 @@ export default class FreePlayLevel extends Scene {
                 this.startWaveBtn.visible = false;
                 this.emitter.fireEvent(AR_Events.WAVE_START_END, {isWaveInProgress: false});
                 setTimeout(() => {
-                        this.sceneManager.changeToScene(LevelSelection, {}, {});
+                        this.sceneManager.changeToScene(MainMenu, {}, {});
                 }, 3000);
             }
         }
@@ -1288,22 +1289,6 @@ export default class FreePlayLevel extends Scene {
                 enemyDefense = 0;
                 speed = 100;
             }
-            else if(this.soldierSpawnChance > 0 && randomNumber < this.soldierSpawnChance){
-                enemySprite = this.add.animatedSprite("soldier", "primary");
-                enemySprite.scale.set(4, 4);
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 35)));
-                enemyHealth = 75;
-                enemyDefense = 0.25;
-                speed = 75;
-            }
-            else if(this.robotDogSpawnChance > 0 && randomNumber < this.robotDogSpawnChance){
-                enemySprite = this.add.animatedSprite("robot_dog", "primary");
-                enemySprite.scale.set(2, 2);
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
-                enemyHealth = 35;
-                enemyDefense = 0.4;
-                speed = 130;
-            }
             else if(this.superSoldierSpawnChance > 0 && randomNumber < this.superSoldierSpawnChance){
                 enemySprite = this.add.animatedSprite("superSoldier", "primary");
                 enemySprite.scale.set(3.5, 3.5);
@@ -1319,6 +1304,22 @@ export default class FreePlayLevel extends Scene {
                 enemyHealth = 40;
                 enemyDefense = 0.3;
                 speed = 125;
+            }
+            else if(this.soldierSpawnChance > 0 && randomNumber < this.soldierSpawnChance){
+                enemySprite = this.add.animatedSprite("soldier", "primary");
+                enemySprite.scale.set(4, 4);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 35)));
+                enemyHealth = 75;
+                enemyDefense = 0.25;
+                speed = 75;
+            }
+            else if(this.robotDogSpawnChance > 0 && randomNumber < this.robotDogSpawnChance){
+                enemySprite = this.add.animatedSprite("robot_dog", "primary");
+                enemySprite.scale.set(2, 2);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(24, 24)));
+                enemyHealth = 35;
+                enemyDefense = 0.4;
+                speed = 130;
             }
             else if(this.presidentSpawnChance > 0 && randomNumber < this.presidentSpawnChance){
                 enemySprite = this.add.animatedSprite("president", "primary");

@@ -18,6 +18,9 @@ import LevelSelection from "./LevelSelection";
 export default class MainMenu extends Scene {
 
     static startMusicOnce: boolean = false;
+    static lowerMusicOnce: boolean = false;
+    static musicVolume: number = 1.0;
+    static sfxVolume: number = 0.5;
 
     loadScene(): void {
         this.load.image("logo", "assets/images/Animals_Revenge_Logo.png");
@@ -32,8 +35,8 @@ export default class MainMenu extends Scene {
     startScene(): void {
         if (!MainMenu.startMusicOnce) {
             this.emitter.fireEvent(GameEventType.PLAY_MUSIC, {key: "game_music", loop: true, holdReference: true});
-            AudioManager.setVolume(AudioChannelType.MUSIC, 1.0);
-            AudioManager.setVolume(AudioChannelType.SFX, 0.7 * 0.7);
+            AudioManager.setVolume(AudioChannelType.MUSIC, MainMenu.musicVolume);
+            AudioManager.setVolume(AudioChannelType.SFX, MainMenu.sfxVolume);
             MainMenu.startMusicOnce = true;
         }        
     

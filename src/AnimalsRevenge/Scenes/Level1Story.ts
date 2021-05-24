@@ -45,11 +45,11 @@ export default class Level1Story extends Scene {
         this.texts.push("Hey guys, what are you doing out of your coup\nand fencing");
         this.texts.push("Moo...Moo");
         this.texts.push("Cluck...Cluck");
-        this.texts.push("Margret, look, it looks like the chickens and cows\nare fed up with their horrible living conditions and are\nplanning a revolution that would include exterminating all of\nhumanity. Haha, the ideas I come up with.");
-        this.texts.push("Hehe, now go on back to your cage little one");
+        this.texts.push("Hey Margret, wouldn't it be funny if the chickens\nand cows were fed up with their horrible living conditions\nand planned a revolution that would include exterminating all\nof humanity. Haha, the ideas I come up with.");
+        this.texts.push("Hehe...wait, why is that chicken wearing a military\ncap");
         this.texts.push("MOO");
         this.texts.push("CLUCK");
-        this.texts.push("OH GOD MARGRET THEY ACTUALLY ARE FIGHTING BACK");
+        this.texts.push("OH GOD, THEY ACTUALLY ARE FIGHTING BACK");
 
         
         this.currentSubStringIndex = 0;
@@ -69,7 +69,11 @@ export default class Level1Story extends Scene {
     }
 
     startScene(): void {
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.5);
+        if (!MainMenu.lowerMusicOnce) {
+            MainMenu.musicVolume = 0.5;
+            MainMenu.lowerMusicOnce = true;
+            AudioManager.setVolume(AudioChannelType.MUSIC, MainMenu.musicVolume);
+        }
         
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);

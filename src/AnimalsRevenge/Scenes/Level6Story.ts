@@ -10,6 +10,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level6 from "./Level6";
+import MainMenu from "./MainMenu";
 
 export default class Level6Story extends Scene {
 
@@ -55,7 +56,11 @@ export default class Level6Story extends Scene {
     }
 
     startScene(): void {
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.5);
+        if (!MainMenu.lowerMusicOnce) {
+            MainMenu.musicVolume = 0.5;
+            MainMenu.lowerMusicOnce = true;
+            AudioManager.setVolume(AudioChannelType.MUSIC, MainMenu.musicVolume);
+        }
         
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);

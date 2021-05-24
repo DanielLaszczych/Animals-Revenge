@@ -52,7 +52,11 @@ export default class Level3Story extends Scene {
     }
 
     startScene(): void {
-        AudioManager.setVolume(AudioChannelType.MUSIC, 0.5);
+        if (!MainMenu.lowerMusicOnce) {
+            MainMenu.musicVolume = 0.5;
+            MainMenu.lowerMusicOnce = true;
+            AudioManager.setVolume(AudioChannelType.MUSIC, MainMenu.musicVolume);
+        }
         
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);

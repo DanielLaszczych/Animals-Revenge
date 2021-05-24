@@ -34,8 +34,8 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Slider from "../../Wolfie2D/Nodes/UIElements/Slider";
 import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
-import Game from "../../Wolfie2D/Loop/Game";
 import SpiderAI from "../AI/Turrets/Spider/SpiderAI";
+import MainMenu from "./MainMenu";
 
 export default class GameLevel extends Scene {
 
@@ -105,9 +105,6 @@ export default class GameLevel extends Scene {
     protected timeBetweenSpawn: number = 1000;
     protected spawnTimer: Timer;
 
-    static musicValue: number = 0.2;
-    static sfxValue: number = 0.7;
-
     initScene(init: Record<string, any>) {
         if (Help.infHealth) {
             this.healthCount = Infinity;
@@ -165,9 +162,12 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-        GameLevel.musicValue = 0.5;
-        AudioManager.setVolume(AudioChannelType.MUSIC, GameLevel.musicValue);
-        AudioManager.setVolume(AudioChannelType.SFX, GameLevel.sfxValue * GameLevel.sfxValue);
+        if (!MainMenu.lowerMusicOnce) {
+            MainMenu.musicVolume = 0.5;
+            MainMenu.lowerMusicOnce = true;
+        }
+        AudioManager.setVolume(AudioChannelType.MUSIC, MainMenu.musicVolume);
+        AudioManager.setVolume(AudioChannelType.SFX, MainMenu.sfxVolume);
         this.initLayers();
         this.initViewPort();
         this.subscribeToEvents();
@@ -255,7 +255,7 @@ export default class GameLevel extends Scene {
         musicLabel.font = "PixelSimple";
         musicLabel.fontSize = 30;
 
-        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: GameLevel.musicValue});
+        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 25), value: MainMenu.musicVolume});
         
         // UI Stuff
         slider.size = new Vec2(200, 50);
@@ -266,8 +266,8 @@ export default class GameLevel extends Scene {
 
         slider.onValueChange = (value: number) => {
             // Use a non-linear value->volume function, since sound is wack
-            GameLevel.musicValue = value;
-            AudioManager.setVolume(AudioChannelType.MUSIC, value*value);
+            MainMenu.musicVolume = value;
+            AudioManager.setVolume(AudioChannelType.MUSIC, value);
         }
 
         let sfxLabel = <Label>this.add.uiElement(UIElementType.LABEL, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 70), text: "Sound Effects"});
@@ -276,7 +276,7 @@ export default class GameLevel extends Scene {
         sfxLabel.fontSize = 30;
 
         // Initialize value to 1 (music is at max)
-        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: GameLevel.sfxValue});
+        let sfxslider = <Slider>this.add.uiElement(UIElementType.SLIDER, "pauseLayer", {position: new Vec2(this.size.x, this.size.y + 105), value: MainMenu.sfxVolume});
 
         // UI Stuff
         sfxslider.size = new Vec2(200, 50);
@@ -287,8 +287,8 @@ export default class GameLevel extends Scene {
 
         sfxslider.onValueChange = (value: number) => {
             // Use a non-linear value->volume function, since sound is wack
-            GameLevel.sfxValue = value;
-            AudioManager.setVolume(AudioChannelType.SFX, value*value);
+            MainMenu.sfxVolume = value;
+            AudioManager.setVolume(AudioChannelType.SFX, value);
         }
     }
 
