@@ -1,6 +1,6 @@
 {
     "name": "superSoldier",
-    "spriteSheetImage": "SuperSolider.png",
+    "spriteSheetImage": "supersolider.png",
     "spriteWidth": 16,
     "spriteHeight": 16,
     "leftBuffer": 0,
@@ -8,12 +8,51 @@
     "topBuffer": 0,
     "bottomBuffer": 0,
     "columns": 8,
-    "rows": 1,
+    "rows": 2,
     "animations": [
         {
             
             "name": "WALK",
             "repeat": true,
+            "frames": [
+                {
+                    "index": 8,
+                    "duration": 15
+                },
+                {
+                    "index": 9,
+                    "duration": 10
+                },
+                {
+                    "index": 10,
+                    "duration": 10
+                },
+                {
+                    "index": 11,
+                    "duration": 10
+                },
+                {
+                    "index": 12,
+                    "duration": 15
+                },
+                {
+                    "index": 13,
+                    "duration": 10
+                },
+                {
+                    "index": 14,
+                    "duration": 10
+                },
+                {
+                    "index": 15,
+                    "duration": 15
+                }
+            ]
+        },
+        {
+    
+            "name": "Dying",
+            "repeat": false,
             "frames": [
                 {
                     "index": 0,
@@ -34,17 +73,16 @@
                 {
                     "index": 4,
                     "duration": 15
-                },
+                }
+            ]
+        },
+        {
+    
+            "name": "Dead",
+            "repeat": false,
+            "frames": [
                 {
-                    "index": 5,
-                    "duration": 10
-                },
-                {
-                    "index": 6,
-                    "duration": 10
-                },
-                {
-                    "index": 7,
+                    "index": 4,
                     "duration": 15
                 }
             ]

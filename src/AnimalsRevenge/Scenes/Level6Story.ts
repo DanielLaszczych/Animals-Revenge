@@ -33,7 +33,7 @@ export default class Level6Story extends Scene {
         this.talkers.push("Soldier: ");
         this.talkers.push("President: ");
 
-        this.texts.push("Mr. President, the animals are coming");
+        this.texts.push("Mr. President, the animals are coming.");
         this.texts.push("Animals don't scare me, we have the best military\nin the...");
         this.texts.push("CLUCKKKKKKKKK");
         this.texts.push("GET DOWN MR. PRESIDENT");

@@ -97,7 +97,7 @@ export default class Walk extends State {
             this.currentPath = this.getNextPath();
         }
         this.owner.moveOnPath((this.speed - this.slowAmount) * deltaT * this.parent.levelSpeed, this.currentPath);
-        if (this.owner.imageId === "drone" || this.owner.imageId === "superSoldier" || this.owner.imageId === "president") {
+        if (this.owner.imageId === "drone" || this.owner.imageId === "superSoldier" || this.owner.imageId === "president" || this.owner.imageId === "robot_dog") {
             this.owner.rotation = Vec2.UP.angleToCCW(this.currentPath.getMoveDirection(this.owner))
         } else {
             let addTurn = 0;

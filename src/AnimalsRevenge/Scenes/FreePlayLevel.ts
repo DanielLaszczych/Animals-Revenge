@@ -1563,14 +1563,14 @@ export default class FreePlayLevel extends Scene {
                                             property: TweenableProperties.scaleX,
                                             resetOnComplete: false,
                                             start: 2,
-                                            end: 0.5,
+                                            end: 0.8,
                                             ease: EaseFunctionType.IN_OUT_SINE
                                         },
                                         {
                                             property: TweenableProperties.scaleY,
                                             resetOnComplete: false,
                                             start: 2,
-                                            end: 0.5,
+                                            end: 0.8,
                                             ease: EaseFunctionType.IN_OUT_SINE
                                         },
                                     ],
@@ -1579,7 +1579,7 @@ export default class FreePlayLevel extends Scene {
                                 (<AnimatedSprite>enemy).animation.stop();
                                 enemy.tweens.play("shrink");
                                 setTimeout(() => {
-                                    (<AnimatedSprite>enemy).scale.set(5, 5);
+                                    (<AnimatedSprite>enemy).scale.set(4, 4);
                                     (<AnimatedSprite>enemy).animation.play("Explode");
                                 }, 1000);
                                 setTimeout(() => {
@@ -1593,6 +1593,38 @@ export default class FreePlayLevel extends Scene {
                                 setTimeout(() => {
                                     enemy.destroy();
                                 }, 1000);
+                            } else if ((<AnimatedSprite>enemy).imageId === "soldier") {
+                                (<AnimatedSprite>enemy).freeze();
+                                (<AnimatedSprite>enemy).animation.stop();
+                                (<AnimatedSprite>enemy).animation.play("Dying");
+                                (<AnimatedSprite>enemy).animation.queue("Dead");
+                                setTimeout(() => {
+                                    enemy.destroy();
+                                }, 800);
+                            } else if ((<AnimatedSprite>enemy).imageId === "robot_dog") {
+                                (<AnimatedSprite>enemy).freeze();
+                                (<AnimatedSprite>enemy).animation.stop();
+                                (<AnimatedSprite>enemy).animation.play("Dying");
+                                (<AnimatedSprite>enemy).animation.queue("Dead");
+                                setTimeout(() => {
+                                    enemy.destroy();
+                                }, 1500);
+                            } else if ((<AnimatedSprite>enemy).imageId === "superSoldier") {
+                                (<AnimatedSprite>enemy).freeze();
+                                (<AnimatedSprite>enemy).animation.stop();
+                                (<AnimatedSprite>enemy).animation.play("Dying");
+                                (<AnimatedSprite>enemy).animation.queue("Dead");
+                                setTimeout(() => {
+                                    enemy.destroy();
+                                }, 800);
+                            } else if ((<AnimatedSprite>enemy).imageId === "farmer") {
+                                (<AnimatedSprite>enemy).freeze();
+                                (<AnimatedSprite>enemy).animation.stop();
+                                (<AnimatedSprite>enemy).animation.play("Dying");
+                                (<AnimatedSprite>enemy).animation.queue("Dead");
+                                setTimeout(() => {
+                                    enemy.destroy();
+                                }, 800);
                             } else {
                                 enemy.destroy();
                             }

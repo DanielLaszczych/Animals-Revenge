@@ -38,8 +38,8 @@ export default class Level5Story extends Scene {
         this.talkers.push("Kid: ");
         this.talkers.push("Kid: ");
 
-        this.texts.push("Mom, I want some chicken nuggies");
-        this.texts.push("Ok Billy, but only if you say please");
+        this.texts.push("Mom, I want some chicken nuggies.");
+        this.texts.push("Ok Billy, but only if you say please.");
         this.texts.push("Fine, pleas...");
         this.texts.push("CLUCK CLUCK CLUCK");
         this.texts.push("OH GOD NO, BILLYY");

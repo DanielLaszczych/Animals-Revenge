@@ -42,14 +42,14 @@ export default class Level1Story extends Scene {
         this.texts.push("...");
         this.texts.push("...");
         this.texts.push("...");
-        this.texts.push("Hey guys, what are you doing out of your coup\nand fencing");
+        this.texts.push("Hey guys, what are you doing out of your coup\nand fencing.");
         this.texts.push("Moo...Moo");
         this.texts.push("Cluck...Cluck");
         this.texts.push("Hey Margret, wouldn't it be funny if the chickens\nand cows were fed up with their horrible living conditions\nand planned a revolution that would include exterminating all\nof humanity. Haha, the ideas I come up with.");
-        this.texts.push("Hehe...wait, why is that chicken wearing a military\ncap");
+        this.texts.push("Hehe...wait, why is that chicken wearing a military\ncap.");
         this.texts.push("MOO");
         this.texts.push("CLUCK");
-        this.texts.push("OH GOD, THEY ACTUALLY ARE FIGHTING BACK");
+        this.texts.push("OH GOD, THEY ACTUALLY ARE FIGHTING BACK.");
 
         
         this.currentSubStringIndex = 0;
