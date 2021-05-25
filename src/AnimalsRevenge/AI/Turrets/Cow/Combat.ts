@@ -76,14 +76,14 @@ export default class Combat extends State {
                 this.owner.destroy();
             }
         } 
-        // else if (event.type === AR_Events.ENEMY_DIED) {
-        //     if (this.parent.target === event.data.get("id")) {
-        //         let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
-        //         if (isBurpNotInMotion) {
-        //             this.finished("idle");
-        //         }
-        //     }
-        // }
+        else if (event.type === AR_Events.ENEMY_DIED) {
+            if (this.parent.target === event.data.get("id")) {
+                let isBurpNotInMotion = (this.parent.areaofEffect.visible && this.doOnce) || !this.parent.areaofEffect.visible;
+                if (isBurpNotInMotion) {
+                    this.finished("idle");
+                }
+            }
+        }
     }
 
     update(deltaT: number): void {

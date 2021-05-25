@@ -18,7 +18,7 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyAI from "../AI/Enemies/EnemyAI";
 import { AR_Events } from "../animalrevenge_enums";
 import ChickenAI from "../AI/Turrets/Chicken/ChickenAI";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import CowAI from "../AI/Turrets/Cow/CowAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
@@ -1512,6 +1512,9 @@ export default class FreePlayLevel extends Scene {
                             enemy = other;
                             projectile = node;
                         }
+                        if (!this.enemies.has(enemy)) {
+                            break;
+                        }
                         if (event.data.get("data").target !== undefined && event.data.get("data").target !== enemy.id) {
                             break;
                         }
@@ -1547,11 +1550,52 @@ export default class FreePlayLevel extends Scene {
                         }
 
                         if (newHealth <= 0) {
+                            this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: enemy.id});
                             // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "enemyDeath", loop: false});
                             healthBar.destroy();
                             this.enemies.delete(enemy);
-                            enemy.destroy();
-                            // this.emitter.fireEvent(AR_Events.ENEMY_DIED, {id: id});
+                            if ((<AnimatedSprite>enemy).imageId === "drone") {
+                                enemy.tweens.add("shrink", {
+                                    startDelay: 0,
+                                    duration: 1000,
+                                    effects: [
+                                        {
+                                            property: TweenableProperties.scaleX,
+                                            resetOnComplete: false,
+                                            start: 2,
+                                            end: 0.5,
+                                            ease: EaseFunctionType.IN_OUT_SINE
+                                        },
+                                        {
+                                            property: TweenableProperties.scaleY,
+                                            resetOnComplete: false,
+                                            start: 2,
+                                            end: 0.5,
+                                            ease: EaseFunctionType.IN_OUT_SINE
+                                        },
+                                    ],
+                                    reverseOnComplete: false
+                                });
+                                (<AnimatedSprite>enemy).animation.stop();
+                                enemy.tweens.play("shrink");
+                                setTimeout(() => {
+                                    (<AnimatedSprite>enemy).scale.set(5, 5);
+                                    (<AnimatedSprite>enemy).animation.play("Explode");
+                                }, 1000);
+                                setTimeout(() => {
+                                    enemy.destroy();
+                                }, 2000);
+                            } else if ((<AnimatedSprite>enemy).imageId === "president") {
+                                (<AnimatedSprite>enemy).freeze();
+                                (<AnimatedSprite>enemy).animation.stop();
+                                (<AnimatedSprite>enemy).animation.play("Dying");
+                                (<AnimatedSprite>enemy).animation.queue("Dead");
+                                setTimeout(() => {
+                                    enemy.destroy();
+                                }, 1000);
+                            } else {
+                                enemy.destroy();
+                            }
                         } else {
                             this.enemies.get(enemy).health = newHealth;
                         }

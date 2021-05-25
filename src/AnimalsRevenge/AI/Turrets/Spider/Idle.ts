@@ -36,7 +36,7 @@ export default class Idle extends State {
                 this.parent.trigger.setTrigger("enemy", AR_Events.ENEMY_HIT, null, {damage: 0});
             }
         }
-        if (event.type === AR_Events.PAUSE_RESUME_GAME) {
+        else if (event.type === AR_Events.PAUSE_RESUME_GAME) {
             if (event.data.get("pausing")) {
                 this.parent.isPaused = true;
                 this.owner.animation.pause();
@@ -51,7 +51,7 @@ export default class Idle extends State {
         if (this.parent.isPaused) {
             return;
         }
-        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
+        else if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
             let target = this.owner.getScene().getSceneGraph().getNode(event.data.get("target"));
             let turret = this.owner.getScene().getSceneGraph().getNode(event.data.get("turret"));
             if (target === undefined || turret.id !== this.owner.id) {
@@ -60,7 +60,7 @@ export default class Idle extends State {
             this.parent.target = event.data.get("target");
             this.finished("combat");
         }
-        if (event.type === AR_Events.SELL_TOWER) {
+        else if (event.type === AR_Events.SELL_TOWER) {
             if (event.data.get("id") === this.owner.id) {
                 for (let i = 0; i < this.parent.projectiles.length;) {
                     let projectile = this.parent.projectiles[i].sprite;
@@ -72,6 +72,13 @@ export default class Idle extends State {
                 this.owner.destroy();
             }
         } 
+        else if (event.type === AR_Events.ENEMY_DIED) {
+            for (let i = 0; i < this.parent.projectiles.length; i++) {
+                if (this.parent.projectiles[i].target === event.data.get("id")) {
+                    this.parent.projectiles[i].target = null;
+                }
+            }
+        }
     }
 
     update(deltaT: number): void{

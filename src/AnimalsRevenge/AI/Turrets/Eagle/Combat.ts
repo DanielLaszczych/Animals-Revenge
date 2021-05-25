@@ -55,10 +55,10 @@ export default class Combat extends State {
         if (this.parent.isPaused) {
             return;
         }
-        if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
+        else if (event.type === AR_Events.ENEMY_ENTERED_TOWER_RANGE) {
            return;
         } 
-        if (event.type === AR_Events.SELL_TOWER) {
+        else if (event.type === AR_Events.SELL_TOWER) {
             if (event.data.get("id") === this.owner.id) {
                 for (let i = 0; i < this.parent.projectiles.length;) {
                     let projectile = this.parent.projectiles[i].sprite;
@@ -68,11 +68,16 @@ export default class Combat extends State {
                 this.owner.destroy();
             }
         } 
-        // else if (event.type === AR_Events.ENEMY_DIED) {
-        //     if (this.parent.target === event.data.get("id")) {
-        //         this.finished("idle");
-        //     }
-        // }
+        else if (event.type === AR_Events.ENEMY_DIED) {
+            for (let i = 0; i < this.parent.projectiles.length; i++) {
+                if (this.parent.projectiles[i].target === event.data.get("id")) {
+                    this.parent.projectiles[i].target = null;
+                }
+            }
+            if (this.parent.target === event.data.get("id")) {
+                this.finished("idle");
+            }
+        }
     }
     
     update(deltaT: number): void {

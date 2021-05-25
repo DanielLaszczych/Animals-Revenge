@@ -24,6 +24,8 @@ export default class Walk extends State {
     protected originalSpeed: number;
     protected slowTimer: Timer;
 
+    protected isDied: boolean;
+
     constructor(parent: EnemyAI, owner: AnimatedSprite, path: Array<Vec2>, speed: number) {
         super(parent);
         this.owner = owner;
@@ -32,6 +34,7 @@ export default class Walk extends State {
         this.speed = speed;
         this.slowTimer = new Timer(500);
         this.slowTimer.levelSpeed = this.parent.levelSpeed;
+        this.isDied = false;
     }
 
     onEnter() {
@@ -73,6 +76,12 @@ export default class Walk extends State {
                     }
                 }
             }
+            if (event.type === AR_Events.ENEMY_DIED) {
+                if (this.owner.id === event.data.get("id") && this.owner.imageId === "drone") {
+                    this.isDied = true;
+                    this.speed = this.originalSpeed * 0.6;
+                }
+            }
         }
     }
 
@@ -80,7 +89,7 @@ export default class Walk extends State {
         if (this.parent.isPaused) {
             return;
         }
-        if (this.slowTimer.isStopped()) {
+        if (this.slowTimer.isStopped() && !this.isDied) {
             this.speed = this.originalSpeed;
             this.slowAmount = 0;
         }

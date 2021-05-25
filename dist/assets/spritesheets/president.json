@@ -3,7 +3,7 @@
     "spriteSheetImage": "president.png",
     "spriteWidth": 16,
     "spriteHeight": 16,
-    "columns": 4,
+    "columns": 8,
     "rows": 1,
     "durationType": "time",
     "animations": [
@@ -11,6 +11,16 @@
             "name": "WALK",
             "repeat": true,
             "frames": [{"index": 0, "duration": 25}, {"index": 1, "duration": 25}, {"index": 2, "duration": 25}, {"index": 3, "duration": 25}]
+        },
+        {
+            "name": "Dying",
+            "repeat": false,
+            "frames": [{"index": 4, "duration": 25}, {"index": 5, "duration": 25}, {"index": 6, "duration": 25}, {"index": 7, "duration": 25}]
+        },
+        {
+            "name": "Dead",
+            "repeat": false,
+            "frames": [{"index": 7, "duration": 25}]
         }
     ]
 }
