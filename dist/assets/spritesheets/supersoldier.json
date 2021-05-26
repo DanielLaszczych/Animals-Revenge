@@ -1,6 +1,6 @@
 {
     "name": "superSoldier",
-    "spriteSheetImage": "supersolider.png",
+    "spriteSheetImage": "supersoldier.png",
     "spriteWidth": 16,
     "spriteHeight": 16,
     "leftBuffer": 0,

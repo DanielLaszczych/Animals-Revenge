@@ -1,6 +1,6 @@
 {
     "name": "president",
-    "spriteSheetImage": "president.png",
+    "spriteSheetImage": "President.png",
     "spriteWidth": 16,
     "spriteHeight": 16,
     "columns": 8,
