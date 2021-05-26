@@ -39,7 +39,7 @@ export default class EndingStory extends Scene {
 
         this.texts.push("And so, sick and tired of their way of life, General Eggbert\nand Captain Betty started a rebellion against the humans.");
         this.texts.push("Along their journey they formed alliances that would prove\nto be much of value.");
-        this.texts.push("From the corners of every crevis, Mistress Short-Legs and\nher brood, who were tired of their webs being destroyed,\nwere the first to join the rebellion.");
+        this.texts.push("From the corners of every crevice, Mistress Short-Legs and\nher brood, who were tired of their webs being destroyed,\nwere the first to join the rebellion.");
         this.texts.push("From the forests that were quickly disappearing, Dues Claw\nand his clan joined quickly after hearing of the rebellion.");
         this.texts.push("After escaping the forests, Captain Betty would travel\nto the beaches which had become polluted with garbage\nfrom the humans. At the beach there were penguins who\nwere smiling and waving for some reason but happily joined.");
         this.texts.push("General Eggbert would go to the zoo's in the cities where\nanimals had become a means of human entertainment. The\nElephants, whose firepower would add much needed\nstrength, joined forces with Eggbert after being freed.");
